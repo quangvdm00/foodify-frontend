@@ -49,7 +49,7 @@ export class NavService {
         {
             title: 'Products', icon: 'box', type: 'sub', active: false, children: [
                 {path: '/products/product-list', title: 'Product List', type: 'link'},
-                {path: '/products/product-detail', title: 'Product Detail', type: 'link'},
+                // {path: '/products/product-detail', title: 'Product Detail', type: 'link'},
                 {path: '/products/category', title: 'Product Category', type: 'link'},
                 // {path: '/products/physical/sub-category', title: 'Sub Category', type: 'link'},
                 {path: '/products/add-product', title: 'Add Product', type: 'link'},

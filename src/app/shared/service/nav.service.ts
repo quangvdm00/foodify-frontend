@@ -50,9 +50,10 @@ export class NavService {
             title: 'Products', icon: 'box', type: 'sub', active: false, children: [
                 {path: '/products/product-list', title: 'Product List', type: 'link'},
                 // {path: '/products/product-detail', title: 'Product Detail', type: 'link'},
-                {path: '/products/category', title: 'Product Category', type: 'link'},
                 // {path: '/products/physical/sub-category', title: 'Sub Category', type: 'link'},
                 {path: '/products/add-product', title: 'Add Product', type: 'link'},
+                {path: '/products/category', title: 'Product Category', type: 'link'},
+                // {path: '/products/add-product-category', title: 'Add Product Category', type: 'link'},
             ]
         },
                 // {
@@ -78,27 +79,27 @@ export class NavService {
                 {path: '/sales/transactions', title: 'Transactions', type: 'link'},
             ]
         },
-        {
-            title: 'Coupons', icon: 'tag', type: 'sub', active: false, children: [
-                {path: '/coupons/list-coupons', title: 'List Coupons', type: 'link'},
-                {path: '/coupons/create-coupons', title: 'Create Coupons', type: 'link'},
-            ]
-        },
-        {
-            title: 'Pages', icon: 'clipboard', type: 'sub', active: false, children: [
-                {path: '/pages/list-page', title: 'List Page', type: 'link'},
-                {path: '/pages/create-page', title: 'Create Page', type: 'link'},
-            ]
-        },
-        {
-            title: 'Media', path: '/media', icon: 'camera', type: 'link', active: false
-        },
-        {
-            title: 'Menus', icon: 'align-left', type: 'sub', active: false, children: [
-                {path: '/menus/list-menu', title: 'Menu Lists', type: 'link'},
-                {path: '/menus/create-menu', title: 'Create Menu', type: 'link'},
-            ]
-        },
+        // {
+        //     title: 'Coupons', icon: 'tag', type: 'sub', active: false, children: [
+        //         {path: '/coupons/list-coupons', title: 'List Coupons', type: 'link'},
+        //         {path: '/coupons/create-coupons', title: 'Create Coupons', type: 'link'},
+        //     ]
+        // },
+        // {
+        //     title: 'Pages', icon: 'clipboard', type: 'sub', active: false, children: [
+        //         {path: '/pages/list-page', title: 'List Page', type: 'link'},
+        //         {path: '/pages/create-page', title: 'Create Page', type: 'link'},
+        //     ]
+        // },
+        // {
+        //     title: 'Media', path: '/media', icon: 'camera', type: 'link', active: false
+        // },
+        // {
+        //     title: 'Menus', icon: 'align-left', type: 'sub', active: false, children: [
+        //         {path: '/menus/list-menu', title: 'Menu Lists', type: 'link'},
+        //         {path: '/menus/create-menu', title: 'Create Menu', type: 'link'},
+        //     ]
+        // },
         {
             title: 'Users', icon: 'user-plus', type: 'sub', active: false, children: [
                 {path: '/users/list-user', title: 'User List', type: 'link'},
@@ -111,13 +112,13 @@ export class NavService {
                 {path: '/vendors/create-vendors', title: 'Create Vendor', type: 'link'},
             ]
         },
-        {
-            title: 'Localization', icon: 'chrome', type: 'sub', children: [
-                {path: '/localization/translations', title: 'Translations', type: 'link'},
-                {path: '/localization/currency-rates', title: 'Currency Rates', type: 'link'},
-                {path: '/localization/taxes', title: 'Taxes', type: 'link'},
-            ]
-        },
+        // {
+        //     title: 'Localization', icon: 'chrome', type: 'sub', children: [
+        //         {path: '/localization/translations', title: 'Translations', type: 'link'},
+        //         {path: '/localization/currency-rates', title: 'Currency Rates', type: 'link'},
+        //         {path: '/localization/taxes', title: 'Taxes', type: 'link'},
+        //     ]
+        // },
         {
             title: 'Reports', path: '/reports', icon: 'bar-chart', type: 'link', active: false
         },

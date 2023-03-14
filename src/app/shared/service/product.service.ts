@@ -16,21 +16,25 @@ export class ProductService {
     }
 
     getProducts(): Observable<Product[]> {
+        console.log(`getting jwt-token from Storage`, localStorage.getItem('jwt-token'));
+        const products = this.httpClient.get<GetResponseProducts>(this.baseUrl)
+            .pipe(
+                map((response: GetResponseProducts) => response.products)
+            );
+        console.log(products);
         return this.httpClient.get<GetResponseProducts>(this.baseUrl)
             .pipe(
-                map((response: GetResponseProducts) => response._embedded.products)
+                map((response: GetResponseProducts) => response.products)
             );
     }
 }
 
 interface GetResponseProducts {
-    _embedded: {
-        products: Product[]
-    },
+    products: Product[];
     page: {
         size: number,
         totalElements: number,
         totalPages: number,
         number: number
-    }
+    };
 }

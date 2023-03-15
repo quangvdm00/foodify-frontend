@@ -4,16 +4,13 @@ import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {ChangeEvent} from "@ckeditor/ckeditor5-angular";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {Product} from "../../../../shared/tables/Product";
-import {Category} from "../../../../shared/tables/category";
-
 
 @Component({
-    selector: 'app-add-product',
-    templateUrl: './add-product.component.html',
-    styleUrls: ['./add-product.component.scss'],
-    providers: []
+    selector: 'app-add-product-category',
+    templateUrl: './add-product-category.component.html',
+    styleUrls: ['./add-product-category.component.scss']
 })
-export class AddProductComponent implements OnInit {
+export class AddProductCategoryComponent {
     public productForm: UntypedFormGroup;
     public Editor = ClassicEditor;
     public counter: number = 1;
@@ -43,9 +40,8 @@ export class AddProductComponent implements OnInit {
     modalRef: BsModalRef;
     message: string;
 
-    constructor(
-        private fb: UntypedFormBuilder,
-        private modalService: BsModalService) {
+    constructor(private fb: UntypedFormBuilder,
+                private modalService: BsModalService) {
         this.productForm = this.fb.group({
             name: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
             price: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
@@ -58,10 +54,10 @@ export class AddProductComponent implements OnInit {
 
     onAddNewProduct() {
         // const product = new Product(
-        //     this.productName, this.description, true,20,
-        //     this.productPrice, [this.productCategory], [''], 30);
+        //     this.productName, this.description, true, 20,
+        //     this.productPrice,
+        //     [this.productCategory], [''], 30);
         // console.log(product);
-
         this.productForm.reset();
     }
 

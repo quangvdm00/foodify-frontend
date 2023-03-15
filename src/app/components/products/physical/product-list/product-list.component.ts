@@ -1,6 +1,5 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ProductService} from "../../../../shared/service/product.service";
-import {Product} from "../../../../shared/tables/Product";
 
 @Component({
     selector: 'app-product-list',
@@ -20,8 +19,12 @@ export class ProductListComponent implements OnInit {
 
     listProduct() {
         this.productService.getProducts().subscribe(
-            data => this.products = data
+            data => {
+                this.products = data;
+                console.log(data);
+            }
         );
         // this.products = Product.product;
+        // console.log(`products: `, this.products);
     }
 }

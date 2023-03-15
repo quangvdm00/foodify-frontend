@@ -1,47 +1,157 @@
 <!-- Container-fluid starts-->
 <div class="container-fluid">
-        <div class="card">
-            <div class="card-header">
-                <h5>Vendor Details</h5>
+    <div class="card">
+        <div class="card-header">
+            <h5>Vendor Details</h5>
+        </div>
+        <div class="card-body vendor-table">
+            <div id="batchDelete" class="custom-datatable vendor-list">
+                <div class="table-responsive ">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Vendors</th>
+                            <th scope="col">Products</th>
+                            <th scope="col" sortable="name">Store Name</th>
+                            <th scope="col" sortable="name">Date</th>
+                            <!--                            <th scope="col" sortable="name">Wallet Balance</th>-->
+                            <th scope="col" sortable="name">Revenue</th>
+                            <th scope="col" sortable="name">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!--                        <ngb-pagination [(page)]="thePageNumber"-->
+                        <!--                                        [pageSize]="thePageSize"-->
+                        <!--                                        [collectionSize]="theTotalElements"-->
+                        <!--                                        [maxSize]="5"-->
+                        <!--                                        (pageChange)="loadData()">-->
+                        <!--                        </ngb-pagination>-->
+
+                        <tr *ngFor="let item of vendors, let idx = index">
+                            <td scope="row">
+                                <img [src]="item.vendor" class="imgTable" style="width: 20px">
+                                <span>{{item.name}}</span>
+                            </td>
+                            <td>
+                                {{item.products}}
+                            </td>
+                            <td>{{item.store_name}}</td>
+                            <td>{{item.date}}</td>
+                            <!--                            <td>{{item.balance}}</td>-->
+                            <td>{{item.revenue}}</td>
+                            <td>
+                                <a
+                                        style="cursor: pointer;">
+                                    <a
+                                            class='fa fa-edit f-12'
+                                            title="Save"
+                                            data-target="#formModal"
+                                            data-toggle="modal"
+                                            (click)="onEditProduct(item, formEditTemplate)">
+                                    </a>
+                                </a>&nbsp;
+                                <a
+                                        style="cursor: pointer;"
+                                        (click)="openModal(template)"><i class="fa fa-trash-o"></i></a>
+                            </td>
+                            <ng-template #template>
+                                <div class="modal-body text-center">
+                                    <p>Do you want to delete this product?</p>
+                                    <button type="button" class="btn btn-default" (click)="confirm(idx)">Yes</button>
+                                    <button type="button" class="btn btn-primary" (click)="decline()">No</button>
+                                </div>
+                            </ng-template>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="card-body vendor-table">
-                <div id="batchDelete" class="custom-datatable vendor-list">
-                    <div class="table-responsive ">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Vendors</th>
-                                    <th scope="col">Products</th>
-                                    <th scope="col" sortable="name" >Store Name</th>
-                                    <th scope="col" sortable="name" >Date</th>
-                                    <th scope="col" sortable="name" >Wallet Balance</th>
-                                    <th scope="col" sortable="name" >Revenue</th>
-                                    <th scope="col" sortable="name" >Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let item of vendors">
-                                    <td scope="row">
-                                        <img [src]="item.vendor" class="imgTable" style="width: 20px">
-                                       <span>{{item.name}}</span> 
-                                    </td>
-                                    <td>
-                                        {{item.products}}
-                                    </td>
-                                    <td>{{item.store_name}}</td>
-                                    <td>{{item.date}}</td>
-                                    <td>{{item.balance}}</td>
-                                    <td>{{item.revenue}}</td>
-                                    <td>
-                                        <a href="javascript:void(0)"><i class='fa fa-edit f-12'></i></a>&nbsp;
-                                        <a href="javascript:void(0)"><i class="fa fa-trash-o"></i></a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+        </div>
+    </div>
+</div>
+<ng-template #formEditTemplate [formGroup]="vendorForm">
+    <!-- Modal -->
+    <div [class.show]="show"
+         id="formModal" tabindex="-1"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Vendor Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div
+                            class="form-group row">
+                        <div class="input-group">
+                            <div class="col-xl-3 col-sm-4">
+                                <span class="input-group-addon"><label for="vendor" class="mb-0">Vendors</label></span>
+                            </div>
+                            <input
+                                    type="text" class="form-control"
+                                    name="vendor" id="vendor"
+                                    autocomplete="off"
+                                    formControlName="vendor"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="input-group">
+                            <div class="col-xl-3 col-sm-4">
+                                <span class="input-group-addon"><label for="products"
+                                                                       class="mb-0">Products</label></span>
+                            </div>
+                            <input type="text" class="form-control"
+                                   name="products" id="products"
+                                   autocomplete="off"
+                                   formControlName="products"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="input-group">
+                            <div class="col-xl-3 col-sm-4">
+                                <span class="input-group-addon"><label for="storeName"
+                                                                       class="mb-0">Store Name</label></span>
+                            </div>
+                            <input type="text" class="form-control"
+                                   name="storeName" id="storeName"
+                                   autocomplete="off"
+                                   formControlName="storeName"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="input-group">
+                            <div class="col-xl-3 col-sm-4">
+                                <span class="input-group-addon"><label for="date" class="mb-0">Date</label></span>
+                            </div>
+                            <input type="date" class="form-control"
+                                   name="date" id="date"
+                                   autocomplete="off"
+                                   formControlName="date"
+                            />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                                type="submit" class="btn btn-primary" (click)="onSubmitEditProduct()">Save changes
+                        </button>
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-dismiss="modal"
+                                (click)="onClose()"
+                        >Close
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Container-fluid Ends-->
+</ng-template>

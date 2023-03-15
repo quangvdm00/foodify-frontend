@@ -21,9 +21,14 @@ import {InvoiceModule} from './components/invoice/invoice.module';
 import {SettingModule} from './components/setting/setting.module';
 import {ReportsModule} from './components/reports/reports.module';
 import {AuthModule} from './components/auth/auth.module';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {ModalModule} from "ngx-bootstrap/modal";
+import {AngularFireStorageModule} from "@angular/fire/compat/storage";
+import {AngularFireModule} from "@angular/fire/compat";
+import {environment} from "../environments/environment";
+import {FirebaseService} from "./shared/service/firebase.service";
+import {AuthInterceptor} from "./shared/inceptor/auth-interceptor";
 
-;
 
 @NgModule({
     declarations: [
@@ -49,9 +54,19 @@ import {HttpClientModule} from "@angular/common/http";
         MenusModule,
         UsersModule,
         AgGridModule,
-        HttpClientModule
+        HttpClientModule,
+        AngularFireStorageModule,
+        AngularFireModule.initializeApp(environment.firebaseConfig, 'cloud'),
+        ModalModule.forRoot()
     ],
-    providers: [],
+    providers: [
+        FirebaseService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {

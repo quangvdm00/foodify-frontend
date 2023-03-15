@@ -24,6 +24,9 @@ import {NgxDropzoneModule} from 'ngx-dropzone';
 // search module
 import {Ng2SearchPipeModule} from 'ng2-search-filter';
 import {SharedModule} from 'src/app/shared/shared.module';
+import {AddProductCategoryComponent} from './physical/add-product-category/add-product-category.component';
+import {HTTP_INTERCEPTORS} from "@angular/common/http";
+import {AuthInterceptor} from "../../shared/inceptor/auth-interceptor";
 // import { NgbdSortableHeader } from "src/app/shared/directives/NgbdSortableHeader";
 // import {  } from '../../directives/shorting.directive/';
 
@@ -38,7 +41,8 @@ import {SharedModule} from 'src/app/shared/shared.module';
         DigitalSubCategoryComponent,
         DigitalListComponent,
         DigitalAddComponent,
-        ProductDetailComponent
+        ProductDetailComponent,
+        AddProductCategoryComponent
     ],
     imports: [
         Ng2SearchPipeModule,
@@ -55,7 +59,12 @@ import {SharedModule} from 'src/app/shared/shared.module';
     exports: [SubCategoryComponent],
     bootstrap: [SubCategoryComponent],
     providers: [
-        NgbActiveModal
+        NgbActiveModal,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true,
+        },
     ]
 })
 export class ProductsModule {

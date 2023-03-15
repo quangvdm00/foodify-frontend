@@ -21,36 +21,36 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="project-status">
-                        <h5 class="f-w-600">Employee Status</h5>
-                        <div class="media">
-                            <div class="media-body">
-                                <h6>Performance<span class="pull-right">80%</span></h6>
-                                <div class="progress sm-progress-bar">
-                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 90%"
-                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="media-body">
-                                <h6>Overtime <span class="pull-right">60%</span></h6>
-                                <div class="progress sm-progress-bar">
-                                    <div class="progress-bar bg-secondary" role="progressbar" style="width: 60%"
-                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="media-body">
-                                <h6>Leaves taken<span class="pull-right">70%</span></h6>
-                                <div class="progress sm-progress-bar">
-                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 70%"
-                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div class="project-status">-->
+<!--                        <h5 class="f-w-600">Employee Status</h5>-->
+<!--                        <div class="media">-->
+<!--                            <div class="media-body">-->
+<!--                                <h6>Performance<span class="pull-right">80%</span></h6>-->
+<!--                                <div class="progress sm-progress-bar">-->
+<!--                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 90%"-->
+<!--                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="media">-->
+<!--                            <div class="media-body">-->
+<!--                                <h6>Overtime <span class="pull-right">60%</span></h6>-->
+<!--                                <div class="progress sm-progress-bar">-->
+<!--                                    <div class="progress-bar bg-secondary" role="progressbar" style="width: 60%"-->
+<!--                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="media">-->
+<!--                            <div class="media-body">-->
+<!--                                <h6>Leaves taken<span class="pull-right">70%</span></h6>-->
+<!--                                <div class="progress sm-progress-bar">-->
+<!--                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 70%"-->
+<!--                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
             </div>
         </div>
@@ -101,80 +101,80 @@
                             </div>
                           </ng-template>
                         </li>
-                        <li [ngbNavItem]="2">
-                          <a ngbNavLink class="d-flex align-items-center"><i data-feather="settings" class="me-2"></i>Contact</a>
-                          <ng-template ngbNavContent>
-                            <div class="account-setting">
-                                <h5 class="f-w-600">Notifications</h5>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="d-block mb-2" for="chk-ani">
-                                            <input class="checkbox_animated" id="chk-ani" type="checkbox">
-                                            Allow Desktop Notifications
-                                        </label>
-                                        <label class="d-block mb-2" for="chk-ani1">
-                                            <input class="checkbox_animated" id="chk-ani1" type="checkbox">
-                                            Enable Notifications
-                                        </label>
-                                        <label class="d-block mb-2" for="chk-ani2">
-                                            <input class="checkbox_animated" id="chk-ani2" type="checkbox">
-                                            Get notification for my own activity
-                                        </label>
-                                        <label class="d-block mb-0" for="chk-ani3">
-                                            <input class="checkbox_animated" id="chk-ani3" type="checkbox"
-                                                checked="">
-                                            DND
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="account-setting deactivate-account">
-                                <h5 class="f-w-600">Deactivate Account</h5>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="d-block mb-2" for="edo-ani">
-                                            <input class="radio_animated" id="edo-ani" type="radio" name="rdo-ani"
-                                                checked="">
-                                            I have a privacy concern
-                                        </label>
-                                        <label class="d-block mb-2" for="edo-ani1">
-                                            <input class="radio_animated" id="edo-ani1" type="radio" name="rdo-ani">
-                                            This is temporary
-                                        </label>
-                                        <label class="d-block mb-0" for="edo-ani2">
-                                            <input class="radio_animated" id="edo-ani2" type="radio" name="rdo-ani"
-                                                checked="">
-                                            Other
-                                        </label>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-primary">Deactivate Account</button>
-                            </div>
-                            <div class="account-setting deactivate-account">
-                                <h5 class="f-w-600">Delete Account</h5>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="d-block mb-2" for="edo-ani3">
-                                            <input class="radio_animated" id="edo-ani3" type="radio" name="rdo-ani1"
-                                                checked="">
-                                            No longer usable
-                                        </label>
-                                        <label class="d-block mb-2" for="edo-ani4">
-                                            <input class="radio_animated" id="edo-ani4" type="radio"
-                                                name="rdo-ani1">
-                                            Want to switch on other account
-                                        </label>
-                                        <label class="d-block mb-0" for="edo-ani5">
-                                            <input class="radio_animated" id="edo-ani5" type="radio" name="rdo-ani1"
-                                                checked="">
-                                            Other
-                                        </label>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-primary">Delete Account</button>
-                            </div>
-                          </ng-template>
-                        </li>
+<!--                        <li [ngbNavItem]="2">-->
+<!--                          <a ngbNavLink class="d-flex align-items-center"><i data-feather="settings" class="me-2"></i>Contact</a>-->
+<!--                          <ng-template ngbNavContent>-->
+<!--                            <div class="account-setting">-->
+<!--                                <h5 class="f-w-600">Notifications</h5>-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col">-->
+<!--                                        <label class="d-block mb-2" for="chk-ani">-->
+<!--                                            <input class="checkbox_animated" id="chk-ani" type="checkbox">-->
+<!--                                            Allow Desktop Notifications-->
+<!--                                        </label>-->
+<!--                                        <label class="d-block mb-2" for="chk-ani1">-->
+<!--                                            <input class="checkbox_animated" id="chk-ani1" type="checkbox">-->
+<!--                                            Enable Notifications-->
+<!--                                        </label>-->
+<!--                                        <label class="d-block mb-2" for="chk-ani2">-->
+<!--                                            <input class="checkbox_animated" id="chk-ani2" type="checkbox">-->
+<!--                                            Get notification for my own activity-->
+<!--                                        </label>-->
+<!--                                        <label class="d-block mb-0" for="chk-ani3">-->
+<!--                                            <input class="checkbox_animated" id="chk-ani3" type="checkbox"-->
+<!--                                                checked="">-->
+<!--                                            DND-->
+<!--                                        </label>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="account-setting deactivate-account">-->
+<!--                                <h5 class="f-w-600">Deactivate Account</h5>-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col">-->
+<!--                                        <label class="d-block mb-2" for="edo-ani">-->
+<!--                                            <input class="radio_animated" id="edo-ani" type="radio" name="rdo-ani"-->
+<!--                                                checked="">-->
+<!--                                            I have a privacy concern-->
+<!--                                        </label>-->
+<!--                                        <label class="d-block mb-2" for="edo-ani1">-->
+<!--                                            <input class="radio_animated" id="edo-ani1" type="radio" name="rdo-ani">-->
+<!--                                            This is temporary-->
+<!--                                        </label>-->
+<!--                                        <label class="d-block mb-0" for="edo-ani2">-->
+<!--                                            <input class="radio_animated" id="edo-ani2" type="radio" name="rdo-ani"-->
+<!--                                                checked="">-->
+<!--                                            Other-->
+<!--                                        </label>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <button type="button" class="btn btn-primary">Deactivate Account</button>-->
+<!--                            </div>-->
+<!--                            <div class="account-setting deactivate-account">-->
+<!--                                <h5 class="f-w-600">Delete Account</h5>-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col">-->
+<!--                                        <label class="d-block mb-2" for="edo-ani3">-->
+<!--                                            <input class="radio_animated" id="edo-ani3" type="radio" name="rdo-ani1"-->
+<!--                                                checked="">-->
+<!--                                            No longer usable-->
+<!--                                        </label>-->
+<!--                                        <label class="d-block mb-2" for="edo-ani4">-->
+<!--                                            <input class="radio_animated" id="edo-ani4" type="radio"-->
+<!--                                                name="rdo-ani1">-->
+<!--                                            Want to switch on other account-->
+<!--                                        </label>-->
+<!--                                        <label class="d-block mb-0" for="edo-ani5">-->
+<!--                                            <input class="radio_animated" id="edo-ani5" type="radio" name="rdo-ani1"-->
+<!--                                                checked="">-->
+<!--                                            Other-->
+<!--                                        </label>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <button type="button" class="btn btn-primary">Delete Account</button>-->
+<!--                            </div>-->
+<!--                          </ng-template>-->
+<!--                        </li>-->
                     </ul>
                     <div [ngbNavOutlet]="nav" class="mt-2"></div>
 

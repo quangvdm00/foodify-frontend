@@ -3,6 +3,7 @@ import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NgbdSortableHeader, SortEvent } from 'src/app/shared/directives/NgbdSortableHeader';
 import { TableService } from 'src/app/shared/service/table.service';
+import { UserService } from 'src/app/shared/service/user.service';
 import { UserListDB, USERLISTDB } from 'src/app/shared/tables/list-users';
 
 @Component({
@@ -13,33 +14,37 @@ import { UserListDB, USERLISTDB } from 'src/app/shared/tables/list-users';
 })
 export class ListUserComponent implements OnInit {
   public user_list = []
-
   public tableItem$: Observable<UserListDB[]>;
   public searchText;
   total$: Observable<number>;
 
-  constructor(public service: TableService) {
-    this.tableItem$ = service.tableItem$;
-    this.total$ = service.total$;
-    this.service.setUserData(USERLISTDB)
+  users = [];
+  
+
+  //Pagination Properties
+  thePageNumber = 1;
+  thePageSize = 10;
+  theTotalElements = 0;
+
+  constructor(public service: TableService,
+              private userService: UserService) {}
+
+
+  ngOnInit(): void {
+    this.listUser()
   }
 
-  @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
-
-  onSort({ column, direction }: SortEvent) {
-    // resetting other headers
-    this.headers.forEach((header) => {
-      if (header.sortable !== column) {
-        header.direction = '';
-      }
-    });
-
-    this.service.sortColumn = column;
-    this.service.sortDirection = direction;
-
+  listUser() {
+    this.userService.getUsersPagination(this.thePageNumber - 1, this.thePageSize).subscribe(this.processResult())
   }
 
-  ngOnInit() {
+  processResult() {
+    return (data: any) => {
+      this.users = data.users;
+      this.thePageNumber = data.page.pageNo + 1;
+      this.thePageSize = data.page.pageSize;
+      this.theTotalElements = data.page.totalElements;
+    }
   }
 
 }

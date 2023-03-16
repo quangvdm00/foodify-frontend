@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NavService } from '../../service/nav.service';
 import { trigger, transition, useAnimation } from '@angular/animations';
 import {  fadeIn } from 'ng-animate';
+import {ChangeDetectorRef } from '@angular/core'
+
 
 @Component({
   selector: 'app-content-layout',
@@ -20,7 +22,7 @@ export class ContentLayoutComponent implements OnInit {
   public layoutType: string = 'RTL';
   public layoutClass: boolean = false;
 
-  constructor(public navServices: NavService) { }
+  constructor(public navServices: NavService, private cd: ChangeDetectorRef) { }
 
   public getRouterOutletState(outlet) {
     return outlet.isActivated ? outlet.activatedRoute : '';
@@ -42,6 +44,8 @@ export class ContentLayoutComponent implements OnInit {
     }
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.cd.detectChanges()
+   }
 
 }

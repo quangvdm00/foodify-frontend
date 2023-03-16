@@ -98,15 +98,15 @@ export class TableService {
 
         // 1. sort
         let tableItem = sort(this.userData, sortColumn, sortDirection);
-        console.log("tableItem", tableItem);
+        // console.log("tableItem", tableItem);
 
         // 2. filter
-        const total = tableItem.length;
+        const total = tableItem?.length;
 
         tableItem = tableItem
-            .map((item, i) => ({ id: i + 1, ...item }))
-            .slice((page - 1) * pageSize, (page - 1) * pageSize + pageSize);
-        console.log("total ", tableItem);
+            ?.map((item, i) => ({ id: i + 1, ...item }))
+            ?.slice((page - 1) * pageSize, (page - 1) * pageSize + pageSize);
+        // console.log("total ", tableItem);
         return of({ tableItem, total });
     }
 

@@ -31,6 +31,6 @@ import { NgbdSortableHeader } from './directives/NgbdSortableHeader';
     RouterModule
   ],
   providers: [NavService, TableService, WINDOW_PROVIDERS],
-  exports: [FeatherIconsComponent, ToggleFullscreenDirective,NgbdSortableHeader]
+  exports: [FeatherIconsComponent, ToggleFullscreenDirective, NgbdSortableHeader]
 })
 export class SharedModule { }

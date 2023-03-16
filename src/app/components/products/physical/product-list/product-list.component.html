@@ -7,19 +7,17 @@
                         <div class="lable-block"><span class="lable3" *ngIf="product.tag == 'new'">new</span> <span
                                 class="lable4" *ngIf="product.sale == 'on sale'">on sale</span></div>
                         <div class="front">
-                            <a href="javascript:void(0)"><img [src]="[product.img]"
-                                                              class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                            <a href="javascript:void(0)"><img [src]="[product.images[0].imageUrl]"
+                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
                             <div class="product-hover">
                                 <ul>
                                     <li>
-                                        <button
-                                                class="btn" type="button" data-original-title="" title=""><i
+                                        <button class="btn" type="button" data-original-title="" title=""><i
                                                 class="icon-pencil-alt"></i></button>
                                     </li>
                                     <li>
-                                        <button
-                                                class="btn" type="button" data-toggle="modal"
-                                                data-target="#exampleModalCenter" data-original-title="" title=""><i
+                                        <button class="btn" type="button" data-toggle="modal"
+                                            data-target="#exampleModalCenter" data-original-title="" title=""><i
                                                 class="icon-trash"></i></button>
                                     </li>
                                 </ul>
@@ -30,10 +28,10 @@
                         <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
                                 class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
                         <a href="javascript:void(0)">
-                            <h6>{{product._name}}</h6>
+                            <h6>{{product.name}}</h6>
                         </a>
-                        <h4>{{product._discount}}
-                            <del>{{product._price}}</del>
+                        <h4>{{product.cost - product.cost * product.discountPercent / 100}}
+                            <del *ngIf="product.discountPercent > 0">{{product.cost}}</del>
                         </h4>
                         <!--                        <ul class="color-variant">-->
                         <!--                            <li class="bg-light0"></li>-->
@@ -45,4 +43,9 @@
             </div>
         </div>
     </div>
+</div>
+<div class="d-flex justify-content-center p-2">
+    <ngb-pagination [collectionSize]="theTotalElements" [(page)]="thePageNumber" [pageSize]="thePageSize" [maxSize]="5"
+        [rotate]="true" [boundaryLinks]="true" (pageChange)="listProduct()">
+    </ngb-pagination>
 </div>

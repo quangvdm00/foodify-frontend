@@ -12,6 +12,6 @@ export class Product {
     reviewCount: number;
     shopId: number;
     images: string[];
-    categoryIds: number[];
+    categoryNames: string[];
 
 }

@@ -69,14 +69,39 @@
                                         <div class="col-xl-3 col-sm-4">
                                             <label for="validationCustom03" class="mb-0">Loại sản phẩm</label>
                                         </div>
-                                        <div class="col-xl-8 col-sm-7">
+
+                                        <div class="col-xl-8 col-sm-7" formArrayName="categories">
+                                            <div *ngFor="let item of categories.controls; let i = index">
+                                                <div formGroupName="{{i}}">
+                                                    <input class="form-control" id="validationCustom03"
+                                                        formControlName="categoryName" required="">
+                                                    <div
+                                                        *ngIf="categories.controls[i].get('categoryName').invalid &&
+                                                        (categories.controls[i].get('categoryName').dirty || categories.controls[i].get('categoryName').touched)">
+                                                        <div
+                                                            *ngIf="categories.controls[i].get('categoryName').errors.required">
+                                                            Category Name is required
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-primary me-1"
+                                                (click)="addNewCategory()">
+                                                Thêm loại
+                                            </button>
+                                        </div>
+
+
+
+                                        <!-- <div class="col-xl-8 col-sm-7">
                                             <input class="form-control" id="validationCustom03"
                                                 [formControl]="productForm.controls['category']" required="">
                                             <div *ngIf="productForm.controls.category.touched && productForm.controls.category.errors?.required"
                                                 class="text text-danger">
                                                 Loại sản phẩm không được bỏ trống.
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <!--                  <div class="form-group row">-->
                                     <!--                    <div class="col-xl-3 col-sm-4">-->

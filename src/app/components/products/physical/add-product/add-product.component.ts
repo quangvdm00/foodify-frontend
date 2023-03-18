@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { ChangeEvent } from "@ckeditor/ckeditor5-angular";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
@@ -19,11 +19,11 @@ export class AddProductComponent implements OnInit {
     public productForm: UntypedFormGroup;
     public Editor = ClassicEditor;
 
-    @ViewChild('ckEditor') ckEditor: any;
+    // @ViewChild('ckEditor') ckEditor: any;
 
     description: string = '';
-
     message: string;
+    items!: FormArray;
 
     constructor(
         private fb: UntypedFormBuilder,
@@ -33,11 +33,12 @@ export class AddProductComponent implements OnInit {
             price: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
             category: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
             shopId: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-            categories: this.fb.array([])
+            categories: new FormArray([])
         });
     }
 
     onAddNewProduct() {
+        const categoryNames = this.items.controls.map(control => control.get('categoryName').value);
         const product = new Product();
         product.id = 1;
         product.name = this.productName;
@@ -48,15 +49,25 @@ export class AddProductComponent implements OnInit {
         product.averageRating = 0;
         product.reviewCount = 0;
         product.shopId = this.productShopId;
-        product.categoryIds = this.productCategory;
+        product.categoryNames = categoryNames;
         console.log(product);
-        console.log(this.productCategories);
 
         // this.productService.addProduct(product).subscribe(
         //     result => console.log(result),
         //     error => console.error(error)
         // );
         this.productForm.reset();
+    }
+
+    addNewCategory() {
+        this.items = this.productForm.get('categories') as FormArray;
+        this.items.push(this.generateNewCategory());
+    }
+
+    generateNewCategory(): FormGroup {
+        return new FormGroup({
+            categoryName: new FormControl('', Validators.required)
+        });
     }
 
     onChange({ editor }: ChangeEvent) {
@@ -79,10 +90,13 @@ export class AddProductComponent implements OnInit {
 
     get productShopId() { return this.productForm.get('shopId').value; }
 
-    get productCategories() {
-        return this.productForm.controls["categories"] as FormArray;
+    get categories() {
+        return this.productForm.get('categories') as FormArray;
     }
 
+    ngOnInit() {
+        this.addNewCategory();
+    }
 
     // // FileUpload
     // readUrl(event: any, i) {
@@ -120,18 +134,5 @@ export class AddProductComponent implements OnInit {
     //     this.modalRef.hide();
     // }
 
-    ngOnInit() {
-    }
 
-    addCategory() {
-        const categoryForm = this.fb.group({
-            categoryName: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]]
-        })
-
-        this.productCategories.push(categoryForm);
-    }
-
-    deleteCategory(categoryIndex: number) {
-        this.productCategories.removeAt(categoryIndex);
-    }
 }

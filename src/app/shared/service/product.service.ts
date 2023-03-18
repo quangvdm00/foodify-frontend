@@ -16,6 +16,7 @@ export class ProductService {
     }
 
     addProduct(product: Product) {
+        console.log("add Product Service Called")
         return this.httpClient.post<Product>(this.baseUrl, product);
     }
 

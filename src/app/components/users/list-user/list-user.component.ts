@@ -32,6 +32,8 @@ export class ListUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.listUser()
+    console.log(this.users);
+    
   }
 
   listUser() {

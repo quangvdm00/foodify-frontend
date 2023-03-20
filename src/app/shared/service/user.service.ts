@@ -17,6 +17,11 @@ export class UserService {
     return this.httpClient.get<GetResponseUsers>(this.userUrl + `?pageNo=${thePage}&pageSize=${thePageSize}`)
   }
 
+  createUser(createUser: User): Observable<User> {
+    return this.httpClient.post<User>(this.userUrl, createUser)
+  }
+
+  
 }
 
 interface GetResponseUsers {

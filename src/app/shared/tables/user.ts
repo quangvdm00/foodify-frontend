@@ -1,3 +1,4 @@
+import { Address } from "./address";
 import { Product } from "./Product";
 
 export class User {
@@ -10,6 +11,8 @@ export class User {
     private createdTime: string
     private identifiedCode: string
     private defaultAddress: null
+    private addresses: Address[]
     private products: Product[]
-    private locked: boolean
+    private isLocked: boolean
+    private roleName: string
 }

@@ -2,11 +2,11 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header">
-            <h5>User Details</h5>
+            <h5>Chi tiết người dùng</h5>
         </div>
         <div class="card-body">
             <div class="btn-popup pull-right">
-                <a class="btn btn-primary" [routerLink]="'/users/create-user'">Create User</a>
+                <a class="btn btn-primary" [routerLink]="'/users/create-user'">Tạo người dùng</a>
             </div>
             <div id="batchDelete" class="category-table custom-datatable transcation-datatable user-image">
                 <div class="table-responsive">
@@ -19,6 +19,7 @@
                                 <th scope="col" sortable="email">Email</th>
                                 <th scope="col" sortable="dateOfBirth">Ngày sinh</th>
                                 <th scope="col" sortable="phoneNumber">Số điện thoại</th>
+                                <!-- <th scope="col" sortable="address">Địa chỉ</th> -->
                                 <th scope="col" sortable="isLocked">Trạng thái</th>
                             </tr>
                         </thead>
@@ -35,6 +36,7 @@
                                 <td>{{user.email}}</td>
                                 <td>{{user.dateOfBirth}}</td>
                                 <td>{{user.phoneNumber}}</td>
+                                <!-- <td>{{user.addresses}}</td> -->
                                 <td>{{user.locked}}</td>
                             </tr>
                         </tbody>

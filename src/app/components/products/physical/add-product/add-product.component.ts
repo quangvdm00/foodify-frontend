@@ -27,7 +27,8 @@ export class AddProductComponent implements OnInit {
 
     constructor(
         private fb: UntypedFormBuilder,
-        private productService: ProductService) {
+        private productService: ProductService,
+        private modalService: BsModalService) {
         this.productForm = this.fb.group({
             name: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
             price: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
@@ -38,7 +39,8 @@ export class AddProductComponent implements OnInit {
     }
 
     onAddNewProduct() {
-        const categoryNames = this.items.controls.map(control => control.get('categoryName').value);
+        const categoryNames: string[] = this.items.controls.map(control => control.get('categoryName').value);
+        console.log(categoryNames);
         const product = new Product();
         product.id = 1;
         product.name = this.productName;
@@ -50,13 +52,12 @@ export class AddProductComponent implements OnInit {
         product.reviewCount = 0;
         product.shopId = this.productShopId;
         product.categoryNames = categoryNames;
-        console.log(product);
 
-        // this.productService.addProduct(product).subscribe(
-        //     result => console.log(result),
-        //     error => console.error(error)
-        // );
-        this.productForm.reset();
+        this.productService.addProduct(product).subscribe(
+            result => console.log(result),
+            error => console.error(error)
+        );
+        // this.productForm.reset();
     }
 
     addNewCategory() {
@@ -68,6 +69,12 @@ export class AddProductComponent implements OnInit {
         return new FormGroup({
             categoryName: new FormControl('', Validators.required)
         });
+    }
+
+    deleteCategory(index: number) {
+        this.items = this.productForm.get('categories') as FormArray;
+        this.items.removeAt(index);
+
     }
 
     onChange({ editor }: ChangeEvent) {
@@ -116,23 +123,26 @@ export class AddProductComponent implements OnInit {
     //     };
     // }
 
-    // openModal(template: TemplateRef<any>) {
-    //     this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
-    // }
+    //Modal
+    modalRef: BsModalRef;
 
-    // confirm(): void {
-    //     this.message = 'Confirmed!';
-    //     this.modalRef.hide();
-    //     this.productForm.reset();
+    openModal(template: TemplateRef<any>) {
+        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+    }
 
-    //     // this.ckEditor.instance.setData('');
-    //     // this.ckEditor.setData('');
-    // }
+    confirm(): void {
+        this.message = 'Confirmed!';
+        this.modalRef.hide();
+        this.onAddNewProduct();
+        this.productForm.reset();
 
-    // decline(): void {
-    //     this.message = 'Declined!';
-    //     this.modalRef.hide();
-    // }
+        // this.ckEditor.instance.setData('');
+        // this.ckEditor.setData('');
+    }
 
+    decline(): void {
+        this.message = 'Declined!';
+        this.modalRef.hide();
+    }
 
 }

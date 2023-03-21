@@ -16,13 +16,20 @@ export class ProductService {
     }
 
     addProduct(product: Product) {
-        console.log("add Product Service Called")
-        return this.httpClient.post<Product>(this.baseUrl, product);
+        return this.httpClient.post(this.baseUrl, product);
     }
 
     getProductsPagination(thePage: number, thePageSize: number): Observable<GetResponseProducts> {
         console.log(`getting jwt-token from Storage`, localStorage.getItem('jwt-token'));
         return this.httpClient.get<GetResponseProducts>(this.baseUrl + `?pageNo=${thePage}&pageSize=${thePageSize}`);
+    }
+
+    getProductById(productId: number): Observable<Product> {
+        return this.httpClient.get<Product>(this.baseUrl + `/${productId}`);
+    }
+
+    deleteProduct(productId: number) {
+        return this.httpClient.delete(this.baseUrl + `/${productId}`);
     }
 }
 

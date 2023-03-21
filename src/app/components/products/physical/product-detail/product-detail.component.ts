@@ -1,7 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
-import {Image} from '@ks89/angular-modal-gallery';
-import {NgbRatingConfig} from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit } from '@angular/core';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { Image } from '@ks89/angular-modal-gallery';
+import { NgbRatingConfig } from '@ng-bootstrap/ng-bootstrap';
+import { Product } from 'src/app/shared/tables/Product';
+import { ProductService } from 'src/app/shared/service/product.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-product-detail',
@@ -10,23 +13,30 @@ import {NgbRatingConfig} from '@ng-bootstrap/ng-bootstrap';
     providers: [NgbRatingConfig]
 })
 export class ProductDetailComponent implements OnInit {
+    // id: number = this.route.snapshot.paramMap.get('id');
+    product: Product
+    imageUrls: string[];
+
+
     public closeResult: string;
     public counter: number = 1;
     currentRate = 8;
 
     public imagesRect: Image[] = [
-        new Image(0, {img: 'assets/images/pro3/2.jpg'}, {img: 'assets/images/pro3/1.jpg'}),
-        new Image(1, {img: 'assets/images/pro3/27.jpg'}, {img: 'assets/images/pro3/27.jpg'}),
-        new Image(2, {img: 'assets/images/pro3/1.jpg'}, {img: 'assets/images/pro3/1.jpg'}),
-        new Image(3, {img: 'assets/images/pro3/2.jpg'}, {img: 'assets/images/pro3/2.jpg'})]
+        new Image(0, { img: 'assets/images/pro3/2.jpg' }, { img: 'assets/images/pro3/1.jpg' }),
+        new Image(1, { img: 'assets/images/pro3/27.jpg' }, { img: 'assets/images/pro3/27.jpg' }),
+        new Image(2, { img: 'assets/images/pro3/1.jpg' }, { img: 'assets/images/pro3/1.jpg' }),
+        new Image(3, { img: 'assets/images/pro3/2.jpg' }, { img: 'assets/images/pro3/2.jpg' })]
 
-    constructor(private modalService: NgbModal, config: NgbRatingConfig) {
+    constructor(private modalService: NgbModal, config: NgbRatingConfig,
+        private productService: ProductService,
+        private route: ActivatedRoute) {
         config.max = 5;
         config.readonly = false;
     }
 
     open(content) {
-        this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+        this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
             this.closeResult = `Closed with: ${result}`;
         }, (reason) => {
             this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
@@ -51,7 +61,12 @@ export class ProductDetailComponent implements OnInit {
         this.counter -= 1;
     }
 
+    handleProductDetails() {
+        const productId = +this.route.snapshot.paramMap.get('id')!;
+        this.productService.getProductById(productId).subscribe(data => this.product = data);
+    }
     ngOnInit() {
+        this.route.paramMap.subscribe(() => this.handleProductDetails());
     }
 
 }

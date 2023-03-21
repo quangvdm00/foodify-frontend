@@ -1,4 +1,5 @@
 import { Shop } from "../service/Shop";
+import { Category } from "./Category";
 
 export class Product {
 
@@ -7,11 +8,14 @@ export class Product {
     description: string;
     isEnabled: boolean;
     discountPercent: number;
-    cost: bigint;
+    cost: number;
     averageRating: number;
     reviewCount: number;
-    shopId: number;
     images: string[];
-    categoryNames: string[];
 
+    categoryNames: string[];
+    categories: Category[];
+
+    shopId: number;
+    shop: Shop;
 }

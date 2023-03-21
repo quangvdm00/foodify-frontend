@@ -9,7 +9,8 @@ import { DigitalSubCategoryComponent } from './digital/digital-sub-category/digi
 import { DigitalListComponent } from './digital/digital-list/digital-list.component';
 import { DigitalAddComponent } from './digital/digital-add/digital-add.component';
 import { ProductDetailComponent } from './physical/product-detail/product-detail.component';
-import {AddProductCategoryComponent} from "./physical/add-product-category/add-product-category.component";
+import { AddProductCategoryComponent } from "./physical/add-product-category/add-product-category.component";
+import { EditProductComponent } from './physical/edit-product/edit-product.component';
 
 const routes: Routes = [
   {
@@ -35,24 +36,24 @@ const routes: Routes = [
         path: 'product-list',
         component: ProductListComponent,
         data: {
-          title: "Product List",
-          breadcrumb: "Product List"
+          title: "Danh sách sản phẩm",
+          breadcrumb: "Danh sách sản phẩm"
         }
       },
       {
-        path: 'product-detail',
+        path: 'product-detail/:id',
         component: ProductDetailComponent,
         data: {
-          title: "Product Detail",
-          breadcrumb: "Product Detail"
+          title: "Chi tiết sản phẩm",
+          breadcrumb: "Chi tiết sản phẩm"
         }
       },
       {
         path: 'add-product',
         component: AddProductComponent,
         data: {
-          title: "Add Products",
-          breadcrumb: "Add Product"
+          title: "Thêm sản phẩm",
+          breadcrumb: "Thêm sản phẩm"
         }
       },
       {
@@ -63,6 +64,14 @@ const routes: Routes = [
           breadcrumb: "Add Product Category"
         }
       },
+      {
+        path: 'edit-product/:id',
+        component: EditProductComponent,
+        data: {
+          title: "Chỉnh sửa sản phẩm",
+          breadcrumb: "Chỉnh sửa sản phẩm"
+        }
+      }
       // {
       //   path: 'digital/digital-category',
       //   component: DigitalCategoryComponent,

@@ -15,7 +15,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class EditProductComponent {
   public adminImg = environment.adminImg;
-  public productForm: UntypedFormGroup;
+  public editProductForm: UntypedFormGroup;
   public Editor = ClassicEditor;
 
   product: Product;
@@ -28,7 +28,7 @@ export class EditProductComponent {
     private productService: ProductService,
     private modalService: BsModalService,
     private route: ActivatedRoute) {
-    this.productForm = this.fb.group({
+    this.editProductForm = this.fb.group({
       name: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
       price: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
       category: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
@@ -66,7 +66,7 @@ export class EditProductComponent {
   }
 
   addNewCategory() {
-    this.items = this.productForm.get('categories') as FormArray;
+    this.items = this.editProductForm.get('categories') as FormArray;
     this.items.push(this.generateNewCategory());
   }
 
@@ -77,7 +77,7 @@ export class EditProductComponent {
   }
 
   deleteCategory(index: number) {
-    this.items = this.productForm.get('categories') as FormArray;
+    this.items = this.editProductForm.get('categories') as FormArray;
     this.items.removeAt(index);
 
   }
@@ -90,25 +90,36 @@ export class EditProductComponent {
   }
 
   //Getter
-  get productName() { return this.productForm.get('name').value; }
+  get productName() { return this.editProductForm.get('name').value; }
 
   get productCategory() {
-    const numberStr: string = this.productForm.get('category').value;
+    const numberStr: string = this.editProductForm.get('category').value;
     const idArr: number[] = numberStr.split(",").map(Number);
     return idArr;
   }
 
-  get productPrice() { return this.productForm.get('price').value; }
+  get productPrice() { return this.editProductForm.get('price').value; }
 
-  get productShopId() { return this.productForm.get('shopId').value; }
+  get productShopId() { return this.editProductForm.get('shopId').value; }
 
   get categories() {
-    return this.productForm.get('categories') as FormArray;
+    return this.editProductForm.get('categories') as FormArray;
   }
 
   ngOnInit() {
     this.addNewCategory();
-    this.route.paramMap.subscribe(() => this.handleProductDetails());
+    const productId = +this.route.snapshot.paramMap.get('id')!;
+    this.productService.getProductById(productId).subscribe(
+      data => this.fillFormToUpdate(data)
+    )
+  }
+
+  fillFormToUpdate(response: Product) {
+    console.log(response)
+    this.editProductForm.patchValue({
+      id: response.id,
+      name: response.name
+    })
   }
 
   //Modal
@@ -122,7 +133,7 @@ export class EditProductComponent {
     this.message = 'Confirmed!';
     this.modalRef.hide();
     this.onAddNewProduct();
-    this.productForm.reset();
+    this.editProductForm.reset();
 
     // this.ckEditor.instance.setData('');
     // this.ckEditor.setData('');

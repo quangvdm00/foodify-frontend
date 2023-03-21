@@ -5,6 +5,7 @@ import { NgbdSortableHeader, SortEvent } from 'src/app/shared/directives/NgbdSor
 import { TableService } from 'src/app/shared/service/table.service';
 import { UserService } from 'src/app/shared/service/user.service';
 import { UserListDB, USERLISTDB } from 'src/app/shared/tables/list-users';
+import { User } from 'src/app/shared/tables/user';
 
 @Component({
   selector: 'app-list-user',
@@ -32,8 +33,6 @@ export class ListUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.listUser()
-    console.log(this.users);
-    
   }
 
   listUser() {

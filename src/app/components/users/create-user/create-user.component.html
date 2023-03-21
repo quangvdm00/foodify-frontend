@@ -19,11 +19,23 @@
                       <label for="validationCustom0"><span>*</span> Ảnh đại diện</label>
                     </div>
                     <div class="col-xl-8 col-md-7">
-                      <input class="input-image" formControlName="imageUrl" type="file" accept="image/*" (change)="onFileChange($event)"/>
-                      <img class="rounded-circle border border-danger" [src]="avatar" *ngIf="avatar"
-                           style="width: 160px; height: 160px; margin-left: 20px"
+                      <input
+                        class="input-image"
+                        formControlName="imageUrl"
+                        type="file"
+                        accept="image/*"
+                        (change)="onFileChange($event)"
                       />
-                      <div *ngIf="imageUrl?.invalid && (imageUrl?.dirty || imageUrl?.touched)" class="alert alert-danger mt-1">
+                      <img
+                        class="rounded-circle border border-danger"
+                        [src]="avatar"
+                        *ngIf="avatar"
+                        style="width: 160px; height: 160px; margin-left: 20px"
+                      />
+                      <div
+                        *ngIf="imageUrl?.invalid && (imageUrl?.dirty || imageUrl?.touched)"
+                        class="alert alert-danger mt-1"
+                      >
                         <div *ngIf="imageUrl?.errors?.['required']">Vui lòng chọn ảnh đại diện.</div>
                       </div>
                     </div>
@@ -35,7 +47,10 @@
                     </div>
                     <div class="col-xl-8 col-md-7">
                       <input formControlName="fullName" class="form-control" type="text" placeholder="Họ và tên" />
-                      <div *ngIf="fullName?.invalid && (fullName?.dirty || fullName?.touched)" class="alert alert-danger mt-1">
+                      <div
+                        *ngIf="fullName?.invalid && (fullName?.dirty || fullName?.touched)"
+                        class="alert alert-danger mt-1"
+                      >
                         <div *ngIf="fullName?.errors?.['required']">Vui lòng không được bỏ trống tên.</div>
                         <div *ngIf="fullName?.errors?.['minlength']">Tên phải có ít nhất 2 kí tự</div>
                       </div>
@@ -61,7 +76,10 @@
                     </div>
                     <div class="col-xl-8 col-md-7">
                       <input formControlName="dateOfBirth" class="form-control" type="date" />
-                      <div *ngIf="dateOfBirth?.invalid && (dateOfBirth?.dirty || dateOfBirth?.touched)" class="alert alert-danger mt-1">
+                      <div
+                        *ngIf="dateOfBirth?.invalid && (dateOfBirth?.dirty || dateOfBirth?.touched)"
+                        class="alert alert-danger mt-1"
+                      >
                         <div *ngIf="dateOfBirth?.errors?.['required']">Vui lòng không được bỏ trống ngày sinh.</div>
                       </div>
                     </div>
@@ -78,7 +96,10 @@
                         type="tel"
                         placeholder="Số điện thoại"
                       />
-                      <div *ngIf="phoneNumber?.invalid && (phoneNumber?.dirty || phoneNumber?.touched)" class="alert alert-danger mt-1">
+                      <div
+                        *ngIf="phoneNumber?.invalid && (phoneNumber?.dirty || phoneNumber?.touched)"
+                        class="alert alert-danger mt-1"
+                      >
                         <div *ngIf="phoneNumber?.errors?.['required']">Vui lòng không được bỏ trống số điện thoại.</div>
                         <div *ngIf="phoneNumber?.errors?.['pattern']">Số điện thoại phải có tối đa 10 số</div>
                       </div>
@@ -96,9 +117,12 @@
                         type="number"
                         placeholder="Số CMNND/CCCD"
                       />
-                      <div *ngIf="identifiedCode?.invalid && (identifiedCode?.dirty || identifiedCode?.touched)" class="alert alert-danger mt-1">
+                      <div
+                        *ngIf="identifiedCode?.invalid && (identifiedCode?.dirty || identifiedCode?.touched)"
+                        class="alert alert-danger mt-1"
+                      >
                         <div *ngIf="identifiedCode?.errors?.['required']">Vui lòng không được bỏ trống CMND/CCCD.</div>
-                        <div *ngIf="identifiedCode?.errors?.['pattern']">Số CMND/CCCD phải có tối đa 9 số</div>
+                        <div *ngIf="identifiedCode?.errors?.['pattern']">CMND phải có tối đa 9 số hoặc CCCD phải có tối đa 12 số</div>
                       </div>
                     </div>
                   </div>
@@ -107,13 +131,28 @@
                     <div class="col-xl-3 col-md-4">
                       <label for="validationCustom2"><span>*</span>Địa chỉ</label>
                     </div>
-                    <div class="col-xl-8 col-md-7" formArrayName="addresses">
-                      <div class="address-form" *ngFor="let address of addUserForm.get('addresses')['controls']; let i = index" [formGroupName]="i">
+                    <div class="col-xl-8 col-md-7" formArrayName="addressDto">
+                      <div
+                        class="address-form"
+                        *ngFor="let address of addUserForm.get('addressDto')['controls']; let i = index"
+                        [formGroupName]="i"
+                      >
                         <div class="address-cover">
                           <div class="address-holder">
                             <div class="address-street">
-                              <input formControlName="address" class="form-control address-input" type="text" placeholder="Địa chỉ"/>
-                              <div *ngIf=" address.get('address')?.invalid && (address.get('address')?.dirty || address.get('address')?.touched)" class="alert alert-danger mt-1">
+                              <input
+                                formControlName="address"
+                                class="form-control address-input"
+                                type="text"
+                                placeholder="Địa chỉ"
+                              />
+                              <div
+                                *ngIf="
+                                  address.get('address')?.invalid &&
+                                  (address.get('address')?.dirty || address.get('address')?.touched)
+                                "
+                                class="alert alert-danger mt-1"
+                              >
                                 <div *ngIf="address.get('address')?.errors?.['required']">
                                   Vui lòng không được bỏ trống địa chỉ.
                                 </div>
@@ -127,18 +166,30 @@
                                     {{ district.name }}
                                   </option>
                                 </select>
-                                <div *ngIf="address.get('district')?.invalid && (address.get('district')?.dirty || address.get('district')?.touched)" class="alert alert-danger mt-1">
+                                <div
+                                  *ngIf="
+                                    address.get('district')?.invalid &&
+                                    (address.get('district')?.dirty || address.get('district')?.touched)
+                                  "
+                                  class="alert alert-danger mt-1"
+                                >
                                   <div *ngIf="address.get('district')?.errors?.['required']">Vui lòng chọn Quận.</div>
                                 </div>
                               </div>
                               <div class="location-ward">
                                 <select formControlName="ward" class="ward" id="ward-select">
                                   <option value="">-- Chọn phường --</option>
-                                  <option *ngFor="let ward of getWards(i)" [value]="ward.id">
+                                  <option *ngFor="let ward of getWards()" [value]="ward.id" >
                                     {{ ward.name }}
                                   </option>
                                 </select>
-                                <div *ngIf="address.get('ward')?.invalid && (address.get('ward')?.dirty || address.get('ward')?.touched)" class="alert alert-danger mt-1">
+                                <div
+                                  *ngIf="
+                                    address.get('ward')?.invalid &&
+                                    (address.get('ward')?.dirty || address.get('ward')?.touched)
+                                  "
+                                  class="alert alert-danger mt-1"
+                                >
                                   <div *ngIf="address.get('ward')?.errors?.['required']">Vui lòng chọn Phường.</div>
                                 </div>
                               </div>
@@ -155,7 +206,12 @@
                     </div>
                     <div class="col-xl-8 col-md-7">
                       <div class="form-control input-password-holder">
-                        <input formControlName="password" class="input-password" type="{{ showPassword ? 'text' : 'password' }}" placeholder="Mật khẩu" />
+                        <input
+                          formControlName="password"
+                          class="input-password"
+                          type="{{ showPassword ? 'text' : 'password' }}"
+                          placeholder="Mật khẩu"
+                        />
                         <span class="icon-holder-eye" (click)="showPassword = !showPassword">
                           <i class="{{ showPassword ? 'fa fa-eye-slash' : 'fa fa-eye' }}"></i>
                         </span>
@@ -181,7 +237,13 @@
                     </div>
                     <div class="col-xl-8 col-md-7">
                       <div class="form-control input-password-holder">
-                        <input formControlName="confirmPassword" class="input-password" type="{{ showPassword ? 'text' : 'password' }}" #pwc placeholder="Xác nhận mật khẩu"/>
+                        <input
+                          formControlName="confirmPassword"
+                          class="input-password"
+                          type="{{ showPassword ? 'text' : 'password' }}"
+                          #pwc
+                          placeholder="Xác nhận mật khẩu"
+                        />
                         <span class="icon-holder-eye" (click)="showPassword = !showPassword">
                           <i class="{{ showPassword ? 'fa fa-eye-slash' : 'fa fa-eye' }}"></i>
                         </span>
@@ -204,7 +266,7 @@
                     </div>
                   </div>
                   <div class="pull-right">
-                    <button type="submit" class="btn btn-primary" >Tạo tài khoản</button>
+                    <button type="submit" class="btn btn-primary">Tạo tài khoản</button>
                   </div>
                 </form>
               </ng-template>

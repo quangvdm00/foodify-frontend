@@ -31,10 +31,28 @@ export class EditProductComponent {
     this.editProductForm = this.fb.group({
       name: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
       price: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-      category: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
       shopId: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
       categories: new FormArray([])
     });
+  }
+
+  ngOnInit() {
+    this.addNewCategory();
+    const productId = +this.route.snapshot.paramMap.get('id')!;
+    this.productService.getProductById(productId).subscribe(
+      data => this.fillFormToUpdate(data)
+    )
+  }
+
+  fillFormToUpdate(response: Product) {
+    console.log(response)
+    this.editProductForm.patchValue({
+      id: response.id,
+      name: response.name,
+      price: response.cost,
+      shopId: response.shop.id
+    })
+    this.description = response.description;
   }
 
   onAddNewProduct() {
@@ -106,21 +124,7 @@ export class EditProductComponent {
     return this.editProductForm.get('categories') as FormArray;
   }
 
-  ngOnInit() {
-    this.addNewCategory();
-    const productId = +this.route.snapshot.paramMap.get('id')!;
-    this.productService.getProductById(productId).subscribe(
-      data => this.fillFormToUpdate(data)
-    )
-  }
 
-  fillFormToUpdate(response: Product) {
-    console.log(response)
-    this.editProductForm.patchValue({
-      id: response.id,
-      name: response.name
-    })
-  }
 
   //Modal
   modalRef: BsModalRef;

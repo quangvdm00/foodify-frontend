@@ -126,11 +126,16 @@
 
                                     <!-- Product Description -->
                                     <div class="form-group row">
-                                        <div class="col-xl-3 col-sm-4"><label>Mô tả sản phẩm</label></div>
+                                        <div class="col-xl-3 col-sm-4">
+                                            <label for="validationCustom02" class="mb-0">Mô tả sản phẩm</label>
+                                        </div>
                                         <div class="col-xl-8 col-sm-7">
-                                            <div class="ps-0 description-sm">
-                                                <ckeditor #ckEditor [editor]="Editor" [data]="description"
-                                                    (change)="onChange($event)"></ckeditor>
+                                            <textarea class="form-control" id="validationCustom02" type="number"
+                                                [formControl]="productForm.controls['descriptions']"
+                                                required=""></textarea>
+                                            <div *ngIf="productForm.controls.descriptions.touched && productForm.controls.descriptions.errors?.required"
+                                                class="text text-danger">
+                                                Mô tả không được bỏ trống.
                                             </div>
                                         </div>
                                     </div>
@@ -164,9 +169,18 @@
                                         <ng-template #add_product>
                                             <div class="modal-body text-center">
                                                 <p>Bạn chắc chắc muốn thêm sản phẩm này chứ ?</p>
-                                                <button type="button" class="btn btn-default" (click)="confirm()">Có
+                                                <button type="button" class="btn btn-default"
+                                                    (click)="confirm(complete)">Có
                                                 </button>
                                                 <button type="button" class="btn btn-primary" (click)="decline()">Không
+                                                </button>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template #complete>
+                                            <div class="modal-body text-center">
+                                                <p>Thêm sản phẩm thành công</p>
+                                                <button type="button" class="btn btn-primary" (click)="completed()">Tiếp
+                                                    tục
                                                 </button>
                                             </div>
                                         </ng-template>

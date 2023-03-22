@@ -6,6 +6,7 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { Product } from "../../../../shared/tables/Product";
 import { Category } from "../../../../shared/tables/Category";
 import { ProductService } from 'src/app/shared/service/product.service';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -15,9 +16,26 @@ import { ProductService } from 'src/app/shared/service/product.service';
     providers: []
 })
 export class AddProductComponent implements OnInit {
-    public bigImageUrl = "https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/330279460_921995832174858_116554411020824696_n.jpg?alt=media&token=2e79076a-75f6-4175-9b01-3e22bf3134cb";
+    public adminImage = environment.adminImg;
     public productForm: UntypedFormGroup;
     public Editor = ClassicEditor;
+
+    public url = [{
+        img: "assets/images/user.png",
+    },
+    {
+        img: "assets/images/user.png",
+    },
+    {
+        img: "assets/images/user.png",
+    },
+    {
+        img: "assets/images/user.png",
+    },
+    {
+        img: "assets/images/user.png",
+    }
+    ];
 
     // @ViewChild('ckEditor') ckEditor: any;
 
@@ -34,6 +52,7 @@ export class AddProductComponent implements OnInit {
             price: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
             category: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
             shopId: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
+            descriptions: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
             categories: new FormArray([])
         });
     }
@@ -44,7 +63,7 @@ export class AddProductComponent implements OnInit {
         const product = new Product();
         product.id = 1;
         product.name = this.productName;
-        product.description = this.description;
+        product.description = this.descriptions;
         product.isEnabled = true;
         product.discountPercent = 0;
         product.cost = this.productPrice;
@@ -77,13 +96,6 @@ export class AddProductComponent implements OnInit {
 
     }
 
-    onChange({ editor }: ChangeEvent) {
-        let data = editor.getData();
-        console.log(data)
-        // const data = EDITTORC.instances.Editor.document.getBody().getText();
-        this.description = data;
-    }
-
     //Getter
     get productName() { return this.productForm.get('name').value; }
 
@@ -101,27 +113,11 @@ export class AddProductComponent implements OnInit {
         return this.productForm.get('categories') as FormArray;
     }
 
+    get descriptions() { return this.productForm.get('descriptions').value }
+
     ngOnInit() {
         this.addNewCategory();
     }
-
-    // // FileUpload
-    // readUrl(event: any, i) {
-    //     if (event.target.files.length === 0) {
-    //         return;
-    //     }
-    //     // Image upload validation
-    //     var mimeType = event.target.files[0].type;
-    //     if (mimeType.match(/image\/*/) == null) {
-    //         return;
-    //     }
-    //     // Image upload
-    //     var reader = new FileReader();
-    //     reader.readAsDataURL(event.target.files[0]);
-    //     reader.onload = (_event) => {
-    //         this.url[i].img = reader.result.toString();
-    //     };
-    // }
 
     //Modal
     modalRef: BsModalRef;
@@ -130,19 +126,40 @@ export class AddProductComponent implements OnInit {
         this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
     }
 
-    confirm(): void {
+    confirm(template: TemplateRef<any>): void {
         this.message = 'Confirmed!';
         this.modalRef.hide();
         this.onAddNewProduct();
-        this.productForm.reset();
-
-        // this.ckEditor.instance.setData('');
-        // this.ckEditor.setData('');
+        this.modalRef = this.modalService.show(template, { class: 'modal-sm' })
     }
 
     decline(): void {
         this.message = 'Declined!';
         this.modalRef.hide();
+    }
+
+    completed(): void {
+        this.modalRef.hide();
+        this.productForm.reset();
+    }
+
+
+    // FileUpload
+    readUrl(event: any, i) {
+        if (event.target.files.length === 0) {
+            return;
+        }
+        // Image upload validation
+        var mimeType = event.target.files[0].type;
+        if (mimeType.match(/image\/*/) == null) {
+            return;
+        }
+        // Image upload
+        var reader = new FileReader();
+        reader.readAsDataURL(event.target.files[0]);
+        reader.onload = (_event) => {
+            this.url[i].img = reader.result.toString();
+        };
     }
 
 }

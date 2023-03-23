@@ -1,16 +1,16 @@
 import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
+import { AngularFireStorage } from "@angular/fire/compat/storage";
 import { FormGroup, FormBuilder, FormControl, Validators, UntypedFormGroup, FormArray } from "@angular/forms";
 import { Router } from "@angular/router";
-import { response } from "express";
+import { finalize } from "rxjs";
+import { Observable } from "rxjs-compat";
 import { Validation } from "src/app/constants/Validation";
-import { AddressService } from "src/app/shared/service/address.service";
 import { DistrictService } from "src/app/shared/service/district.service";
 import { UserService } from "src/app/shared/service/user.service";
 import { WardService } from "src/app/shared/service/ward.service";
 import { District } from "src/app/shared/tables/district";
 import { Ward } from "src/app/shared/tables/ward";
-import { environment } from "src/environments/environment";
 
 @Component({
   selector: "app-create-user",
@@ -21,20 +21,31 @@ export class CreateUserComponent implements OnInit {
   public permissionForm: UntypedFormGroup;
   public active = 1;
 
+  // form
   addUserForm: FormGroup;
+
+  // image
   avatar: string;
+
+  // file
+  downloadURL: Observable<string>;
+  imageFile: File;
+  imageLink;
+
+  // password
   showPassword = false;
+
+  // address
   districts: District[];
   wards: Ward[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
-    private httpClient: HttpClient,
     private router: Router,
     private userService: UserService,
     private districtService: DistrictService,
     private wardService: WardService,
-    private addressService: AddressService
+    private storage: AngularFireStorage
   ) {
     this.createPermissionForm();
   }
@@ -88,7 +99,7 @@ export class CreateUserComponent implements OnInit {
   get ward() {return this.addUserForm.get("addressDto")["controls"][3].get("ward");}
   get password() {return this.addUserForm.get("password");}
   get confirmPassword() {return this.addUserForm.get("confirmPassword");}
-  get isLocked() {return this.addUserForm.get("isLocked")}
+  get isLocked() {return this.addUserForm.get("isLocked");}
   get roleName() {return this.addUserForm.get("roleName");}
 
   // Set avatar image
@@ -103,6 +114,37 @@ export class CreateUserComponent implements OnInit {
         localStorage.setItem("image", this.avatar);
       };
     }
+    this.imageFile = event.target.files[0];
+  }
+
+  // Upload the image to firebase
+  uploadImage(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      let n = Date.now();
+      const filePath = `UserImages/${n}`;
+
+      const fileRef = this.storage.ref(filePath);
+      const task = this.storage.upload(`UserImages/${n}`, this.imageFile);
+      task
+        .snapshotChanges()
+        .pipe(
+          finalize(() => {
+            this.downloadURL = fileRef.getDownloadURL();
+            this.downloadURL.subscribe((url) => {
+              if (url) {
+                //return url here
+                this.imageLink = url;
+              }
+              resolve();
+            });
+          })
+        )
+        .subscribe((url) => {
+          // if (url) {
+          //     // console.log(url);
+          // }
+        });
+    });
   }
 
   // Check password and confirm password is match
@@ -126,19 +168,22 @@ export class CreateUserComponent implements OnInit {
     const districtId = this.addressDto.controls[index].get("district").value;
     const wardControl = this.addressDto.controls[index].get("ward");
 
-
     // If districtId == "2" (Hoang Sa) -> No Validate "Ward"
     if (districtId === "2") {
       wardControl.clearValidators();
       wardControl.updateValueAndValidity();
+      wardControl?.disable();
+      this.wards = [];
     } else {
       wardControl.setValidators([Validators.required]);
       wardControl.updateValueAndValidity();
+      wardControl?.enable();
     }
 
+    // Get API wards of each district
     this.wardService.getWardList(districtId).subscribe((data) => {
       this.addressDto.controls[index].get("ward").setValue("");
-      this.wards = data;
+      this.wards = districtId === "2" ? [] : data;
     });
   }
 
@@ -152,29 +197,43 @@ export class CreateUserComponent implements OnInit {
    */
   createUser() {
     let districtId = this.addressDto.controls[0].get("district").value;
-    let districtName = this.districts.filter(district => district.id == districtId)[0].name
+    let districtName = this.districts.filter((district) => district.id == districtId)[0]?.name;
 
     let wardId = this.addressDto.controls[0].get("ward").value;
-    let wardName = this.wards.filter(ward => ward.id == wardId)[0].name
-    
+    // let wardName = this.wards.filter((ward) => ward.id == wardId)[0].name;
+    let wardName = "";
+    if (districtId === "2") {
+      wardName = "";
+    } else {
+      wardName = this.wards.filter((ward) => ward.id == wardId)[0]?.name;
+    }
+
     console.log(this.addUserForm.value);
 
+    // if(districtId === '2' && wardId == null && wardName == null) {
+    //   wardName = ''
+    // }
+
+    // Check all validations addUserForm
     if (this.addUserForm.invalid) {
       this.addUserForm.markAllAsTouched();
       return;
     }
 
-    
     // addressDto of Form return array. So get first value to send req
     let valueForm = this.addUserForm.value;
     valueForm.addressDto = valueForm.addressDto[0];
-    valueForm.addressDto.district = districtName
-    valueForm.addressDto.ward = wardName
+    valueForm.addressDto.district = districtName;
+    valueForm.addressDto.ward = wardName;
 
-    this.userService.createUser(valueForm).subscribe({
-      next: (user) => {
-        this.router.navigate(["users/list-user"]);
-      },
-    });
+    // Send image to firebase and another datas to database
+    this.uploadImage().then(()=>{
+      this.userService.createUser(valueForm).subscribe({
+        next: (user) => {
+          this.router.navigate(["users/list-user"]);
+        },
+      });
+    })
   }
+
 }

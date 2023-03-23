@@ -27,7 +27,7 @@
                         (change)="onFileChange($event)"
                       />
                       <img
-                        class="rounded-circle border border-danger"
+                        class="rounded-circle border border-dark"
                         [src]="avatar"
                         *ngIf="avatar"
                         style="width: 160px; height: 160px; margin-left: 20px"
@@ -140,12 +140,7 @@
                         <div class="address-cover">
                           <div class="address-holder">
                             <div class="address-street">
-                              <input
-                                formControlName="address"
-                                class="form-control address-input"
-                                type="text"
-                                placeholder="Địa chỉ"
-                              />
+                              <input formControlName="address" class="form-control address-input" type="text" placeholder="Địa chỉ"/>
                               <div
                                 *ngIf="
                                   address.get('address')?.invalid &&
@@ -161,7 +156,7 @@
                             <div class="address-location">
                               <div class="location-district">
                                 <select formControlName="district" class="district" (change)="onDistrictChange(i)">
-                                  <option value="">-- Chọn quận --</option>
+                                  <option class="option-color" value="">-- Chọn quận --</option>
                                   <option *ngFor="let district of districts" [value]="district.id">
                                     {{ district.name }}
                                   </option>
@@ -177,8 +172,8 @@
                                 </div>
                               </div>
                               <div class="location-ward">
-                                <select formControlName="ward" class="ward" id="ward-select">
-                                  <option value="">-- Chọn phường --</option>
+                                <select formControlName="ward" class="ward" id="ward-select" [attr.disabled]="address.get('district').value === '2'">
+                                  <option class="text-muted" value="">-- Chọn phường --</option>
                                   <option *ngFor="let ward of getWards()" [value]="ward.id" >
                                     {{ ward.name }}
                                   </option>
@@ -213,7 +208,7 @@
                           placeholder="Mật khẩu"
                         />
                         <span class="icon-holder-eye" (click)="showPassword = !showPassword">
-                          <i class="{{ showPassword ? 'fa fa-eye-slash' : 'fa fa-eye' }}"></i>
+                          <i class="{{ showPassword ? 'fa fa-eye' : 'fa fa-eye-slash' }}"></i>
                         </span>
                       </div>
                       <div
@@ -245,7 +240,7 @@
                           placeholder="Xác nhận mật khẩu"
                         />
                         <span class="icon-holder-eye" (click)="showPassword = !showPassword">
-                          <i class="{{ showPassword ? 'fa fa-eye-slash' : 'fa fa-eye' }}"></i>
+                          <i class="{{ showPassword ? 'fa fa-eye' : 'fa fa-eye-slash' }}"></i>
                         </span>
                       </div>
                       <div

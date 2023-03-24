@@ -4,7 +4,9 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { rejects } from 'assert';
 import { url } from 'inspector';
 import { resolve } from 'path';
-import { finalize, Observable } from 'rxjs';
+import { finalize, mergeMap, Observable } from 'rxjs';
+import { switchMap } from 'rxjs-compat/operator/switchMap';
+import { ShipperService } from 'src/app/shared/service/shipper.service';
 import { UserService } from 'src/app/shared/service/user.service';
 import { Shipper } from 'src/app/shared/tables/shipper';
 import { User } from 'src/app/shared/tables/User';
@@ -25,7 +27,8 @@ export class CreateShipperComponent {
   constructor(
     private formBuilder: UntypedFormBuilder,
     private storage: AngularFireStorage,
-    private userService: UserService
+    private userService: UserService,
+    private shipperService: ShipperService
   ) {
     this.createAccountForm();
     this.createPermissionForm();
@@ -55,20 +58,31 @@ export class CreateShipperComponent {
   createShipper(): Promise<void> {
     return new Promise((resolve, rejects) => {
       this.uploadImage(this.imageFile).then((url) => {
-        const newShipper = new User()
-        newShipper.fullName = this.shipperFullName;
-        newShipper.dateOfBirth = this.shipperDob;
-        newShipper.email = this.shipperEmail;
-        newShipper.phoneNumber = this.shipperPhoneNum;
-        newShipper.identifiedCode = this.shipperIdentifiedCode;
-        newShipper.imageUrl = url
-        newShipper.isLocked = false;
-        newShipper.roleName = 'ROLE_SHIPPER'
-        console.log(newShipper);
-        this.userService.createUser(newShipper).subscribe((user) => {
-          newShipper.id = user.id
-          console.log(user.id)
-        })
+        const newUser = new User()
+        const newShipper = new Shipper();
+        newUser.fullName = this.shipperFullName;
+        newUser.dateOfBirth = this.shipperDob;
+        newUser.email = this.shipperEmail;
+        newUser.phoneNumber = this.shipperPhoneNum;
+        newUser.identifiedCode = this.shipperIdentifiedCode;
+        newUser.imageUrl = url
+        newUser.isLocked = false;
+        newUser.defaultAddress = 0;
+        newUser.roleName = 'ROLE_SHIPPER'
+        console.log(newUser);
+        // this.userService.createUser(newUser).subscribe((user) => {
+        //   newShipper.userId = user.id;
+        //   newShipper.shopId = this.shipperShopId;
+        //   console.log(user.id)
+        // })
+
+        this.userService.createUser(newUser).pipe(
+          mergeMap((user) => {
+            newShipper.userId = user.id
+            newShipper.shopId = this.shipperShopId
+            return this.shipperService.createShipper(newShipper)
+          })).subscribe();
+
         resolve();
       })
     })

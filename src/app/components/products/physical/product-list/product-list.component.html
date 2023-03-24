@@ -53,6 +53,18 @@
             </div>
         </div>
     </div>
+
+    <div class="d-flex justify-content-between p-2">
+        <ngb-pagination [collectionSize]="theTotalElements" [(page)]="thePageNumber" [maxSize]="5"
+            [pageSize]="thePageSize" [rotate]="true" [boundaryLinks]="true" (pageChange)="listProduct()">
+        </ngb-pagination>
+        <select class="form-select" style="width: auto" name="pageSize" (change)="listProduct()"
+            [(ngModel)]="thePageSize">
+            <option [value]="12" [selected]="true" [ngValue]="12">12 items per page</option>
+            <option [ngValue]="16">16 items per page</option>
+            <option [ngValue]="20">20 items per page</option>
+        </select>
+    </div>
     <!-- Confirm Delete -->
     <ng-template #confirm_Delete>
         <div class="modal-body text-center">
@@ -72,9 +84,4 @@
             </button>
         </div>
     </ng-template>
-</div>
-<div class="d-flex justify-content-center p-2">
-    <ngb-pagination [collectionSize]="theTotalElements" [(page)]="thePageNumber" [pageSize]="thePageSize" [maxSize]="5"
-        [rotate]="true" [boundaryLinks]="true" (pageChange)="listProduct()">
-    </ngb-pagination>
 </div>

@@ -14,7 +14,7 @@ export class ListShipperComponent {
 
   //Pagination Properties
   thePageNumber = 1;
-  thePageSize = 12;
+  thePageSize = 10;
   theTotalElements = 0;
 
   constructor(private shipperService: ShipperService,

@@ -22,23 +22,23 @@ const routes: Routes = [
                 component: CreateShipperComponent,
                 data: {
                     title: "Tạo shipper",
-                    breadcrumb: "Tạo shipper"
+                    breadcrumb: "Tạo"
                 }
             },
             {
-                path: 'edit:id',
+                path: 'edit/:id',
                 component: EditShipperComponent,
                 data: {
-                    title: "Tạo shipper",
-                    breadcrumb: "Tạo shipper"
+                    title: "Chỉnh sửa shipper",
+                    breadcrumb: "Chỉnh sửa"
                 }
             },
             {
-                path: 'details:id',
+                path: 'details/:id',
                 component: ShipperDetailComponent,
                 data: {
-                    title: "Tạo shipper",
-                    breadcrumb: "Tạo shipper"
+                    title: "Thông tin Shipper",
+                    breadcrumb: "Thông tin"
                 }
             },
         ]

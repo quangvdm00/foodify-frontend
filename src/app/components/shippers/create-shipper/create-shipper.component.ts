@@ -76,7 +76,7 @@ export class CreateShipperComponent {
         //   console.log(user.id)
         // })
 
-        this.userService.createUser(newUser).pipe(
+        this.userService.createUserOnly(newUser).pipe(
           mergeMap((user) => {
             newShipper.userId = user.id
             newShipper.shopId = this.shipperShopId

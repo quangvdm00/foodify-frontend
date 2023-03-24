@@ -57,8 +57,10 @@
                                             <i style="color: #FF6347;" class="fa fa-motorcycle" aria-hidden="true"></i>
                                         </td>
                                         <td>
-                                            <a style="cursor: pointer;"><i class="fa fa-eye f-12"></i></a>&nbsp;
-                                            <a style="cursor: pointer;"><i class='fa fa-edit f-12'></i></a>&nbsp;
+                                            <a [routerLink]="['/shippers', 'details', 'shipper.id']"
+                                                style="cursor: pointer;"><i class="fa fa-eye f-12"></i></a>&nbsp;
+                                            <a [routerLink]="['/shippers', 'edit', 'shipper.id']"
+                                                style="cursor: pointer;"><i class='fa fa-edit f-12'></i></a>&nbsp;
                                             <a style="cursor: pointer;"><i class="fa fa-trash-o"></i></a>
                                             <!-- <ng-template #deleteCategory>
                                                 <div class="modal-body text-center">

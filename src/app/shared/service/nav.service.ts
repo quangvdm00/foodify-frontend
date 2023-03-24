@@ -1,6 +1,6 @@
-import {HostListener, Inject, Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
-import {WINDOW} from "./windows.service";
+import { HostListener, Inject, Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { WINDOW } from "./windows.service";
 
 // Menu
 export interface Menu {
@@ -40,43 +40,48 @@ export class NavService {
     MENUITEMS: Menu[] = [
         {
             path: '/dashboard/default',
-            title: 'Dashboard',
+            title: 'Bảng điều khiển',
             icon: 'home',
             type: 'link',
             badgeType: 'primary',
             active: false
         },
         {
-            title: 'Products', icon: 'box', type: 'sub', active: false, children: [
-                {path: '/products/product-list', title: 'Product List', type: 'link'},
+            title: 'Địa chỉ', icon: 'align-left', type: 'sub', active: false, children: [
+                { path: '/addresses/list-address', title: 'Danh sách', type: 'link' }
+            ]
+        },
+        {
+            title: 'Sản phẩm', icon: 'box', type: 'sub', active: false, children: [
+                { path: '/products/product-list', title: 'Danh sách', type: 'link' },
                 // {path: '/products/product-detail', title: 'Product Detail', type: 'link'},
                 // {path: '/products/physical/sub-category', title: 'Sub Category', type: 'link'},
-                {path: '/products/add-product', title: 'Add Product', type: 'link'},
-                {path: '/products/category', title: 'Product Category', type: 'link'},
+                { path: '/products/add-product', title: 'Thêm sản phẩm', type: 'link' },
+                { path: '/products/category', title: 'Thể loại', type: 'link' },
                 // {path: '/products/add-product-category', title: 'Add Product Category', type: 'link'},
             ]
         },
-                // {
-                //     title: 'Physical', type: 'sub', children: [
-                //         {path: '/products/physical/category', title: 'Category', type: 'link'},
-                //         {path: '/products/physical/sub-category', title: 'Sub Category', type: 'link'},
-                //         {path: '/products/physical/product-list', title: 'Product List', type: 'link'},
-                //         {path: '/products/physical/product-detail', title: 'Product Detail', type: 'link'},
-                //         {path: '/products/physical/add-product', title: 'Add Product', type: 'link'},
-                //     ]
-                // },
-                // {
-                //     title: 'digital', type: 'sub', children: [
-                //         {path: '/products/digital/digital-category', title: 'Category', type: 'link'},
-                //         {path: '/products/digital/digital-sub-category', title: 'Sub Category', type: 'link'},
-                //         {path: '/products/digital/digital-product-list', title: 'Product List', type: 'link'},
-                //         {path: '/products/digital/digital-add-product', title: 'Add Product', type: 'link'},
-                //     ]
-                // },
+        // {
+        //     title: 'Physical', type: 'sub', children: [
+        //         {path: '/products/physical/category', title: 'Category', type: 'link'},
+        //         {path: '/products/physical/sub-category', title: 'Sub Category', type: 'link'},
+        //         {path: '/products/physical/product-list', title: 'Product List', type: 'link'},
+        //         {path: '/products/physical/product-detail', title: 'Product Detail', type: 'link'},
+        //         {path: '/products/physical/add-product', title: 'Add Product', type: 'link'},
+        //     ]
+        // },
+        // {
+        //     title: 'digital', type: 'sub', children: [
+        //         {path: '/products/digital/digital-category', title: 'Category', type: 'link'},
+        //         {path: '/products/digital/digital-sub-category', title: 'Sub Category', type: 'link'},
+        //         {path: '/products/digital/digital-product-list', title: 'Product List', type: 'link'},
+        //         {path: '/products/digital/digital-add-product', title: 'Add Product', type: 'link'},
+        //     ]
+        // },
         {
-            title: 'Sales', icon: 'dollar-sign', type: 'sub', active: false, children: [
-                {path: '/sales/orders', title: 'Orders', type: 'link'},
-                {path: '/sales/transactions', title: 'Transactions', type: 'link'},
+            title: 'Đơn hàng', icon: 'dollar-sign', type: 'sub', active: false, children: [
+                { path: '/sales/orders', title: 'Danh sách', type: 'link' },
+                { path: '/sales/transactions', title: 'Giao dịch', type: 'link' },
             ]
         },
         // {
@@ -96,20 +101,26 @@ export class NavService {
         // },
         // {
         //     title: 'Menus', icon: 'align-left', type: 'sub', active: false, children: [
-        //         {path: '/menus/list-menu', title: 'Menu Lists', type: 'link'},
-        //         {path: '/menus/create-menu', title: 'Create Menu', type: 'link'},
+        //         { path: '/menus/list-menu', title: 'Menu Lists', type: 'link' },
+        //         { path: '/menus/create-menu', title: 'Create Menu', type: 'link' },
         //     ]
         // },
         {
-            title: 'Users', icon: 'user-plus', type: 'sub', active: false, children: [
-                {path: '/users/list-user', title: 'User List', type: 'link'},
-                {path: '/users/create-user', title: 'Create User', type: 'link'},
+            title: 'Người dùng', icon: 'user-plus', type: 'sub', active: false, children: [
+                { path: '/users/list-user', title: 'Danh sách', type: 'link' },
+                { path: '/users/create-user', title: 'Tạo người dùng', type: 'link' },
             ]
         },
         {
-            title: 'Vendors', icon: 'users', type: 'sub', active: false, children: [
-                {path: '/vendors/list-vendors', title: 'Vendor List', type: 'link'},
-                {path: '/vendors/create-vendors', title: 'Create Vendor', type: 'link'},
+            title: 'Người bán hàng', icon: 'users', type: 'sub', active: false, children: [
+                { path: '/vendors/list-vendors', title: 'Danh sách', type: 'link' },
+                { path: '/vendors/create-vendors', title: 'Tạo người bán', type: 'link' }
+            ]
+        },
+        {
+            title: 'Shipper', icon: 'archive', type: 'sub', active: false, children: [
+                { path: '/shippers/list', title: 'Danh sách', type: 'link' },
+                { path: '/shippers/create', title: 'Tạo shipper', type: 'link' }
             ]
         },
         // {
@@ -120,19 +131,19 @@ export class NavService {
         //     ]
         // },
         {
-            title: 'Reports', path: '/reports', icon: 'bar-chart', type: 'link', active: false
+            title: 'Báo cáo', path: '/reports', icon: 'bar-chart', type: 'link', active: false
         },
         {
-            title: 'Settings', icon: 'settings', type: 'sub', children: [
-                {path: '/settings/profile', title: 'Profile', type: 'link'},
+            title: 'Cài đặt', icon: 'settings', type: 'sub', children: [
+                { path: '/settings/profile', title: 'Trang cá nhân', type: 'link' },
             ]
         },
         {
-            title: 'Invoice', path: '/invoice', icon: 'archive', type: 'link', active: false
+            title: 'Hoá đơn', path: '/invoice', icon: 'archive', type: 'link', active: false
         },
-        {
-            title: 'Login', path: '/auth/login', icon: 'log-in', type: 'link', active: false
-        }
+        // {
+        //     title: 'Login', path: '/auth/login', icon: 'log-in', type: 'link', active: false
+        // }
     ]
     // Array
     items = new BehaviorSubject<Menu[]>(this.MENUITEMS);

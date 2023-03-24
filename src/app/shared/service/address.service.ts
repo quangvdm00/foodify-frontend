@@ -4,6 +4,7 @@ import { Observable } from "rxjs-compat";
 import { environment } from "src/environments/environment";
 import { BaseService } from "./base.service";
 import { Address } from "../tables/address";
+import { AddressResponse } from "../tables/AddressResponse";
 
 @Injectable({
   providedIn: "root",
@@ -25,6 +26,31 @@ export class AddressService extends BaseService {
     return this.http.put<Address>(url, address)
   }
 
+  private baseUrl = `${environment.foodOrderingBaseApiUrl}/addresses`;
+
+
+  deleteAddressById(id: number) {
+    return this.http.delete(this.baseUrl + `/${id}`);
+  }
+
+  getAllAddressPagination(thePage: number, thePageSize: number): Observable<GetResponseAddresses> {
+    return this.http.get<GetResponseAddresses>(this.baseUrl + `?pageNo=${thePage}&pageSize=${thePageSize}`);
+  }
+
+
 }
 
-interface GetResponseUsers {}
+
+
+
+  
+
+interface GetResponseAddresses {
+  addresses: AddressResponse[],
+  page: {
+    pageNo: number,
+    pageSize: number,
+    totalElements: number,
+    totalPages: number,
+  };
+}

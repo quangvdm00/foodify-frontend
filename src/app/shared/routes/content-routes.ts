@@ -1,9 +1,16 @@
-import {Routes} from '@angular/router';
+import { Routes } from '@angular/router';
 
 export const content: Routes = [
     {
         path: 'dashboard',
         loadChildren: () => import('../../components/dashboard/dashboard.module').then(m => m.DashboardModule),
+    },
+    {
+        path: 'addresses',
+        loadChildren: () => import('../../components/addresses/address.module').then(m => m.AddressModule),
+        data: {
+            breadcrumb: "Địa chỉ"
+        }
     },
     {
         path: 'products',
@@ -81,6 +88,13 @@ export const content: Routes = [
         loadChildren: () => import('../../components/invoice/invoice.module').then(m => m.InvoiceModule),
         data: {
             breadcrumb: "Invoice"
+        }
+    },
+    {
+        path: 'shippers',
+        loadChildren: () => import('../../components/shippers/shippers.module').then(m => m.ShipperModule),
+        data: {
+            breadcrumb: "Shipper"
         }
     }
 ];

@@ -9,72 +9,60 @@
                 <div class="table-responsive ">
                     <table class="table table-striped">
                         <thead>
-                        <tr>
-                            <th scope="col">Vendors</th>
-                            <th scope="col">Products</th>
-                            <th scope="col" sortable="name">Store Name</th>
-                            <th scope="col" sortable="name">Date</th>
-                            <!--                            <th scope="col" sortable="name">Wallet Balance</th>-->
-                            <th scope="col" sortable="name">Revenue</th>
-                            <th scope="col" sortable="name">Actions</th>
-                        </tr>
+                            <tr>
+                                <th scope="col">Shop</th>
+                                <th scope="col">Mô tả</th>
+                                <th scope="col" sortable="name">Hoạt động</th>
+                                <th scope="col" sortable="name">Shop sinh viên</th>
+                                <th scope="col" sortable="name">Id người dùng</th>
+                                <th scope="col" sortable="name">Actions</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <!--                        <ngb-pagination [(page)]="thePageNumber"-->
-                        <!--                                        [pageSize]="thePageSize"-->
-                        <!--                                        [collectionSize]="theTotalElements"-->
-                        <!--                                        [maxSize]="5"-->
-                        <!--                                        (pageChange)="loadData()">-->
-                        <!--                        </ngb-pagination>-->
-
-                        <tr *ngFor="let item of vendors, let idx = index">
-                            <td scope="row">
-                                <img [src]="item.vendor" class="imgTable" style="width: 20px">
-                                <span>{{item.name}}</span>
-                            </td>
-                            <td>
-                                {{item.products}}
-                            </td>
-                            <td>{{item.store_name}}</td>
-                            <td>{{item.date}}</td>
-                            <!--                            <td>{{item.balance}}</td>-->
-                            <td>{{item.revenue}}</td>
-                            <td>
-                                <a
-                                        style="cursor: pointer;">
-                                    <a
-                                            class='fa fa-edit f-12'
-                                            title="Save"
-                                            data-target="#formModal"
-                                            data-toggle="modal"
-                                            (click)="onEditProduct(item, formEditTemplate)">
-                                    </a>
-                                </a>&nbsp;
-                                <a
-                                        style="cursor: pointer;"
-                                        (click)="openModal(template)"><i class="fa fa-trash-o"></i></a>
-                            </td>
-                            <ng-template #template>
-                                <div class="modal-body text-center">
-                                    <p>Do you want to delete this product?</p>
-                                    <button type="button" class="btn btn-default" (click)="confirm(idx)">Yes</button>
-                                    <button type="button" class="btn btn-primary" (click)="decline()">No</button>
-                                </div>
-                            </ng-template>
-                        </tr>
+                            <tr *ngFor="let shop of shops, let idx = index">
+                                <td scope="row">
+                                    <img [src]="shop.imageUrl" class="imgTable" style="width: 20px">
+                                    <span>{{shop.name}}</span>
+                                </td>
+                                <td>
+                                    {{shop.description}}
+                                </td>
+                                <td>{{shop.isEnabled}}</td>
+                                <td>{{shop.isStudent}}</td>
+                                <td>{{shop.userId}}</td>
+                                <td>
+                                    <a style="cursor: pointer;">
+                                        <a class='fa fa-edit f-12' title="Save" data-target="#formModal"
+                                            data-toggle="modal">
+                                        </a>
+                                    </a>&nbsp;
+                                    <a style="cursor: pointer;"><i class="fa fa-trash-o"></i></a>
+                                </td>
+                                <ng-template #template>
+                                    <div class="modal-body text-center">
+                                        <p>Do you want to delete this product?</p>
+                                        <button type="button" class="btn btn-default">Yes</button>
+                                        <button type="button" class="btn btn-primary">No</button>
+                                    </div>
+                                </ng-template>
+                            </tr>
                         </tbody>
                     </table>
+
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-center p-2">
+                        <ngb-pagination [(page)]="thePageNumber" [pageSize]="thePageSize"
+                            [collectionSize]="theTotalElements" [maxSize]="5" (pageChange)="listShops()">
+                        </ngb-pagination>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<ng-template #formEditTemplate [formGroup]="vendorForm">
+<ng-template #formEditTemplate>
     <!-- Modal -->
-    <div [class.show]="show"
-         id="formModal" tabindex="-1"
-         aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
+    <div id="formModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -84,18 +72,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div
-                            class="form-group row">
+                    <div class="form-group row">
                         <div class="input-group">
                             <div class="col-xl-3 col-sm-4">
                                 <span class="input-group-addon"><label for="vendor" class="mb-0">Vendors</label></span>
                             </div>
-                            <input
-                                    type="text" class="form-control"
-                                    name="vendor" id="vendor"
-                                    autocomplete="off"
-                                    formControlName="vendor"
-                            />
+                            <input type="text" class="form-control" name="vendor" id="vendor" autocomplete="off"
+                                formControlName="vendor" />
                         </div>
                     </div>
 
@@ -103,27 +86,21 @@
                         <div class="input-group">
                             <div class="col-xl-3 col-sm-4">
                                 <span class="input-group-addon"><label for="products"
-                                                                       class="mb-0">Products</label></span>
+                                        class="mb-0">Products</label></span>
                             </div>
-                            <input type="text" class="form-control"
-                                   name="products" id="products"
-                                   autocomplete="off"
-                                   formControlName="products"
-                            />
+                            <input type="text" class="form-control" name="products" id="products" autocomplete="off"
+                                formControlName="products" />
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <div class="input-group">
                             <div class="col-xl-3 col-sm-4">
-                                <span class="input-group-addon"><label for="storeName"
-                                                                       class="mb-0">Store Name</label></span>
+                                <span class="input-group-addon"><label for="storeName" class="mb-0">Store
+                                        Name</label></span>
                             </div>
-                            <input type="text" class="form-control"
-                                   name="storeName" id="storeName"
-                                   autocomplete="off"
-                                   formControlName="storeName"
-                            />
+                            <input type="text" class="form-control" name="storeName" id="storeName" autocomplete="off"
+                                formControlName="storeName" />
                         </div>
                     </div>
 
@@ -132,22 +109,14 @@
                             <div class="col-xl-3 col-sm-4">
                                 <span class="input-group-addon"><label for="date" class="mb-0">Date</label></span>
                             </div>
-                            <input type="date" class="form-control"
-                                   name="date" id="date"
-                                   autocomplete="off"
-                                   formControlName="date"
-                            />
+                            <input type="date" class="form-control" name="date" id="date" autocomplete="off"
+                                formControlName="date" />
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button
-                                type="submit" class="btn btn-primary" (click)="onSubmitEditProduct()">Save changes
+                        <button type="submit" class="btn btn-primary">Save changes
                         </button>
-                        <button type="button"
-                                class="btn btn-secondary"
-                                data-dismiss="modal"
-                                (click)="onClose()"
-                        >Close
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
                         </button>
                     </div>
                 </div>

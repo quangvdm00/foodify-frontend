@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ProductService } from "../../../../shared/service/product.service";
 
 @Component({
@@ -6,16 +8,21 @@ import { ProductService } from "../../../../shared/service/product.service";
     templateUrl: './product-list.component.html',
     styleUrls: ['./product-list.component.scss']
 })
+
 export class ProductListComponent implements OnInit {
 
     products = [];
+    deleteProductId: number;
+    usingTimes: number;
 
     //Pagination Properties
     thePageNumber = 1;
     thePageSize = 12;
     theTotalElements = 0;
 
-    constructor(private productService: ProductService) {
+    constructor(private productService: ProductService,
+        private modalService: BsModalService,
+        private router: Router) {
     }
 
     ngOnInit() {
@@ -33,5 +40,32 @@ export class ProductListComponent implements OnInit {
             this.thePageSize = data.page.pageSize;
             this.theTotalElements = data.page.totalElements;
         }
+    }
+
+    //Modal
+    modalRef: BsModalRef;
+
+    openModal(template: TemplateRef<any>, id: number) {
+        this.deleteProductId = id;
+        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+    }
+
+    confirm(deleteProductId: number, template: TemplateRef<any>): void {
+        console.log("Delete product with id :" + deleteProductId);
+        this.productService.deleteProduct(deleteProductId).subscribe(data => {
+            console.log("Deleted successfully");
+        });
+        this.modalRef.hide();
+        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+    }
+
+    decline(): void {
+        this.modalRef.hide();
+    }
+
+    successDelete() {
+        this.modalRef.hide()
+        this.listProduct();
+        this.router.navigate(['/products/product-list']);
     }
 }

@@ -28,9 +28,9 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">Image</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Actions</th>
+                                        <th scope="col">Ảnh</th>
+                                        <th scope="col">Tên loại</th>
+                                        <th scope="col"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -41,15 +41,21 @@
                                         </td>
                                         <td>{{ category.name }}</td>
                                         <td>
-                                            <a style="cursor: pointer;"><i class='fa fa-edit f-12'></i></a>&nbsp;
-                                            <a style="cursor: pointer;"><i class="fa fa-trash-o"></i></a>
-                                            <ng-template #template>
+                                            <a style="cursor: pointer;"
+                                                (click)="editCategory(productCategoryTemplate, category)"><i
+                                                    class='fa fa-edit f-12'></i></a>&nbsp;
+                                            <a style="cursor: pointer;"
+                                                (click)="openModal(deleteCategory, category.id)"><i
+                                                    class="fa fa-trash-o"></i></a>
+                                            <ng-template #deleteCategory>
                                                 <div class="modal-body text-center">
-                                                    <p>Do you want to delete this product?</p>
-                                                    <button type="button" class="btn btn-default">
-                                                        Yes
+                                                    <p>Bạn muốn xoá thể loại này chứ ?</p>
+                                                    <button type="button" class="btn btn-default"
+                                                        (click)="confirm(categoryId)">
+                                                        Có
                                                     </button>
-                                                    <button type="button" class="btn btn-primary">No
+                                                    <button type="button" class="btn btn-primary"
+                                                        (click)="decline()">Không
                                                     </button>
                                                 </div>
                                             </ng-template>
@@ -57,10 +63,10 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div class="d-flex justify-content-center p-2">
+                            <!-- <div class="d-flex justify-content-center p-2">
                                 <ngb-pagination>
                                 </ngb-pagination>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -71,28 +77,40 @@
 <!-- Container-fluid Ends-->
 
 <ng-template #productCategoryTemplate>
-    <div class="modal-header">
-        <h5 class="modal-title f-w-600" id="exampleModalLabel">Edit Product Category</h5>
-        <button type="button" class="close" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+    <form formGroup="categoryForm">
+        <div class="modal-header">
+            <h5 class="modal-title f-w-600" id="exampleModalLabel">Edit Product Category</h5>
+            <button type="button" class="close" aria-label="Close" (click)="decline()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div>
+                <div class="form-group">
+                    <label for="validationCustom01" class="mb-1">Tên loại :</label>
+                    <input class="form-control" id="validationCustom01" type="text"
+                        [formControl]="categoryForm.controls['categoryName']" required>
+                </div>
+                <div class="form-group mb-0">
+                    <label for="image" class="mb-1">Ảnh :</label>
+                    <input class="form-control" id="image" [formControl]="categoryForm.controls['categoryImage']"
+                        type="file" autocomplete="off" (change)="onFileSelected($event)">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="onSaveCategory($event, updateSuccess)">Lưu
+                </button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal" (click)="decline()">Đóng
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #updateSuccess>
+    <div class="modal-body text-center">
+        <p>Cập nhật thành công</p>
+        <button type="button" class="btn btn-primary" (click)="success()">Tiếp tục
         </button>
-    </div>
-    <div class="modal-body">
-        <div>
-            <div class="form-group">
-                <label for="validationCustom01" class="mb-1">Category Name :</label>
-                <input class="form-control" id="validationCustom01" type="text" formControlName="categoryName">
-            </div>
-            <div class="form-group mb-0">
-                <label for="image" class="mb-1">Category Image :</label>
-                <input class="form-control" id="image" formControlName="categoryImage" type="file" autocomplete="off">
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Save
-            </button>
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Close
-            </button>
-        </div>
     </div>
 </ng-template>

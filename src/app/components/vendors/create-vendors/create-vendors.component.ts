@@ -1,7 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Shop} from '../../../shared/service/Shop';
-import {vendorsDB} from "../../../shared/tables/vendor-list";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { vendorsDB } from "../../../shared/tables/vendor-list";
 
 @Component({
     selector: 'app-create-vendors',

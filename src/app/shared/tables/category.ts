@@ -1,5 +1,5 @@
 export class Category {
-    private _id: number;
-    private _name: string;
-    private _imageUrl: string
+    id: number;
+    name: string;
+    imageUrl: string
 }

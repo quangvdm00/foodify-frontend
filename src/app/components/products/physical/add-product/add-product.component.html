@@ -12,63 +12,131 @@
                             <div class="add-product">
                                 <div class="row">
                                     <div class="col-xl-9 xl-50 col-sm-6 col-9">
-                                        <img src="assets/images/pro3/1.jpg" alt="" class="img-fluid image_zoom_1">
+                                        <img src="https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/330279460_921995832174858_116554411020824696_n.jpg?alt=media&token=2e79076a-75f6-4175-9b01-3e22bf3134cb"
+                                            alt="" class="img-fluid image_zoom_1">
                                     </div>
                                     <div class="col-xl-3 xl-50 col-sm-6 col-3">
-                                        <ul class="file-upload-product">
+                                        <!-- <ul class="file-upload-product">
                                             <li *ngFor="let item of url; let i=index">
                                                 <div class="box-input-file">
                                                     <input class="upload" type="file" (change)="readUrl($event,i)">
                                                     <img class="imgUpload" alt="" [src]="item.img">
                                                 </div>
                                             </li>
-                                        </ul>
+                                        </ul> -->
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-7">
+
+                            <!-- Form Start -->
                             <form class="needs-validation" [formGroup]="productForm" novalidate>
+
+                                <!-- Product Name -->
                                 <div class="add-product-form">
                                     <div class="form-group row">
                                         <div class="col-xl-3 col-sm-4">
-                                            <label for="validationCustom01" class="mb-0">Title</label>
+                                            <label for="validationCustom01" class="mb-0">Tên sản phẩm</label>
                                         </div>
                                         <div class="col-xl-8 col-sm-7">
                                             <input class="form-control" id="validationCustom01" type="text"
-                                                   [formControl]="productForm.controls['name']" required>
+                                                [formControl]="productForm.controls['name']" required>
                                             <div *ngIf="productForm.controls.name.touched && productForm.controls.name.errors?.required"
-                                                 class="text text-danger">
-                                                Title is required.
+                                                class="text text-danger">
+                                                Tên sản phẩm không được bỏ trống.
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- Product Price -->
                                     <div class="form-group row">
                                         <div class="col-xl-3 col-sm-4">
-                                            <label for="validationCustom02" class="mb-0">Price</label>
+                                            <label for="validationCustom02" class="mb-0">Giá sản phẩm</label>
                                         </div>
                                         <div class="col-xl-8 col-sm-7">
-                                            <input
-                                                    class="form-control" id="validationCustom02" type="number"
-                                                    [formControl]="productForm.controls['price']" required="">
-                                            <div
-                                                    *ngIf="productForm.controls.price.touched && productForm.controls.price.errors?.required"
-                                                    class="text text-danger">
-                                                Price is required.
+                                            <input class="form-control" id="validationCustom02" type="number"
+                                                [formControl]="productForm.controls['price']" required="">
+                                            <div *ngIf="productForm.controls.price.touched && productForm.controls.price.errors?.required"
+                                                class="text text-danger">
+                                                Giá sản phẩm không được bỏ trống.
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- Product Categories -->
                                     <div class="form-group row">
                                         <div class="col-xl-3 col-sm-4">
-                                            <label for="validationCustom03" class="mb-0">Category</label>
+                                            <label for="validationCustom03" class="mb-0">Loại sản phẩm</label>
                                         </div>
-                                        <div class="col-xl-8 col-sm-7">
+
+                                        <div class="col-xl-8 col-sm-7" formArrayName="categories">
+                                            <div *ngFor="let item of categories.controls; let i = index">
+                                                <div formGroupName="{{i}}">
+                                                    <input class="form-control" id="validationCustom03"
+                                                        formControlName="categoryName" required="">
+                                                    <div
+                                                        *ngIf="categories.controls[i].get('categoryName').invalid &&
+                                                        (categories.controls[i].get('categoryName').dirty || categories.controls[i].get('categoryName').touched)">
+                                                        <div
+                                                            *ngIf="categories.controls[i].get('categoryName').errors.required">
+                                                            Category Name is required
+                                                        </div>
+                                                    </div>
+
+                                                    <button type="button" class="btn btn-light"
+                                                        (click)="deleteCategory(i)">
+                                                        Xoá
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-primary me-1"
+                                                (click)="addNewCategory()">
+                                                Thêm loại
+                                            </button>
+                                        </div>
+                                        <!-- <div class="col-xl-8 col-sm-7">
                                             <input class="form-control" id="validationCustom03"
-                                                   [formControl]="productForm.controls['category']" required="">
+                                                [formControl]="productForm.controls['category']" required="">
                                             <div *ngIf="productForm.controls.category.touched && productForm.controls.category.errors?.required"
-                                                 class="text text-danger">
-                                                Category is required.
+                                                class="text text-danger">
+                                                Loại sản phẩm không được bỏ trống.
                                             </div>
+                                        </div> -->
+                                    </div>
+
+
+                                    <!-- Product Images -->
+                                    <div class="form-group row">
+                                        <div class="col-xl-3 col-sm-4">
+                                            <label for="validationCustom03" class="mb-0">Hình ảnh sản phẩm</label>
+                                        </div>
+
+                                        <div class="col-xl-8 col-sm-7" formArrayName="images">
+                                            <div *ngFor="let item of images.controls; let i = index">
+                                                <div formGroupName="{{i}}">
+                                                    <input class="form-control" id="image" formControlName="image_File"
+                                                        type="file" autocomplete="off"
+                                                        (change)="onFileSelected($event, i)" />
+                                                    <!-- <div
+                                                        *ngIf="images.controls[i].get('images').invalid &&
+                                                        (images.controls[i].get('images').dirty || images.controls[i].get('images').touched)">
+                                                        <div *ngIf="images.controls[i].get('images').errors.required">
+                                                            Ảnh không được bỏ trống
+                                                        </div>
+                                                    </div> -->
+
+                                                    <button type="button" class="btn btn-light"
+                                                        (click)="deleteImage(i)">
+                                                        Xoá
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-primary me-1" (click)="addNewImage()">
+                                                Thêm ảnh
+                                            </button>
                                         </div>
                                     </div>
                                     <!--                  <div class="form-group row">-->
@@ -86,37 +154,34 @@
                                     <!--                      </select>-->
                                     <!--                    </div>-->
                                     <!--                  </div>-->
+
+                                    <!-- Product Description -->
                                     <div class="form-group row">
                                         <div class="col-xl-3 col-sm-4">
-                                            <label class="mb-0">Total Products</label>
+                                            <label for="validationCustom02" class="mb-0">Mô tả sản phẩm</label>
                                         </div>
                                         <div class="col-xl-8 col-sm-7">
-                                            <div class="qty-box1">
-                                                <div class="input-group">
-                                                    <i class="fa fa-minus btnGtr1"
-                                                       style="cursor: pointer;"
-                                                       (click)=decrement()></i>
-                                                    <input
-                                                        #productQuantity
-                                                        class="touchspin1 text-center" name="counter"
-                                                        [value]="counter" type="text">
-                                                    <i class="fa fa-plus btnLess1"
-                                                       style="cursor: pointer;"
-                                                       (click)=increment()></i>
-                                                </div>
+                                            <textarea class="form-control" id="validationCustom02" type="number"
+                                                [formControl]="productForm.controls['descriptions']"
+                                                required=""></textarea>
+                                            <div *ngIf="productForm.controls.descriptions.touched && productForm.controls.descriptions.errors?.required"
+                                                class="text text-danger">
+                                                Mô tả không được bỏ trống.
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- Product Shop Id -->
                                     <div class="form-group row">
-                                        <div class="col-xl-3 col-sm-4"><label>Add Description</label></div>
+                                        <div class="col-xl-3 col-sm-4">
+                                            <label for="validationCustom03" class="mb-0">Id shop</label>
+                                        </div>
                                         <div class="col-xl-8 col-sm-7">
-                                            <div class="ps-0 description-sm">
-                                                <ckeditor
-                                                    #ckEditor
-                                                    [editor]="Editor"
-                                                    [data]="description"
-                                                    (change)="onChange($event)"
-                                                ></ckeditor>
+                                            <input class="form-control" id="validationCustom03"
+                                                [formControl]="productForm.controls['shopId']" required="">
+                                            <div *ngIf="productForm.controls.shopId.touched && productForm.controls.shopId.errors?.required"
+                                                class="text text-danger">
+                                                Id shop không được bỏ trống.
                                             </div>
                                         </div>
                                     </div>
@@ -125,18 +190,28 @@
                             <div class="form-group row mb-0">
                                 <div class="col-sm-8 offset-xl-3 offset-sm-4">
                                     <div class="product-buttons">
-                                        <button type="button" class="btn btn-primary me-1" (click)="onAddNewProduct()">
-                                            Add
+                                        <button type="button" class="btn btn-primary me-1"
+                                            (click)="openModal(add_product)">
+                                            Thêm sản phẩm
                                         </button>
-                                        <button type="button" class="btn btn-light" (click)="openModal(template)">
+                                        <!-- <button type="button" class="btn btn-light" (click)="openModal(add_product)">
                                             Discard
-                                        </button>
-                                        <ng-template #template>
+                                        </button> -->
+                                        <ng-template #add_product>
                                             <div class="modal-body text-center">
-                                                <p>Do you want to discard?</p>
-                                                <button type="button" class="btn btn-default" (click)="confirm()">Yes
+                                                <p>Bạn chắc chắc muốn thêm sản phẩm này chứ ?</p>
+                                                <button type="button" class="btn btn-default"
+                                                    (click)="confirm(complete)">Có
                                                 </button>
-                                                <button type="button" class="btn btn-primary" (click)="decline()">No
+                                                <button type="button" class="btn btn-primary" (click)="decline()">Không
+                                                </button>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template #complete>
+                                            <div class="modal-body text-center">
+                                                <p>Thêm sản phẩm thành công</p>
+                                                <button type="button" class="btn btn-primary" (click)="completed()">Tiếp
+                                                    tục
                                                 </button>
                                             </div>
                                         </ng-template>

@@ -1,10 +1,18 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormArray, FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {ChangeEvent} from "@ckeditor/ckeditor5-angular";
-import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
-import {Product} from "../../../../shared/tables/Product";
-import {Category} from "../../../../shared/tables/category";
+import { ChangeEvent } from "@ckeditor/ckeditor5-angular";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { Product } from "../../../../shared/tables/Product";
+import { Category } from "../../../../shared/tables/Category";
+import { ProductService } from 'src/app/shared/service/product.service';
+import { environment } from 'src/environments/environment';
+import { concatMap, finalize, Observable, switchMap } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { resolve } from 'path';
+import { rejects } from 'assert';
+import { ProductImageService } from 'src/app/shared/service/product-image.service';
+import { ProductImage } from 'src/app/shared/tables/ProductImage';
 
 
 @Component({
@@ -14,128 +22,243 @@ import {Category} from "../../../../shared/tables/category";
     providers: []
 })
 export class AddProductComponent implements OnInit {
+    public adminImage = environment.adminImg;
     public productForm: UntypedFormGroup;
     public Editor = ClassicEditor;
-    public counter: number = 1;
-    public url = [{
-        img: "assets/images/user.png",
-    },
-        {
-            img: "assets/images/user.png",
-        },
-        {
-            img: "assets/images/user.png",
-        },
-        {
-            img: "assets/images/user.png",
-        },
-        {
-            img: "assets/images/user.png",
-        }
-    ];
 
+    // public url = [{
+    //     img: "assets/images/user.png",
+    // },
+    // {
+    //     img: "assets/images/user.png",
+    // },
+    // {
+    //     img: "assets/images/user.png",
+    // },
+    // {
+    //     img: "assets/images/user.png",
+    // },
+    // {
+    //     img: "assets/images/user.png",
+    // }
+    // ];
 
-    @ViewChild('productQuantity') quantity;
-    @ViewChild('ckEditor') ckEditor: any;
+    // @ViewChild('ckEditor') ckEditor: any;
 
     description: string = '';
-
-    modalRef: BsModalRef;
     message: string;
+    cats!: FormArray;
+    imgs!: FormArray;
+    createdId: number;
+    imageUrls: string[] = [];
 
     constructor(
         private fb: UntypedFormBuilder,
-        private modalService: BsModalService) {
+        private productService: ProductService,
+        private productImageService: ProductImageService,
+        private modalService: BsModalService,
+        private storage: AngularFireStorage) {
         this.productForm = this.fb.group({
             name: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
             price: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-            category: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-            code: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-            quantity: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-            // size: ['', Validators.required]
+            shopId: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
+            descriptions: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
+            categories: new FormArray([]),
+            images: new FormArray([])
         });
     }
 
-    onAddNewProduct() {
-        // const product = new Product(
-        //     this.productName, this.description, true,20,
-        //     this.productPrice, [this.productCategory], [''], 30);
-        // console.log(product);
+    onAddNewProduct(): Promise<void> {
+        return new Promise((resolve, rejects) => {
+            const categoryNames: string[] = this.cats.controls.map(control => control.get('categoryName').value);
+            console.log(categoryNames);
 
-        this.productForm.reset();
+            const uploadFiles: File[] = this.imgs.controls.map(control => control.get('image_File').value);
+
+            const uploadPromises = uploadFiles.map((file) => {
+                return this.uploadImage(file).then((imageUrl: string) => {
+                    this.imageUrls.push(imageUrl)
+                })
+            })
+
+            Promise.all(uploadPromises).then(() => {
+                const product = new Product();
+
+                product.name = this.productName;
+                product.description = this.descriptions;
+                product.isEnabled = true;
+                product.discountPercent = 0;
+                product.cost = this.productPrice;
+                product.averageRating = 0;
+                product.reviewCount = 0;
+                product.shopId = this.productShopId;
+                product.categoryNames = categoryNames;
+
+                this.productService.addProduct(product).pipe(
+                    switchMap((product) => {
+                        this.createdId = product.id;
+                        return this.imageUrls;
+                    }),
+                    concatMap((url) => {
+                        const img = new ProductImage();
+                        img.id = 0;
+                        img.imageUrl = url;
+                        img.productId = this.createdId;
+                        return this.productImageService.addProductImage(img, img.productId);
+                    })
+                ).subscribe();
+
+                resolve();
+            })
+        })
     }
 
-    onChange({editor}: ChangeEvent) {
-        let data = editor.getData();
-        // const data = EDITTORC.instances.Editor.document.getBody().getText();
-        this.description = data;
+    // Category Form Array
+    addNewCategory() {
+        this.cats = this.productForm.get('categories') as FormArray;
+        this.cats.push(this.generateNewCategory());
     }
 
-    get productName() {
-        return this.productForm.get('name').value;
+    generateNewCategory(): FormGroup {
+        return new FormGroup({
+            categoryName: new FormControl('', Validators.required)
+        });
     }
+
+    deleteCategory(index: number) {
+        this.cats = this.productForm.get('categories') as FormArray;
+        this.cats.removeAt(index);
+
+    }
+
+    //Image Form Array
+    addNewImage() {
+        this.imgs = this.productForm.get('images') as FormArray;
+        this.imgs.push(this.generateNewImage())
+    }
+
+    generateNewImage(): FormGroup {
+        return new FormGroup({
+            image_File: new FormControl('', Validators.required)
+        })
+    }
+
+    deleteImage(index: number) {
+        this.imgs = this.productForm.get('images') as FormArray;
+        this.imgs.removeAt(index)
+    }
+
+    //Getter
+    get productName() { return this.productForm.get('name').value; }
 
     get productCategory() {
-        return this.productForm.get('category').value;
+        const numberStr: string = this.productForm.get('category').value;
+        const idArr: number[] = numberStr.split(",").map(Number);
+        return idArr;
     }
 
-    get productPrice() {
-        return this.productForm.get('price').value;
+    get productPrice() { return this.productForm.get('price').value; }
+
+    get productShopId() { return this.productForm.get('shopId').value; }
+
+    get categories() {
+        return this.productForm.get('categories') as FormArray;
     }
 
-    get productQuantity() {
-        return this.productForm.get('quantity').value;
+    get images() {
+        return this.productForm.get('images') as FormArray;
     }
 
-    // get productName() {
-    //     return this.productForm.get('name').value;
-    // }
+    get descriptions() { return this.productForm.get('descriptions').value }
 
-    increment() {
-        this.counter += 1;
+    ngOnInit() {
+        // this.addNewCategory();
     }
 
-    decrement() {
-        this.counter -= 1;
-    }
-
-    // FileUpload
-    readUrl(event: any, i) {
-        if (event.target.files.length === 0) {
-            return;
-        }
-        // Image upload validation
-        var mimeType = event.target.files[0].type;
-        if (mimeType.match(/image\/*/) == null) {
-            return;
-        }
-        // Image upload
-        var reader = new FileReader();
-        reader.readAsDataURL(event.target.files[0]);
-        reader.onload = (_event) => {
-            this.url[i].img = reader.result.toString();
-        };
-    }
+    //Modal
+    modalRef: BsModalRef;
 
     openModal(template: TemplateRef<any>) {
-        this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
     }
 
-    confirm(): void {
-        this.message = 'Confirmed!';
+    confirm(template: TemplateRef<any>): void {
         this.modalRef.hide();
-        this.productForm.reset();
-
-        // this.ckEditor.instance.setData('');
-        // this.ckEditor.setData('');
+        this.onAddNewProduct().then(() => {
+            this.modalRef = this.modalService.show(template, { class: 'modal-sm' })
+        })
     }
 
     decline(): void {
-        this.message = 'Declined!';
         this.modalRef.hide();
     }
 
-    ngOnInit() {
+    completed(): void {
+        this.modalRef.hide();
+        this.productForm.reset();
     }
+
+    //Image Upload
+
+    //File
+    imageFile: File;
+    imageUrl: string;
+    downloadURL: Observable<string>;
+
+    onFileSelected(event, index: number) {
+        this.imageFile = event.target.files[0]
+        console.log(this.imageFile.name, index)
+
+        this.imgs = this.productForm.get('images') as FormArray;
+        this.imgs.at(index).patchValue({ image_File: this.imageFile });
+    }
+
+    uploadImage(fileUpload: File): Promise<string> {
+        return new Promise<string>((resolve) => {
+            let n = Date.now();
+            const filePath = `Products/${n}`;
+
+            const fileRef = this.storage.ref(filePath);
+            const task = this.storage.upload(`Products/${n}`, fileUpload);
+            task
+                .snapshotChanges()
+                .pipe(
+                    finalize(() => {
+                        this.downloadURL = fileRef.getDownloadURL();
+                        this.downloadURL.subscribe(url => {
+                            if (url) {
+                                resolve(url);
+                            }
+
+                        });
+                    })
+                )
+                .subscribe(url => {
+                    // if (url) {
+                    //     // console.log(url);
+                    // }
+                }
+                );
+        })
+    }
+
+
+    // // FileUpload
+    // readUrl(event: any, i) {
+    //     if (event.target.files.length === 0) {
+    //         return;
+    //     }
+    //     // Image upload validation
+    //     var mimeType = event.target.files[0].type;
+    //     if (mimeType.match(/image\/*/) == null) {
+    //         return;
+    //     }
+    //     // Image upload
+    //     var reader = new FileReader();
+    //     reader.readAsDataURL(event.target.files[0]);
+    //     reader.onload = (_event) => {
+    //         this.url[i].img = reader.result.toString();
+    //     };
+    // }
 
 }

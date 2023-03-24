@@ -32,3 +32,18 @@ export class UserCreate {
   phoneNumber: string;
   roleName: string;
 }
+
+export class UserUpdate {
+  addresses: Address[]
+  dateOfBirth: string
+  defaultAddress: 0
+  email: string
+  fullName: string
+  id: string
+  identifiedCode: string
+  imageUrl: string
+  phoneNumber: string;
+  product: Product[]
+  isLocked: boolean
+  roleName: string;
+}

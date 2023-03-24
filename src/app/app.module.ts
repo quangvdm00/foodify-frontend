@@ -29,7 +29,6 @@ import {environment} from "../environments/environment";
 import {FirebaseService} from "./shared/service/firebase.service";
 import {AuthInterceptor} from "./shared/inceptor/auth-interceptor";
 
-
 @NgModule({
     declarations: [
         AppComponent,
@@ -58,6 +57,7 @@ import {AuthInterceptor} from "./shared/inceptor/auth-interceptor";
         AngularFireStorageModule,
         AngularFireModule.initializeApp(environment.firebaseConfig, 'cloud'),
         ModalModule.forRoot()
+        
     ],
     providers: [
         FirebaseService,

@@ -19,6 +19,12 @@ export class AddressService extends BaseService {
     let url = this.addressUrl + `users/${userId}/addresses`;
     return this.http.post<Address>(url, address);
   }
+
+  updateAddreess(address: Address, userId: string, addressId: string): Observable<Address> {
+    let url = this.addressUrl + `users/${userId}/addresses/${addressId}`;
+    return this.http.put<Address>(url, address)
+  }
+
 }
 
 interface GetResponseUsers {}

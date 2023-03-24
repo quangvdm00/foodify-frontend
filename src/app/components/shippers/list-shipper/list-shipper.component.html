@@ -29,25 +29,37 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Ảnh</th>
-                                        <th scope="col">Tên loại</th>
+                                        <th scope="col">Họ và tên</th>
+                                        <th scope="col">Shop</th>
+                                        <th scope="col">Active</th>
+                                        <th scope="col">Shipping</th>
                                         <th scope="col"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor='let category of categories'>
-                                        <th scope="row">{{ category.id }}</th>
+                                    <tr *ngFor="let shipper of shippers; let i = index">
+                                        <th scope="row">{{ i }}</th>
                                         <td>
-                                            <img [src]="category.imageUrl" class="imgTable" style="width: 20px">
+                                            <img [src]="shipper.user.imageUrl" class="imgTable" style="width: 20px">
                                         </td>
-                                        <td>{{ category.name }}</td>
+                                        <td>{{ shipper.user.fullName }}</td>
+                                        <td>{{ shipper.shop.name }}</td>
+                                        <td *ngIf="shipper.isActive == true">
+                                            <i style="color: green;" class="fa fa-power-off" aria-hidden="true"></i>
+                                        </td>
+                                        <td *ngIf="shipper.isActive == false">
+                                            <i style="color: #FF6347;" class="fa fa-power-off" aria-hidden="true"></i>
+                                        </td>
+                                        <td *ngIf="shipper.isShipping== true">
+                                            <i style="color: green;" class="fa fa-motorcycle" aria-hidden="true"></i>
+                                        </td>
+                                        <td *ngIf="shipper.isShipping== false">
+                                            <i style="color: #FF6347;" class="fa fa-motorcycle" aria-hidden="true"></i>
+                                        </td>
                                         <td>
-                                            <a style="cursor: pointer;"
-                                                (click)="editCategory(productCategoryTemplate, category)"><i
-                                                    class='fa fa-edit f-12'></i></a>&nbsp;
-                                            <a style="cursor: pointer;"
-                                                (click)="openModal(deleteCategory, category.id)"><i
-                                                    class="fa fa-trash-o"></i></a>
-                                            <ng-template #deleteCategory>
+                                            <a style="cursor: pointer;"><i class='fa fa-edit f-12'></i></a>&nbsp;
+                                            <a style="cursor: pointer;"><i class="fa fa-trash-o"></i></a>
+                                            <!-- <ng-template #deleteCategory>
                                                 <div class="modal-body text-center">
                                                     <p>Bạn muốn xoá thể loại này chứ ?</p>
                                                     <button type="button" class="btn btn-default"
@@ -58,7 +70,7 @@
                                                         (click)="decline()">Không
                                                     </button>
                                                 </div>
-                                            </ng-template>
+                                            </ng-template> -->
                                         </td>
                                     </tr>
                                 </tbody>
@@ -76,7 +88,7 @@
 </div>
 <!-- Container-fluid Ends-->
 
-<ng-template #productCategoryTemplate>
+<!-- <ng-template #productCategoryTemplate>
     <form formGroup="categoryForm">
         <div class="modal-header">
             <h5 class="modal-title f-w-600" id="exampleModalLabel">Edit Product Category</h5>
@@ -105,12 +117,12 @@
             </div>
         </div>
     </form>
-</ng-template>
+</ng-template> -->
 
-<ng-template #updateSuccess>
+<!-- <ng-template #updateSuccess>
     <div class="modal-body text-center">
         <p>Cập nhật thành công</p>
         <button type="button" class="btn btn-primary" (click)="success()">Tiếp tục
         </button>
     </div>
-</ng-template>
+</ng-template> -->

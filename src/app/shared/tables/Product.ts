@@ -1,5 +1,5 @@
-import { Shop } from "../service/Shop";
 import { Category } from "./Category";
+import { Shop } from "./Shop";
 
 export class Product {
 

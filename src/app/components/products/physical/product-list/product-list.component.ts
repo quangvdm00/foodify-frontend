@@ -8,10 +8,12 @@ import { ProductService } from "../../../../shared/service/product.service";
     templateUrl: './product-list.component.html',
     styleUrls: ['./product-list.component.scss']
 })
+
 export class ProductListComponent implements OnInit {
 
     products = [];
     deleteProductId: number;
+    usingTimes: number;
 
     //Pagination Properties
     thePageNumber = 1;
@@ -45,9 +47,7 @@ export class ProductListComponent implements OnInit {
 
     openModal(template: TemplateRef<any>, id: number) {
         this.deleteProductId = id;
-        console.log("before deleted");
         this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
-        console.log("after deleted");
     }
 
     confirm(deleteProductId: number, template: TemplateRef<any>): void {
@@ -57,7 +57,6 @@ export class ProductListComponent implements OnInit {
         });
         this.modalRef.hide();
         this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
-
     }
 
     decline(): void {

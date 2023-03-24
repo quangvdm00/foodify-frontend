@@ -13,8 +13,12 @@ export class CategoryService {
   constructor(private httpClient: HttpClient) { }
 
   getCategories(): Observable<Category[]> {
-    console.log(`getting jwt-token from Storage`, localStorage.getItem('jwt-token'));
     const categories = this.httpClient.get<Category[]>(this.baseUrl);
     return categories;
+  }
+
+  editCategoryById(categoryId: number, category: Category): Observable<Category> {
+    console.log("edit service called")
+    return this.httpClient.put<Category>(this.baseUrl + `/${categoryId}`, category)
   }
 }

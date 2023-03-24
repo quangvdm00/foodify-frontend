@@ -1,9 +1,9 @@
 export class Shop {
-    private id: number;
-    private name: string;
-    private description: string;
-    private imageUrl: string;
-    private isEnabled: boolean;
-    private isStudent: boolean;
-    private userId: number;
+    id: number;
+    name: string;
+    description: string;
+    imageUrl: string;
+    isEnabled: boolean;
+    isStudent: boolean;
+    userId: number;
 }

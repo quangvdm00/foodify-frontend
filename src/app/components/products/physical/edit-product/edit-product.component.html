@@ -125,11 +125,52 @@
 
                                     <!-- Product Description -->
                                     <div class="form-group row">
-                                        <div class="col-xl-3 col-sm-4"><label>Mô tả sản phẩm</label></div>
+                                        <div class="col-xl-3 col-sm-4">
+                                            <label for="validationCustom02" class="mb-0">Mô tả sản phẩm</label>
+                                        </div>
                                         <div class="col-xl-8 col-sm-7">
-                                            <div class="ps-0 description-sm">
-                                                <ckeditor #ckEditor [editor]="Editor" [data]="description"
-                                                    (change)="onChange($event)"></ckeditor>
+                                            <textarea class="form-control" id="validationCustom02" type="number"
+                                                [formControl]="editProductForm.controls['descriptions']"
+                                                required=""></textarea>
+                                            <div *ngIf="editProductForm.controls.descriptions.touched && editProductForm.controls.descriptions.errors?.required"
+                                                class="text text-danger">
+                                                Mô tả không được bỏ trống.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Product Enabled -->
+                                    <div class="form-group row">
+                                        <div class="col-xl-3 col-sm-4">
+                                            <label for="validationCustom03" class="mb-0">Trạng thái</label>
+                                        </div>
+                                        <div class="col-xl-8 col-sm-7">
+                                            <button *ngIf="isEnabled" type="button" class="btn btn-secondary"
+                                                (click)="swap()">Được mở bán
+                                            </button>
+                                            <button *ngIf="!isEnabled" type="button" class="btn btn-primary"
+                                                (click)="swap()">Không mở bán
+                                            </button>
+                                            <!-- <input class="form-control" id="validationCustom03"
+                                                [formControl]="editProductForm.controls['shopId']" required="">
+                                            <div *ngIf="editProductForm.controls.shopId.touched && editProductForm.controls.shopId.errors?.required"
+                                                class="text text-danger">
+                                                Id shop không được bỏ trống.
+                                            </div> -->
+                                        </div>
+                                    </div>
+
+                                    <!-- Product Discount Percent -->
+                                    <div class="form-group row">
+                                        <div class="col-xl-3 col-sm-4">
+                                            <label for="validationCustom02" class="mb-0">Giảm giá (%)</label>
+                                        </div>
+                                        <div class="col-xl-8 col-sm-7">
+                                            <input class="form-control" id="validationCustom02" type="number"
+                                                [formControl]="editProductForm.controls['discountPercent']" required="">
+                                            <div *ngIf="editProductForm.controls.discountPercent.touched && editProductForm.controls.discountPercent.errors?.required"
+                                                class="text text-danger">
+                                                Giá sản phẩm không được bỏ trống.
                                             </div>
                                         </div>
                                     </div>
@@ -155,17 +196,28 @@
                                     <div class="product-buttons">
                                         <button type="button" class="btn btn-primary me-1"
                                             (click)="openModal(add_product)">
-                                            Thêm sản phẩm
+                                            Cập nhật sản phẩm
                                         </button>
                                         <!-- <button type="button" class="btn btn-light" (click)="openModal(add_product)">
                                             Discard
                                         </button> -->
                                         <ng-template #add_product>
                                             <div class="modal-body text-center">
-                                                <p>Bạn chắc chắc muốn thêm sản phẩm này chứ ?</p>
-                                                <button type="button" class="btn btn-default" (click)="confirm()">Có
+                                                <p>Bạn chắc chắc muốn chỉnh sửa sản phẩm này chứ ?</p>
+                                                <button type="button" class="btn btn-default"
+                                                    (click)="confirm(success)">Có
                                                 </button>
                                                 <button type="button" class="btn btn-primary" (click)="decline()">Không
+                                                </button>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template #success>
+                                            <div class="modal-body text-center">
+                                                <p>Chỉnh sửa sản phẩm thành công</p>
+                                                <button type="button" class="btn btn-default" (click)="list()">Danh sách
+                                                </button>
+                                                <button type=" button" class="btn btn-primary" (click)="decline()">Tiếp
+                                                    tục
                                                 </button>
                                             </div>
                                         </ng-template>

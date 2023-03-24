@@ -6,7 +6,8 @@ import { ProductService } from 'src/app/shared/service/product.service';
 import { Product } from 'src/app/shared/tables/Product';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { environment } from 'src/environments/environment';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Category } from 'src/app/shared/tables/Category';
 
 @Component({
   selector: 'app-edit-product',
@@ -16,28 +17,32 @@ import { ActivatedRoute } from '@angular/router';
 export class EditProductComponent {
   public adminImg = environment.adminImg;
   public editProductForm: UntypedFormGroup;
-  public Editor = ClassicEditor;
+  // public Editor = ClassicEditor;
 
+  editProductId: number;
   product: Product;
+  isEnabled: boolean;
   description: string = '';
-  message: string;
   items!: FormArray;
 
   constructor(
     private fb: UntypedFormBuilder,
     private productService: ProductService,
     private modalService: BsModalService,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private router: Router) {
     this.editProductForm = this.fb.group({
       name: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
       price: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
       shopId: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
+      descriptions: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
+      discountPercent: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
       categories: new FormArray([])
     });
   }
 
   ngOnInit() {
-    this.addNewCategory();
+    // this.addNewCategory();
     const productId = +this.route.snapshot.paramMap.get('id')!;
     this.productService.getProductById(productId).subscribe(
       data => this.fillFormToUpdate(data)
@@ -45,36 +50,44 @@ export class EditProductComponent {
   }
 
   fillFormToUpdate(response: Product) {
-    console.log(response)
+    response.categories.forEach((category: Category) => {
+      console.log(category.name);
+      this.items = this.editProductForm.get('categories') as FormArray;
+      this.items.push(new FormGroup({
+        categoryName: new FormControl(category.name, Validators.required)
+      }))
+    })
+
+    this.isEnabled = response.isEnabled;
+    this.editProductId = response.id;
+
     this.editProductForm.patchValue({
       id: response.id,
       name: response.name,
       price: response.cost,
+      descriptions: response.description,
+      discountPercent: response.discountPercent,
       shopId: response.shop.id
     })
     this.description = response.description;
   }
 
-  onAddNewProduct() {
+  onUpdateProduct() {
     const categoryNames: string[] = this.items.controls.map(control => control.get('categoryName').value);
     console.log(categoryNames);
     const product = new Product();
     product.id = 1;
     product.name = this.productName;
     product.description = this.description;
-    product.isEnabled = true;
-    product.discountPercent = 0;
+    product.isEnabled = this.isEnabled;
+    product.discountPercent = this.discountPercent;
     product.cost = this.productPrice;
     product.averageRating = 0;
     product.reviewCount = 0;
     product.shopId = this.productShopId;
     product.categoryNames = categoryNames;
-
-    this.productService.addProduct(product).subscribe(
-      result => console.log(result),
-      error => console.error(error)
-    );
-    // this.productForm.reset();
+    console.log(product);
+    this.productService.updateProductById(this.editProductId, product).subscribe();
   }
 
   handleProductDetails() {
@@ -107,6 +120,16 @@ export class EditProductComponent {
     this.description = data;
   }
 
+  swap() {
+    if (this.isEnabled) {
+      this.isEnabled = false
+    }
+    else {
+      this.isEnabled = true;
+      console.log(this.isEnabled);
+    }
+  }
+
   //Getter
   get productName() { return this.editProductForm.get('name').value; }
 
@@ -124,6 +147,10 @@ export class EditProductComponent {
     return this.editProductForm.get('categories') as FormArray;
   }
 
+  get descriptions() { return this.editProductForm.get('descriptions').value }
+
+  get discountPercent() { return this.editProductForm.get('discountPercent').value }
+
 
 
   //Modal
@@ -133,18 +160,18 @@ export class EditProductComponent {
     this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
   }
 
-  confirm(): void {
-    this.message = 'Confirmed!';
+  confirm(template: TemplateRef<any>): void {
     this.modalRef.hide();
-    this.onAddNewProduct();
-    this.editProductForm.reset();
-
-    // this.ckEditor.instance.setData('');
-    // this.ckEditor.setData('');
+    this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+    this.onUpdateProduct();
   }
 
   decline(): void {
-    this.message = 'Declined!';
     this.modalRef.hide();
+  }
+
+  list() {
+    this.modalRef.hide();
+    this.router.navigate(["/products/product-list"])
   }
 }

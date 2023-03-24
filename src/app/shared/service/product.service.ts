@@ -15,8 +15,8 @@ export class ProductService {
     constructor(private httpClient: HttpClient) {
     }
 
-    addProduct(product: Product) {
-        return this.httpClient.post(this.baseUrl, product);
+    addProduct(product: Product): Observable<Product> {
+        return this.httpClient.post<Product>(this.baseUrl, product);
     }
 
     getProductsPagination(thePage: number, thePageSize: number): Observable<GetResponseProducts> {
@@ -26,6 +26,10 @@ export class ProductService {
 
     getProductById(productId: number): Observable<Product> {
         return this.httpClient.get<Product>(this.baseUrl + `/${productId}`);
+    }
+
+    updateProductById(productId: number, product: Product) {
+        return this.httpClient.put<Product>(this.baseUrl + `/${productId}`, product);
     }
 
     deleteProduct(productId: number) {

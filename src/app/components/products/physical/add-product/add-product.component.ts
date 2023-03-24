@@ -7,6 +7,12 @@ import { Product } from "../../../../shared/tables/Product";
 import { Category } from "../../../../shared/tables/Category";
 import { ProductService } from 'src/app/shared/service/product.service';
 import { environment } from 'src/environments/environment';
+import { concatMap, finalize, Observable, switchMap } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { resolve } from 'path';
+import { rejects } from 'assert';
+import { ProductImageService } from 'src/app/shared/service/product-image.service';
+import { ProductImage } from 'src/app/shared/tables/ProductImage';
 
 
 @Component({
@@ -20,68 +26,97 @@ export class AddProductComponent implements OnInit {
     public productForm: UntypedFormGroup;
     public Editor = ClassicEditor;
 
-    public url = [{
-        img: "assets/images/user.png",
-    },
-    {
-        img: "assets/images/user.png",
-    },
-    {
-        img: "assets/images/user.png",
-    },
-    {
-        img: "assets/images/user.png",
-    },
-    {
-        img: "assets/images/user.png",
-    }
-    ];
+    // public url = [{
+    //     img: "assets/images/user.png",
+    // },
+    // {
+    //     img: "assets/images/user.png",
+    // },
+    // {
+    //     img: "assets/images/user.png",
+    // },
+    // {
+    //     img: "assets/images/user.png",
+    // },
+    // {
+    //     img: "assets/images/user.png",
+    // }
+    // ];
 
     // @ViewChild('ckEditor') ckEditor: any;
 
     description: string = '';
     message: string;
-    items!: FormArray;
+    cats!: FormArray;
+    imgs!: FormArray;
+    createdId: number;
+    imageUrls: string[] = [];
 
     constructor(
         private fb: UntypedFormBuilder,
         private productService: ProductService,
-        private modalService: BsModalService) {
+        private productImageService: ProductImageService,
+        private modalService: BsModalService,
+        private storage: AngularFireStorage) {
         this.productForm = this.fb.group({
             name: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
             price: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-            category: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
             shopId: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
             descriptions: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-            categories: new FormArray([])
+            categories: new FormArray([]),
+            images: new FormArray([])
         });
     }
 
-    onAddNewProduct() {
-        const categoryNames: string[] = this.items.controls.map(control => control.get('categoryName').value);
-        console.log(categoryNames);
-        const product = new Product();
-        product.id = 1;
-        product.name = this.productName;
-        product.description = this.descriptions;
-        product.isEnabled = true;
-        product.discountPercent = 0;
-        product.cost = this.productPrice;
-        product.averageRating = 0;
-        product.reviewCount = 0;
-        product.shopId = this.productShopId;
-        product.categoryNames = categoryNames;
+    onAddNewProduct(): Promise<void> {
+        return new Promise((resolve, rejects) => {
+            const categoryNames: string[] = this.cats.controls.map(control => control.get('categoryName').value);
+            console.log(categoryNames);
 
-        this.productService.addProduct(product).subscribe(
-            result => console.log(result),
-            error => console.error(error)
-        );
-        // this.productForm.reset();
+            const uploadFiles: File[] = this.imgs.controls.map(control => control.get('image_File').value);
+
+            const uploadPromises = uploadFiles.map((file) => {
+                return this.uploadImage(file).then((imageUrl: string) => {
+                    this.imageUrls.push(imageUrl)
+                })
+            })
+
+            Promise.all(uploadPromises).then(() => {
+                const product = new Product();
+
+                product.name = this.productName;
+                product.description = this.descriptions;
+                product.isEnabled = true;
+                product.discountPercent = 0;
+                product.cost = this.productPrice;
+                product.averageRating = 0;
+                product.reviewCount = 0;
+                product.shopId = this.productShopId;
+                product.categoryNames = categoryNames;
+
+                this.productService.addProduct(product).pipe(
+                    switchMap((product) => {
+                        this.createdId = product.id;
+                        return this.imageUrls;
+                    }),
+                    concatMap((url) => {
+                        const img = new ProductImage();
+                        img.id = 0;
+                        img.imageUrl = url;
+                        img.productId = this.createdId;
+                        return this.productImageService.addProductImage(img, img.productId);
+                    })
+                ).subscribe();
+
+                resolve();
+            })
+        })
     }
 
+    // Category Form Array
     addNewCategory() {
-        this.items = this.productForm.get('categories') as FormArray;
-        this.items.push(this.generateNewCategory());
+        this.cats = this.productForm.get('categories') as FormArray;
+        this.cats.push(this.generateNewCategory());
     }
 
     generateNewCategory(): FormGroup {
@@ -91,9 +126,26 @@ export class AddProductComponent implements OnInit {
     }
 
     deleteCategory(index: number) {
-        this.items = this.productForm.get('categories') as FormArray;
-        this.items.removeAt(index);
+        this.cats = this.productForm.get('categories') as FormArray;
+        this.cats.removeAt(index);
 
+    }
+
+    //Image Form Array
+    addNewImage() {
+        this.imgs = this.productForm.get('images') as FormArray;
+        this.imgs.push(this.generateNewImage())
+    }
+
+    generateNewImage(): FormGroup {
+        return new FormGroup({
+            image_File: new FormControl('', Validators.required)
+        })
+    }
+
+    deleteImage(index: number) {
+        this.imgs = this.productForm.get('images') as FormArray;
+        this.imgs.removeAt(index)
     }
 
     //Getter
@@ -113,10 +165,14 @@ export class AddProductComponent implements OnInit {
         return this.productForm.get('categories') as FormArray;
     }
 
+    get images() {
+        return this.productForm.get('images') as FormArray;
+    }
+
     get descriptions() { return this.productForm.get('descriptions').value }
 
     ngOnInit() {
-        this.addNewCategory();
+        // this.addNewCategory();
     }
 
     //Modal
@@ -127,14 +183,13 @@ export class AddProductComponent implements OnInit {
     }
 
     confirm(template: TemplateRef<any>): void {
-        this.message = 'Confirmed!';
         this.modalRef.hide();
-        this.onAddNewProduct();
-        this.modalRef = this.modalService.show(template, { class: 'modal-sm' })
+        this.onAddNewProduct().then(() => {
+            this.modalRef = this.modalService.show(template, { class: 'modal-sm' })
+        })
     }
 
     decline(): void {
-        this.message = 'Declined!';
         this.modalRef.hide();
     }
 
@@ -143,23 +198,67 @@ export class AddProductComponent implements OnInit {
         this.productForm.reset();
     }
 
+    //Image Upload
 
-    // FileUpload
-    readUrl(event: any, i) {
-        if (event.target.files.length === 0) {
-            return;
-        }
-        // Image upload validation
-        var mimeType = event.target.files[0].type;
-        if (mimeType.match(/image\/*/) == null) {
-            return;
-        }
-        // Image upload
-        var reader = new FileReader();
-        reader.readAsDataURL(event.target.files[0]);
-        reader.onload = (_event) => {
-            this.url[i].img = reader.result.toString();
-        };
+    //File
+    imageFile: File;
+    imageUrl: string;
+    downloadURL: Observable<string>;
+
+    onFileSelected(event, index: number) {
+        this.imageFile = event.target.files[0]
+        console.log(this.imageFile.name, index)
+
+        this.imgs = this.productForm.get('images') as FormArray;
+        this.imgs.at(index).patchValue({ image_File: this.imageFile });
     }
+
+    uploadImage(fileUpload: File): Promise<string> {
+        return new Promise<string>((resolve) => {
+            let n = Date.now();
+            const filePath = `Products/${n}`;
+
+            const fileRef = this.storage.ref(filePath);
+            const task = this.storage.upload(`Products/${n}`, fileUpload);
+            task
+                .snapshotChanges()
+                .pipe(
+                    finalize(() => {
+                        this.downloadURL = fileRef.getDownloadURL();
+                        this.downloadURL.subscribe(url => {
+                            if (url) {
+                                resolve(url);
+                            }
+
+                        });
+                    })
+                )
+                .subscribe(url => {
+                    // if (url) {
+                    //     // console.log(url);
+                    // }
+                }
+                );
+        })
+    }
+
+
+    // // FileUpload
+    // readUrl(event: any, i) {
+    //     if (event.target.files.length === 0) {
+    //         return;
+    //     }
+    //     // Image upload validation
+    //     var mimeType = event.target.files[0].type;
+    //     if (mimeType.match(/image\/*/) == null) {
+    //         return;
+    //     }
+    //     // Image upload
+    //     var reader = new FileReader();
+    //     reader.readAsDataURL(event.target.files[0]);
+    //     reader.onload = (_event) => {
+    //         this.url[i].img = reader.result.toString();
+    //     };
+    // }
 
 }

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Image } from '@ks89/angular-modal-gallery';
 import { NgbRatingConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Product } from 'src/app/shared/tables/Product';
 import { ProductService } from 'src/app/shared/service/product.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
     selector: 'app-product-detail',
@@ -12,15 +13,11 @@ import { ActivatedRoute } from '@angular/router';
     styleUrls: ['./product-detail.component.scss'],
     providers: [NgbRatingConfig]
 })
+
 export class ProductDetailComponent implements OnInit {
-    // id: number = this.route.snapshot.paramMap.get('id');
     product: Product
     imageUrls: string[];
-
-
-    public closeResult: string;
-    public counter: number = 1;
-    currentRate = 8;
+    deleteProductId: number;
 
     public imagesRect: Image[] = [
         new Image(0, { img: 'assets/images/pro3/2.jpg' }, { img: 'assets/images/pro3/1.jpg' }),
@@ -28,37 +25,11 @@ export class ProductDetailComponent implements OnInit {
         new Image(2, { img: 'assets/images/pro3/1.jpg' }, { img: 'assets/images/pro3/1.jpg' }),
         new Image(3, { img: 'assets/images/pro3/2.jpg' }, { img: 'assets/images/pro3/2.jpg' })]
 
-    constructor(private modalService: NgbModal, config: NgbRatingConfig,
+
+    constructor(private modalService: BsModalService,
         private productService: ProductService,
-        private route: ActivatedRoute) {
-        config.max = 5;
-        config.readonly = false;
-    }
-
-    open(content) {
-        this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-            this.closeResult = `Closed with: ${result}`;
-        }, (reason) => {
-            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        });
-    }
-
-    private getDismissReason(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
-        } else {
-            return `with: ${reason}`;
-        }
-    }
-
-    increment() {
-        this.counter += 1;
-    }
-
-    decrement() {
-        this.counter -= 1;
+        private route: ActivatedRoute,
+        private router: Router) {
     }
 
     handleProductDetails() {
@@ -69,4 +40,31 @@ export class ProductDetailComponent implements OnInit {
         this.route.paramMap.subscribe(() => this.handleProductDetails());
     }
 
+    //Modal
+    modalRef: BsModalRef;
+
+    openModal(template: TemplateRef<any>, id: number) {
+        this.deleteProductId = id;
+        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+    }
+
+    confirm(deleteProductId: number, template: TemplateRef<any>): void {
+        console.log("Delete product with id :" + deleteProductId);
+        this.productService.deleteProduct(deleteProductId).subscribe(data => {
+            console.log("Deleted successfully");
+        });
+        this.modalRef.hide();
+        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+
+    }
+
+    decline(): void {
+        this.modalRef.hide();
+    }
+
+    successDelete() {
+        this.modalRef.hide()
+        // this.listProduct();
+        this.router.navigate(['/products/product-list']);
+    }
 }

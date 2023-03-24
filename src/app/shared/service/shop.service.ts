@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Shop } from './Shop';
+import { Shop } from '../tables/Shop';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +21,9 @@ export class ShopService {
 interface GetResponseShops {
   shops: Shop[];
   page: {
-    pageNo: number,
-    pageSize: number,
-    totalElements: number,
-    totalPages: number,
+    pageNo: number;
+    pageSize: number;
+    totalElements: number;
+    totalPages: number;
   };
 }

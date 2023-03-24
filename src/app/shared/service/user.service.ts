@@ -16,7 +16,7 @@ export class UserService {
     return this.httpClient.get<GetResponseUsers>(this.userUrl + `?pageNo=${thePage}&pageSize=${thePageSize}`);
   }
 
-  createUser(createUser: UserCreate): Observable<UserCreate> {
+  createUserWithOneAddress(createUser: UserCreate): Observable<UserCreate> {
     let createApi = `${environment.foodOrderingBaseApiUrl}/auth/signup`;
     return this.httpClient.post<UserCreate>(createApi, createUser);
   }

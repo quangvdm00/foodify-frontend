@@ -85,22 +85,54 @@ export class CreateUserComponent implements OnInit {
     });
   }
 
-  get id() {return this.addUserForm.get("id");}
-  get imageUrl() {return this.addUserForm.get("imageUrl");}
-  get fullName() {return this.addUserForm.get("fullName");}
-  get email() {return this.addUserForm.get("email");}
-  get dateOfBirth() {return this.addUserForm.get("dateOfBirth");}
-  get phoneNumber() {return this.addUserForm.get("phoneNumber");}
-  get identifiedCode() {return this.addUserForm.get("identifiedCode");}
-  get addressDto() {return this.addUserForm.get("addressDto") as FormArray;}
-  get addressId() {return this.addUserForm.get("addressDto")["controls"][0].get("addressId");}
-  get address() {return this.addUserForm.get("addressDto")["controls"][1].get("address");}
-  get district() {return this.addUserForm.get("addressDto")["controls"][2].get("district");}
-  get ward() {return this.addUserForm.get("addressDto")["controls"][3].get("ward");}
-  get password() {return this.addUserForm.get("password");}
-  get confirmPassword() {return this.addUserForm.get("confirmPassword");}
-  get isLocked() {return this.addUserForm.get("isLocked");}
-  get roleName() {return this.addUserForm.get("roleName");}
+  get id() {
+    return this.addUserForm.get("id");
+  }
+  get imageUrl() {
+    return this.addUserForm.get("imageUrl");
+  }
+  get fullName() {
+    return this.addUserForm.get("fullName");
+  }
+  get email() {
+    return this.addUserForm.get("email");
+  }
+  get dateOfBirth() {
+    return this.addUserForm.get("dateOfBirth");
+  }
+  get phoneNumber() {
+    return this.addUserForm.get("phoneNumber");
+  }
+  get identifiedCode() {
+    return this.addUserForm.get("identifiedCode");
+  }
+  get addressDto() {
+    return this.addUserForm.get("addressDto") as FormArray;
+  }
+  get addressId() {
+    return this.addUserForm.get("addressDto")["controls"][0].get("addressId");
+  }
+  get address() {
+    return this.addUserForm.get("addressDto")["controls"][1].get("address");
+  }
+  get district() {
+    return this.addUserForm.get("addressDto")["controls"][2].get("district");
+  }
+  get ward() {
+    return this.addUserForm.get("addressDto")["controls"][3].get("ward");
+  }
+  get password() {
+    return this.addUserForm.get("password");
+  }
+  get confirmPassword() {
+    return this.addUserForm.get("confirmPassword");
+  }
+  get isLocked() {
+    return this.addUserForm.get("isLocked");
+  }
+  get roleName() {
+    return this.addUserForm.get("roleName");
+  }
 
   // Set avatar image
   onFileChange(event) {
@@ -227,13 +259,12 @@ export class CreateUserComponent implements OnInit {
     valueForm.addressDto.ward = wardName;
 
     // Send image to firebase and another datas to database
-    this.uploadImage().then(()=>{
-      this.userService.createUser(valueForm).subscribe({
+    this.uploadImage().then(() => {
+      this.userService.createUserWithOneAddress(valueForm).subscribe({
         next: (user) => {
           this.router.navigate(["users/list-user"]);
         },
       });
-    })
+    });
   }
-
 }

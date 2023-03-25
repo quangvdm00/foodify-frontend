@@ -23,6 +23,7 @@ export class CreateShipperComponent {
 
   imageFile: File;
   downloadURL: Observable<string>;
+  avatar: string;
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -94,6 +95,20 @@ export class CreateShipperComponent {
     console.log(this.imageFile.name)
   }
 
+  onFileChange(event) {
+    const reader = new FileReader();
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        this.avatar = reader.result as string;
+        localStorage.setItem("image", this.avatar);
+      };
+    }
+    this.imageFile = event.target.files[0];
+  }
+
   uploadImage(fileUpload: File): Promise<string> {
     return new Promise<string>((resolve) => {
       let n = Date.now();
@@ -123,6 +138,8 @@ export class CreateShipperComponent {
   }
 
   //Getter
+  get url() { return this.accountForm.get('shipperImage').value }
+
   get shipperFullName() { return this.accountForm.get('fullName').value }
 
   get shipperDob() { return this.accountForm.get('dob').value }

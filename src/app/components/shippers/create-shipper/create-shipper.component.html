@@ -14,6 +14,19 @@
                                 <form [formGroup]="accountForm" class="needs-validation user-add" novalidate>
                                     <h4>Thông tin tài khoản</h4>
 
+                                    <!-- Image -->
+                                    <div class="form-group row">
+                                        <div class="col-xl-3 col-md-4"><label for="validationCustom5"><span>*</span>
+                                                Ảnh</label></div>
+                                        <div class="col-xl-8 col-md-7">
+                                            <!-- <input class="form-control" autocomplete="off"
+                                                (change)="onFileSelected($event)" formControlName="image"
+                                                id="validationCustom5" type="file" required=""> -->
+                                            <input class="input-image" formControlName="shipperImage" type="file" accept="image/*" (change)="onFileChange($event)"/>
+                                            <img class="rounded-circle border border-dark" [src]="avatar" *ngIf="avatar" style="width: 160px; height: 160px; margin-left: 20px"/>
+                                        </div>
+                                    </div>
+
                                     <!-- Full Name -->
                                     <div class="form-group row">
                                         <div class="col-xl-3 col-md-4"><label for="validationCustom0"><span>*</span>
@@ -56,16 +69,6 @@
                                         <div class="col-xl-8 col-md-7"><input class="form-control"
                                                 formControlName="identifiedCode" id="validationCustom4" type="text"
                                                 required=""></div>
-                                    </div>
-
-                                    <!-- Image -->
-                                    <div class="form-group row">
-                                        <div class="col-xl-3 col-md-4"><label for="validationCustom5"><span>*</span>
-                                                Ảnh</label></div>
-                                        <div class="col-xl-8 col-md-7"><input class="form-control" autocomplete="off"
-                                                (change)="onFileSelected($event)" formControlName="image"
-                                                id="validationCustom5" type="file" required="">
-                                        </div>
                                     </div>
 
                                     <!-- Password -->

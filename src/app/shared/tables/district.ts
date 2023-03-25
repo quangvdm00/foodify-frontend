@@ -1,4 +1,4 @@
 export class District {
-    id: string
+    id: number
     name: string
 }

@@ -2,7 +2,7 @@ import { District } from "./district";
 import { Ward } from "./ward";
 
 export class Address {
-    id: string;
+    id: number;
     address: string
     district: string;
     ward: string

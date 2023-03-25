@@ -1,5 +1,5 @@
 export class Ward {
-    id: string
+    id: number
     name: string
     district_id: string
 }

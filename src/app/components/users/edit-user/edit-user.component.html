@@ -162,7 +162,7 @@
                             </div>
                           </div>
                           <div class="location-ward">
-                            <select formControlName="ward" class="ward" [id]="'ward-select-' + i" [attr.disabled]="address.get('district').value === '2'">
+                            <select formControlName="ward" class="ward" [id]="'ward-select-' + i" [attr.disabled]="address.get('district').value === '2' && !address.get('district').value" *ngIf="address.get('district').value">
                               <option value="">-- Chọn phường --</option>
                               <option *ngFor="let ward of getWards(i)" [value]="ward.id">{{ ward.name }}</option>
                             </select>

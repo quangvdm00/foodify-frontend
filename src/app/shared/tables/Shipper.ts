@@ -1,3 +1,4 @@
+import { Order } from "./Order";
 import { Shop } from "./Shop";
 import { User } from "./User";
 
@@ -5,11 +6,12 @@ export class Shipper {
     //Dto
     id: number;
     isActive: boolean;
-    isShipping: false;
+    isShipping: boolean;
     userId: number;
     shopId: number;
 
     //responses
     user: User;
     shop: Shop;
+    orders: Order[];
 }

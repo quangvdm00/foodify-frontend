@@ -20,6 +20,10 @@ export class ShipperService {
   getShipperPagination(thePage: number, thePageSize: number): Observable<GetResponseShippers> {
     return this.httpClient.get<GetResponseShippers>(this.baseUrl + `?pageNo=${thePage}&pageSize=${thePageSize}`)
   }
+
+  getShipperById(shipperId: number): Observable<Shipper> {
+    return this.httpClient.get<Shipper>(this.baseUrl + `/${shipperId}`)
+  }
 }
 
 interface GetResponseShippers {

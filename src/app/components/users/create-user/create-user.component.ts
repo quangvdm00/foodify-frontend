@@ -196,7 +196,7 @@ export class CreateUserComponent implements OnInit {
   }
 
   // Call API of wards
-  onDistrictChange(index: string) {
+  onDistrictChange(index: number) {
     const districtId = this.addressDto.controls[index].get("district").value;
     const wardControl = this.addressDto.controls[index].get("ward");
 

@@ -21,7 +21,7 @@ export class ListUserComponent implements OnInit {
   public searchText;
   total$: Observable<number>;
   modalRef: BsModalRef;
-  userId: string
+  userId: number
 
   users = [];
 
@@ -51,13 +51,13 @@ export class ListUserComponent implements OnInit {
     };
   }
 
-  openModal(template: TemplateRef<any>, id: string) {
+  openModal(template: TemplateRef<any>, id: number) {
     this.userId = id;
     console.log(this.userId);
     this.modalRef = this.modalService.show(template, { class: "modal-sm" });
   }
 
-  confirmBox(userId: string, template: TemplateRef<any>) {
+  confirmBox(userId: number, template: TemplateRef<any>) {
     this.userService.deleteUser(userId).subscribe(res => {
       this.listUser();
     });

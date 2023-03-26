@@ -19,7 +19,7 @@ import { Ward } from "src/app/shared/tables/ward";
 export class EditUserComponent implements OnInit {
   editUserForm: FormGroup;
   avatar: string;
-  userIdToUpdate: string;
+  userIdToUpdate: number;
   showPassword = false;
   districts: District[];
   wards: Ward[][] = [];
@@ -164,7 +164,7 @@ export class EditUserComponent implements OnInit {
   }
 
   // Gọi API của ward
-  onDistrictChange(index: string) {
+  onDistrictChange(index: number) {
     const districtId = this.addresses.controls[index].get("district").value;
     const wardControl = this.addresses.controls[index].get("ward");
 

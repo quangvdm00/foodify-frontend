@@ -27,7 +27,7 @@ export class UserService {
     return this.httpClient.post<User>(this.baseUrl, user);
   }
 
-  getUser(id: string): Observable<User> {
+  getUser(id: number): Observable<User> {
     return this.httpClient.get<User>(`${this.userUrl}/${id}`);
   }
 
@@ -35,7 +35,7 @@ export class UserService {
   //   return this.httpClient.put<UserUpdate>(`${this.userUrl}/${id}`, updateUser);
   // }
 
-  deleteUser(userId: string): Observable<User> {
+  deleteUser(userId: number): Observable<User> {
     let url = this.userUrl + "/" + userId;
     return this.httpClient.delete<User>(url, {});
   }

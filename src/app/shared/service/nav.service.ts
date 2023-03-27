@@ -113,8 +113,8 @@ export class NavService {
         },
         {
             title: 'Người bán hàng', icon: 'users', type: 'sub', active: false, children: [
-                { path: '/vendors/list-vendors', title: 'Danh sách', type: 'link' },
-                { path: '/vendors/create-vendors', title: 'Tạo người bán', type: 'link' }
+                { path: '/vendors/list', title: 'Danh sách', type: 'link' },
+                { path: '/vendors/create', title: 'Tạo người bán', type: 'link' }
             ]
         },
         {
@@ -134,13 +134,13 @@ export class NavService {
             title: 'Báo cáo', path: '/reports', icon: 'bar-chart', type: 'link', active: false
         },
         {
+            title: 'Hoá đơn', path: '/invoice', icon: 'archive', type: 'link', active: false
+        },
+        {
             title: 'Cài đặt', icon: 'settings', type: 'sub', children: [
                 { path: '/settings/profile', title: 'Trang cá nhân', type: 'link' },
             ]
-        },
-        {
-            title: 'Hoá đơn', path: '/invoice', icon: 'archive', type: 'link', active: false
-        },
+        }
         // {
         //     title: 'Login', path: '/auth/login', icon: 'log-in', type: 'link', active: false
         // }

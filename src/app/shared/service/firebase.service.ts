@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {AngularFireAuth} from '@angular/fire/compat/auth';
-import {Router} from "@angular/router";
+import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Router } from "@angular/router";
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +10,7 @@ export class FirebaseService {
     token: string;
 
     constructor(public firebaseAuth: AngularFireAuth,
-                private router: Router) {
+        private router: Router) {
     }
 
     signUp(email: string, password: string) {
@@ -29,7 +29,7 @@ export class FirebaseService {
                         .then(
                             (token: string) => {
                                 this.token = token;
-                                console.log('Token Firebase: ', {token});
+                                console.log('Token Firebase: ', { token });
                                 this.token = token;
                                 localStorage.setItem('jwt-token', token);
                             }
@@ -41,8 +41,8 @@ export class FirebaseService {
                     this.router.navigate(['dashboard/default']);
                 }
             ).catch(
-            error => console.log(error)
-        );
+                error => console.log(error)
+            );
     }
 
     // async signUp(email: string, password: string) {

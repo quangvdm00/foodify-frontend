@@ -5,6 +5,7 @@
 export const environment = {
     production: false,
     foodOrderingBaseApiUrl: 'http://localhost:8080/api',
+    key: 'AIzaSyCR46ZE1kbE7zkTehhflB9jZgDjDT_2944',
     firebaseConfig: {
         apiKey: 'AIzaSyAZFFIuXkbgdp2F-Em4CK2z8kVJ2L4p_UU',
         authDomain: 'foodify-55954.firebaseapp.com',

@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ListVendorsComponent } from './list-vendors/list-vendors.component';
 import { CreateVendorsComponent } from './create-vendors/create-vendors.component';
+import { EditVendorComponent } from './edit-vendor/edit-vendor.component';
+import { VendorDetailComponent } from './vendor-detail/vendor-detail.component';
 
 
 const routes: Routes = [
@@ -9,19 +11,35 @@ const routes: Routes = [
     path: '',
     children: [
       {
-        path: 'list-vendors',
+        path: 'list',
         component: ListVendorsComponent,
         data: {
-          title: "Vendor List",
-          breadcrumb: "Vendor List"
+          title: "Danh sách shop",
+          breadcrumb: "Shop"
         }
       },
       {
-        path: 'create-vendors',
+        path: 'create',
         component: CreateVendorsComponent,
         data: {
           title: "Create Vendor",
           breadcrumb: "Create Vendor"
+        }
+      },
+      {
+        path: 'details/:id',
+        component: VendorDetailComponent,
+        data: {
+          title: "Chi tiết người bán",
+          breadcrumb: "Chi tiết"
+        }
+      },
+      {
+        path: 'edit/:id',
+        component: EditVendorComponent,
+        data: {
+          title: "Chỉnh sửa người bán",
+          breadcrumb: "Chỉnh sửa"
         }
       }
     ]

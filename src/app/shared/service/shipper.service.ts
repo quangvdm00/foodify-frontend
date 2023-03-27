@@ -12,9 +12,8 @@ export class ShipperService {
 
   constructor(private httpClient: HttpClient) { }
 
-  createShipper(shipper: Shipper) {
-    return this.httpClient.post(this.baseUrl, shipper)
-
+  createShipper(shipper: Shipper): Observable<Shipper> {
+    return this.httpClient.post<Shipper>(this.baseUrl, shipper)
   }
 
   getShipperPagination(thePage: number, thePageSize: number): Observable<GetResponseShippers> {
@@ -24,6 +23,9 @@ export class ShipperService {
   getShipperById(shipperId: number): Observable<Shipper> {
     return this.httpClient.get<Shipper>(this.baseUrl + `/${shipperId}`)
   }
+
+  //Active status
+  //Shipping status
 }
 
 interface GetResponseShippers {

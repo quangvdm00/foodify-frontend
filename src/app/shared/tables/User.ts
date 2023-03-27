@@ -1,3 +1,5 @@
+import { Address } from "./Address";
+
 export class User {
     id: number;
     email: string;
@@ -9,4 +11,7 @@ export class User {
     identifiedCode: string;
     roleName: string;
     defaultAddress: number
+
+    //Response
+    addresses: Address[]
 }

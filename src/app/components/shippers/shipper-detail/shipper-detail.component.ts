@@ -14,7 +14,6 @@ export class ShipperDetailComponent {
   shipper: Shipper;
 
   constructor(
-    private userService: UserService,
     private shipperService: ShipperService,
     private modalService: BsModalService,
     private route: ActivatedRoute,

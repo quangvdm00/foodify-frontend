@@ -16,7 +16,7 @@ export const content: Routes = [
         path: 'products',
         loadChildren: () => import('../../components/products/products.module').then(m => m.ProductsModule),
         data: {
-            breadcrumb: "Products"
+            breadcrumb: "Sản phẩm"
         }
     },
     {
@@ -55,14 +55,14 @@ export const content: Routes = [
         path: 'users',
         loadChildren: () => import('../../components/users/users.module').then(m => m.UsersModule),
         data: {
-            breadcrumb: "Users"
+            breadcrumb: "Người dùng"
         }
     },
     {
         path: 'vendors',
         loadChildren: () => import('../../components/vendors/vendors.module').then(m => m.VendorsModule),
         data: {
-            breadcrumb: "Vendors"
+            breadcrumb: "Shop"
         }
     },
     {
@@ -80,14 +80,14 @@ export const content: Routes = [
         path: 'settings',
         loadChildren: () => import('../../components/setting/setting.module').then(m => m.SettingModule),
         data: {
-            breadcrumb: "Settings"
+            breadcrumb: "Cài đặt"
         }
     },
     {
         path: 'invoice',
         loadChildren: () => import('../../components/invoice/invoice.module').then(m => m.InvoiceModule),
         data: {
-            breadcrumb: "Invoice"
+            breadcrumb: "Hoá đơn"
         }
     },
     {

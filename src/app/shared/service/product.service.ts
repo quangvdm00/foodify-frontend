@@ -28,6 +28,10 @@ export class ProductService {
         return this.httpClient.get<Product>(this.baseUrl + `/${productId}`);
     }
 
+    getProductsByShopId(shopId: number, thePage: number, thePageSize: number): Observable<GetResponseProducts> {
+        return this.httpClient.get<GetResponseProducts>(this.baseUrl + `/shops/${shopId}?pageNo=${thePage}&pageSize=${thePageSize}`)
+    }
+
     updateProductById(productId: number, product: Product) {
         return this.httpClient.put<Product>(this.baseUrl + `/${productId}`, product);
     }

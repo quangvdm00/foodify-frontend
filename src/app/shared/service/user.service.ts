@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs-compat';
 import { environment } from 'src/environments/environment';
+import { Address } from '../tables/Address';
 import { Shipper } from '../tables/shipper';
 import { User } from '../tables/User';
 
@@ -15,5 +16,15 @@ export class UserService {
 
   createUserOnly(user: User): Observable<User> {
     return this.httpClient.post<User>(this.baseUrl, user);
+  }
+
+  //Update user
+  updateUser(userId: number, userUpdate: User): Observable<User> {
+    return this.httpClient.put<User>(this.baseUrl + `/${userId}`, userUpdate);
+  }
+
+  //Create address for user
+  createAddressForUser(userId: number, address: Address) {
+    return this.httpClient.post(this.baseUrl + `/${userId}/addresses`, address)
   }
 }

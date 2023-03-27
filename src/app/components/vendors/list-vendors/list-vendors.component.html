@@ -31,12 +31,17 @@
                                 <td>{{shop.isStudent}}</td>
                                 <td>{{shop.userId}}</td>
                                 <td>
-                                    <a style="cursor: pointer;">
-                                        <a class='fa fa-edit f-12' title="Save" data-target="#formModal"
-                                            data-toggle="modal">
+                                    <a style="cursor: pointer" title="Xem">
+                                        <a [routerLink]="['/vendors','details',shop.id]">
+                                            <i style="color: black;" class="fa fa-eye" aria-hidden="true"></i>
                                         </a>
                                     </a>&nbsp;
-                                    <a style="cursor: pointer;"><i class="fa fa-trash-o"></i></a>
+                                    <a style="cursor: pointer">
+                                        <a title="Chỉnh sửa" [routerLink]="['/vendors','edit',shop.id]">
+                                            <i class='fa fa-edit f-12'></i>
+                                        </a>
+                                    </a>&nbsp;
+                                    <a title="Xoá" style="cursor: pointer"><i class="fa fa-trash-o"></i></a>
                                 </td>
                                 <ng-template #template>
                                     <div class="modal-body text-center">

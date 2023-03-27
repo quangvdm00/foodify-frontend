@@ -71,7 +71,6 @@ export class AddProductComponent implements OnInit {
     onAddNewProduct(): Promise<void> {
         return new Promise((resolve, rejects) => {
             const categoryNames: string[] = this.cats.controls.map(control => control.get('categoryName').value);
-            console.log(categoryNames);
 
             const uploadFiles: File[] = this.imgs.controls.map(control => control.get('image_File').value);
 

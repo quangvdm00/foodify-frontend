@@ -1,5 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { FormBuilder, FormControl, FormGroup, MinLengthValidator, UntypedFormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { EMPTY, finalize, mergeMap, switchMap, tap } from 'rxjs';
+import { Observable } from 'rxjs-compat';
+import { DistrictService } from 'src/app/shared/service/district.service';
+import { ShopService } from 'src/app/shared/service/shop.service';
+import { UserService } from 'src/app/shared/service/user.service';
+import { WardService } from 'src/app/shared/service/ward.service';
+import { Address } from 'src/app/shared/tables/Address';
+import { District } from 'src/app/shared/tables/District';
+import { Shop } from 'src/app/shared/tables/Shop';
+import { User } from 'src/app/shared/tables/User';
+import { Ward } from 'src/app/shared/tables/Ward';
 import { vendorsDB } from "../../../shared/tables/vendor-list";
 
 @Component({
@@ -7,86 +20,337 @@ import { vendorsDB } from "../../../shared/tables/vendor-list";
     templateUrl: './create-vendors.component.html',
     styleUrls: ['./create-vendors.component.scss']
 })
-export class CreateVendorsComponent implements OnInit {
-    accountForm: FormGroup;
-    active = 1;
-    submitted = false;
-    vendors = [];
+export class CreateVendorsComponent {
+    // form
+    public active = 1;
+    addUserForm: FormGroup;
+    shopForm: FormGroup;
 
-    constructor(private formBuilder: FormBuilder) {
-        this.vendors = vendorsDB.data;
-        // this.createPermissionForm();
+    // image
+    avatar: string;
+    shopBanner: string;
+
+    // file
+    downloadURL: Observable<string>;
+    userImageFile: File;
+    shopImageFile: File;
+    imageLink;
+
+    // password
+    showPassword = false;
+
+    // address
+    isHaveDistrict: boolean;
+    district: District;
+    districts: District[];
+    wards: Ward[];
+
+    isStudent: boolean = true;
+    constructor(
+        private formBuilder: FormBuilder,
+        private router: Router,
+        private userService: UserService,
+        private districtService: DistrictService,
+        private wardService: WardService,
+        private storage: AngularFireStorage,
+        private shopService: ShopService
+    ) {
+        this.createUserForm();
+        this.createShopForm();
+    }
+
+    createUserForm() {
+        this.addUserForm = this.formBuilder.group(
+            {
+                image: new FormControl("", [Validators.required]),
+                fullName: new FormControl("", [Validators.required]),
+                email: new FormControl("", [Validators.required, Validators.email]),
+                dateOfBirth: new FormControl("", [Validators.required]),
+                phoneNumber: new FormControl("", [Validators.required]),
+                identifiedCode: new FormControl("", [Validators.required]),
+                address: new FormControl("", [Validators.required]),
+                district: new FormControl("", [Validators.required]),
+                ward: new FormControl("", [Validators.required]),
+                password: new FormControl("", [Validators.required]),
+                confirmPassword: new FormControl("", [Validators.required]),
+            }
+        );
+    }
+
+    createShopForm() {
+        this.shopForm = this.formBuilder.group(
+            {
+                name: new FormControl("", [Validators.required]),
+                description: new FormControl("", [Validators.required]),
+                image: new FormControl(""),
+            }
+        );
     }
 
     ngOnInit() {
-        this.createAccountForm();
+        this.getAllDistrict();
     }
 
-    createAccountForm() {
-        this.accountForm = this.formBuilder.group({
-            fname: ['', Validators.required],
-            lname: ['', Validators.required],
-            email: ['', [
-                Validators.required,
-                Validators.email
-            ],
-            ],
-            password: ['', [
-                Validators.required,
-                Validators.minLength(6),
-                Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$')],
-            ],
-            // Minimum 6 characters, at least one letter, one number and one special character
-            confirmPwd: ['', [
-                Validators.required,
-                Validators.minLength(6),
-                Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$')]]
+    onDistrictSelected() {
+        this.isHaveDistrict = false;
+        console.log("Choose:  " + this.userDistrict);
+        this.districts.forEach((element: District) => {
+            if (this.userDistrict == element.name && this.userDistrict != 'Huyện Hoàng Sa') {
+                this.isHaveDistrict = true;
+                this.wards = element.wards
+            }
         });
     }
 
-    //
-    // createPermissionForm() {
-    //     this.permissionForm = this.formBuilder.group({});
+    /**
+     * create User from Form
+     */
+    createUser() {
+        const newUser = new User();
+        const newAddress = new Address();
+        const newShop = new Shop();
+
+        this.uploadUserImage(this.userImageFile).then((url) => {
+            newUser.fullName = this.userFullName;
+            newUser.email = this.userEmail;
+            newUser.dateOfBirth = this.userDateOfBirth;
+            newUser.phoneNumber = this.userPhoneNumber;
+            newUser.identifiedCode = this.userIdentifiedCode;
+            newUser.imageUrl = url
+            newUser.defaultAddress = 0;
+            newUser.isLocked = false;
+            newUser.roleName = 'ROLE_SHOP';
+
+            this.userService.createUserOnly(newUser).pipe(
+                switchMap((user) => {
+                    this.uploadShopImage(this.shopImageFile).then((url) => {
+                        newShop.userId = user.id
+                        console.log(user.id)
+                        newShop.name = this.shopName
+                        newShop.description = this.shopDescription;
+                        newShop.isStudent = this.isStudent;
+                        newShop.isEnabled = true;
+                        newShop.imageUrl = url;
+                        newShop.lat = '1'
+                        newShop.lng = '1'
+                        this.shopService.createShop(newShop).subscribe(() => {
+                            newAddress.address = this.userAddress;
+                            newAddress.district = this.userDistrict;
+                            if (this.userDistrict != "Huyện Hoàng Sa") newAddress.ward = this.userWard;
+                            this.userService.createAddressForUser(user.id, newAddress).subscribe()
+                        });
+                    })
+                    return EMPTY; // Return an empty observable to prevent nested subscriptions
+                })
+            ).subscribe()
+
+
+        })
+
+        console.log(newUser);
+        console.log(newAddress)
+        console.log(newShop)
+    }
+
+    //Districts
+    getAllDistrict() {
+        this.districtService.getAllDistricts().subscribe((distrs) => {
+            this.districts = distrs;
+        })
+    }
+
+    swap() {
+        if (this.isStudent) {
+            this.isStudent = false
+        }
+        else {
+            this.isStudent = true;
+            console.log(this.isStudent);
+        }
+    }
+
+    //Image
+    onFileSelected(event) {
+        this.userImageFile = event.target.files[0];
+        const reader = new FileReader();
+        if (event.target.files && event.target.files.length) {
+            const [file] = event.target.files;
+            reader.readAsDataURL(file)
+
+            reader.onload = () => {
+                this.avatar = reader.result as string;
+                localStorage.setItem("image", this.avatar);
+            }
+        }
+    }
+
+    //Shop Image
+    onShopFileSelected(event) {
+        this.shopImageFile = event.target.files[0];
+        console.log(this.shopImageFile)
+        const reader = new FileReader();
+        if (event.target.files && event.target.files.length) {
+            const [file] = event.target.files;
+            reader.readAsDataURL(file)
+
+            reader.onload = () => {
+                this.shopBanner = reader.result as string;
+                localStorage.setItem("image", this.shopBanner);
+            }
+        }
+    }
+
+    uploadUserImage(fileUpload: File): Promise<string> {
+        return new Promise<string>((resolve) => {
+            let n = Date.now();
+            const filePath = `UserImages/${n}`;
+
+            const fileRef = this.storage.ref(filePath);
+            const task = this.storage.upload(`UserImages/${n}`, fileUpload);
+            task
+                .snapshotChanges()
+                .pipe(
+                    finalize(() => {
+                        this.downloadURL = fileRef.getDownloadURL();
+                        this.downloadURL.subscribe(url => {
+                            if (url) {
+                                resolve(url);
+                            }
+                        });
+                    })
+                )
+                .subscribe(url => {
+
+                }
+                );
+        })
+    }
+
+    uploadShopImage(fileUpload: File): Promise<string> {
+        return new Promise<string>((resolve) => {
+            let n = Date.now();
+            const filePath = `Shops/${n}`;
+
+            const fileRef = this.storage.ref(filePath);
+            const task = this.storage.upload(`Shops/${n}`, fileUpload);
+            task
+                .snapshotChanges()
+                .pipe(
+                    finalize(() => {
+                        this.downloadURL = fileRef.getDownloadURL();
+                        this.downloadURL.subscribe(url => {
+                            if (url) {
+                                resolve(url);
+                            }
+                        });
+                    })
+                )
+                .subscribe(url => {
+
+                }
+                );
+        })
+    }
+
+
+    //Getter
+    get userFullName() { return this.addUserForm.get("fullName").value; }
+    get userEmail() { return this.addUserForm.get("email").value; }
+    get userDateOfBirth() { return this.addUserForm.get("dateOfBirth").value; }
+    get userPhoneNumber() { return this.addUserForm.get("phoneNumber").value; }
+    get userIdentifiedCode() { return this.addUserForm.get("identifiedCode").value }
+    get userAddress() { return this.addUserForm.get("address").value; }
+    get userDistrict() { return this.addUserForm.get("district").value; }
+    get userWard() { return this.addUserForm.get("ward").value; }
+    get userPassword() { return this.addUserForm.get("password").value; }
+    get userConfirmPassword() { return this.addUserForm.get("confirmPassword").value; }
+
+    //Shop
+    get shopName() { return this.shopForm.get("name").value }
+    get shopDescription() { return this.shopForm.get("description").value }
+
+    // // Set avatar image
+    // onFileChange(event) {
+    //     const reader = new FileReader();
+    //     if (event.target.files && event.target.files.length) {
+    //         const [file] = event.target.files;
+    //         reader.readAsDataURL(file);
+
+    //         reader.onload = () => {
+    //             this.avatar = reader.result as string;
+    //             localStorage.setItem("image", this.avatar);
+    //         };
+    //     }
+    //     this.imageFile = event.target.files[0];
     // }
 
-    onSubmit() {
-        this.submitted = true;
-        if (this.accountForm.invalid) {
-            console.log('err');
-            return;
-        }
+    // // Upload the image to firebase
+    // uploadImage(): Promise<void> {
+    //     return new Promise<void>((resolve) => {
+    //         let n = Date.now();
+    //         const filePath = `UserImages/${n}`;
 
-        console.log(this.accountForm.getRawValue());
-        // const shop = new Shop(
-        //     this.getFirstName, this.getLastName, this.getEmail, this.getPassword, this.confirmPassword);
-        const vendor = new vendorsDB(
-            'assets/images/dashboard/designer.jpg', this.getFirstName, this.getEmail, this.getPassword, null, BigInt(20000), BigInt(40000)
-        );
-        this.vendors.push(vendor);
-    }
+    //         const fileRef = this.storage.ref(filePath);
+    //         const task = this.storage.upload(`UserImages/${n}`, this.imageFile);
+    //         task
+    //             .snapshotChanges()
+    //             .pipe(
+    //                 finalize(() => {
+    //                     this.downloadURL = fileRef.getDownloadURL();
+    //                     this.downloadURL.subscribe((url) => {
+    //                         if (url) {
+    //                             //return url here
+    //                             this.imageLink = url;
+    //                         }
+    //                         resolve();
+    //                     });
+    //                 })
+    //             )
+    //             .subscribe((url) => {
+    //                 // if (url) {
+    //                 //     // console.log(url);
+    //                 // }
+    //             });
+    //     });
+    // }
 
+    // // Check password and confirm password is match
+    // ConfirmedValidator(controlName: string, matchingControlName: string) {
+    //     return (formGroup: FormGroup) => {
+    //         const control = formGroup.controls[controlName];
+    //         const matchingControl = formGroup.controls[matchingControlName];
+    //         if (matchingControl.errors && !matchingControl.errors.confirmedValidator) {
+    //             return;
+    //         }
+    //         if (control.value !== matchingControl.value) {
+    //             matchingControl.setErrors({ confirmedValidator: true });
+    //         } else {
+    //             matchingControl.setErrors(null);
+    //         }
+    //     };
+    // }
 
-    get form() {
-        return this.accountForm.controls;
-    }
+    // // Call API of wards
+    // onDistrictChange(index: string) {
+    //     const districtId = this.addressDto.controls[index].get("district").value;
+    //     const wardControl = this.addressDto.controls[index].get("ward");
 
-    get getFirstName(): string {
-        return this.accountForm.get('fname').getRawValue();
-    }
+    //     // If districtId == "2" (Hoang Sa) -> No Validate "Ward"
+    //     if (districtId === "2") {
+    //         wardControl.clearValidators();
+    //         wardControl.updateValueAndValidity();
+    //         wardControl?.disable();
+    //         this.wards = [];
+    //     } else {
+    //         wardControl.setValidators([Validators.required]);
+    //         wardControl.updateValueAndValidity();
+    //         wardControl?.enable();
+    //     }
 
-    get getLastName(): string {
-        return this.accountForm.get('lname').getRawValue();
-    }
-
-    get getEmail(): string {
-        return this.accountForm.get('email').getRawValue();
-    }
-
-    get getPassword(): string {
-        return this.accountForm.get('password').getRawValue();
-    }
-
-    get confirmPassword(): string {
-        return this.accountForm.get('confirmPwd').getRawValue();
-    }
+    //     // Get API wards of each district
+    //     this.wardService.getWardList(districtId).subscribe((data) => {
+    //         this.addressDto.controls[index].get("ward").setValue("");
+    //         this.wards = districtId === "2" ? [] : data;
+    //     });
+    // }
 }

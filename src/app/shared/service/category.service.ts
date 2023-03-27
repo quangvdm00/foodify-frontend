@@ -21,4 +21,8 @@ export class CategoryService {
     console.log("edit service called")
     return this.httpClient.put<Category>(this.baseUrl + `/${categoryId}`, category)
   }
+
+  deleteCategoryById(categoryId: number) {
+    return this.httpClient.delete(this.baseUrl + `/${categoryId}`);
+  }
 }

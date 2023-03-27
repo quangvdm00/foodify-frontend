@@ -11,6 +11,7 @@ import { map } from 'rxjs/operators';
 export class ProductService {
 
     private baseUrl = `${environment.foodOrderingBaseApiUrl}/products`;
+    idString = '?'
 
     constructor(private httpClient: HttpClient) {
     }
@@ -30,6 +31,16 @@ export class ProductService {
 
     getProductsByShopId(shopId: number, thePage: number, thePageSize: number): Observable<GetResponseProducts> {
         return this.httpClient.get<GetResponseProducts>(this.baseUrl + `/shops/${shopId}?pageNo=${thePage}&pageSize=${thePageSize}`)
+    }
+
+    getProductsByCategoryIds(categories: number[], thePage: number, thePageSize: number): Observable<GetResponseProducts> {
+        this.idString = `/categories?`;
+        categories.forEach(category => {
+            this.idString = this.idString + `id=${category}&`
+        });
+
+        console.log(this.baseUrl + this.idString + `pageNo=${thePage}&pageSize=${thePageSize}`);
+        return this.httpClient.get<GetResponseProducts>(this.baseUrl + this.idString + `pageNo=${thePage}&pageSize=${thePageSize}`)
     }
 
     updateProductById(productId: number, product: Product) {

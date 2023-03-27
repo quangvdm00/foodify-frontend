@@ -11,6 +11,7 @@ import { DigitalAddComponent } from './digital/digital-add/digital-add.component
 import { ProductDetailComponent } from './physical/product-detail/product-detail.component';
 import { AddProductCategoryComponent } from "./physical/add-product-category/add-product-category.component";
 import { EditProductComponent } from './physical/edit-product/edit-product.component';
+import { CategoryDetailComponent } from './physical/category-detail/category-detail.component';
 
 const routes: Routes = [
   {
@@ -20,8 +21,8 @@ const routes: Routes = [
         path: 'category',
         component: CategoryComponent,
         data: {
-          title: "Category",
-          breadcrumb: "Category"
+          title: "Thể loại",
+          breadcrumb: "Thể loại"
         }
       },
       // {
@@ -32,6 +33,14 @@ const routes: Routes = [
       //     breadcrumb: "Sub Category"
       //   }
       // },
+      {
+        path: 'category/:id',
+        component: CategoryDetailComponent,
+        data: {
+          title: "Danh sách sản phẩm",
+          breadcrumb: "Thể loại"
+        }
+      },
       {
         path: 'product-list',
         component: ProductListComponent,

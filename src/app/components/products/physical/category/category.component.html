@@ -37,10 +37,14 @@
                                     <tr *ngFor='let category of categories'>
                                         <th scope="row">{{ category.id }}</th>
                                         <td>
-                                            <img [src]="category.imageUrl" class="imgTable" style="width: 20px">
+                                            <img [src]="category.imageUrl" class="imgTable" style="width: 20px"
+                                                [routerLink]="['/products','category',category.id]">
                                         </td>
                                         <td>{{ category.name }}</td>
                                         <td>
+                                            <a style="cursor: pointer;"
+                                                [routerLink]="['/products','category',category.id]"><i
+                                                    style="color: black;" class='fa fa-eye f-12'></i></a>&nbsp;
                                             <a style="cursor: pointer;"
                                                 (click)="editCategory(productCategoryTemplate, category)"><i
                                                     class='fa fa-edit f-12'></i></a>&nbsp;
@@ -49,9 +53,10 @@
                                                     class="fa fa-trash-o"></i></a>
                                             <ng-template #deleteCategory>
                                                 <div class="modal-body text-center">
-                                                    <p>Bạn muốn xoá thể loại này chứ ?</p>
+                                                    <p>Bạn muốn xoá thể loại này chứ ?<br>
+                                                        Tất cả những sản phẩm liên quan sẽ bị xoá ?</p>
                                                     <button type="button" class="btn btn-default"
-                                                        (click)="confirm(categoryId)">
+                                                        (click)="confirm(categoryId, deleteSuccess)">
                                                         Có
                                                     </button>
                                                     <button type="button" class="btn btn-primary"
@@ -108,6 +113,14 @@
 </ng-template>
 
 <ng-template #updateSuccess>
+    <div class="modal-body text-center">
+        <p>Cập nhật thành công</p>
+        <button type="button" class="btn btn-primary" (click)="success()">Tiếp tục
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #deleteSuccess>
     <div class="modal-body text-center">
         <p>Cập nhật thành công</p>
         <button type="button" class="btn btn-primary" (click)="success()">Tiếp tục

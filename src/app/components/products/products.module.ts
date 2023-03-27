@@ -28,6 +28,7 @@ import {AddProductCategoryComponent} from './physical/add-product-category/add-p
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {AuthInterceptor} from "../../shared/inceptor/auth-interceptor";
 import { EditProductComponent } from './physical/edit-product/edit-product.component';
+import { CategoryDetailComponent } from './physical/category-detail/category-detail.component';
 // import { NgbdSortableHeader } from "src/app/shared/directives/NgbdSortableHeader";
 // import {  } from '../../directives/shorting.directive/';
 
@@ -44,7 +45,8 @@ import { EditProductComponent } from './physical/edit-product/edit-product.compo
         DigitalAddComponent,
         ProductDetailComponent,
         AddProductCategoryComponent,
-        EditProductComponent
+        EditProductComponent,
+        CategoryDetailComponent
     ],
     imports: [
         Ng2SearchPipeModule,

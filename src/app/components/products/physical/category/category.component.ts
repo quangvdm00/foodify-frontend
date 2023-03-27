@@ -61,9 +61,11 @@ export class CategoryComponent implements OnInit {
         this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
     }
 
-    confirm(categoryId: number): void {
+    confirm(categoryId: number, template: TemplateRef<any>): void {
         console.log("Delete category with id :" + categoryId);
+        this.categoryService.deleteCategoryById(categoryId).subscribe();
         this.modalRef.hide();
+        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
     }
 
     decline(): void {

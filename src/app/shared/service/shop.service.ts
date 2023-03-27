@@ -26,10 +26,6 @@ export class ShopService {
     return this.httpClient.get<Shop>(this.baseUrl + `/${shopId}`)
   }
 
-  getLocation(address: Address): Observable<GoogleResponse> {
-    return this.httpClient.get<GoogleResponse>(`https://maps.googleapis.com/maps/api/geocode/json?address=${address.address},${address.ward},${address.district}&key=${environment.key}`)
-  }
-
   downloadImage(url: string) {
     this.httpClient.get(url, { responseType: 'arraybuffer' }).subscribe(response => {
       const file = new File([response], 'YOUR_IMG.jpg', { type: 'image/jpeg' })

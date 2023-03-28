@@ -71,7 +71,7 @@
                       <label for="validationCustom2"><span>*</span> Ngày Sinh</label>
                     </div>
                     <div class="col-xl-8 col-md-7">
-                      <input formControlName="dateOfBirth" class="form-control" type="date" />
+                      <input type="date" formControlName="dateOfBirth" class="form-control" />
                       <div *ngIf="userDateOfBirth?.invalid && (userDateOfBirth?.dirty || userDateOfBirth?.touched)"
                         class="alert alert-danger mt-1">
                         <div *ngIf="userDateOfBirth?.errors?.['required']">Vui lòng không được bỏ
@@ -105,7 +105,7 @@
                     </div>
                     <div class="col-xl-8 col-md-7">
                       <input formControlName="identifiedCode" class="form-control" type="number"
-                        placeholder="Số CMNND/CCCD" />
+                        placeholder="Số CMND/CCCD" />
                       <div
                         *ngIf="userIdentifiedCode?.invalid && (userIdentifiedCode?.dirty || userIdentifiedCode?.touched)"
                         class="alert alert-danger mt-1">
@@ -125,7 +125,7 @@
                       <label for="validationCustom2"><span>*</span>Địa chỉ</label>
                     </div>
                     <div class="col-xl-8 col-md-7">
-                      <input formControlName="identifiedCode" class="form-control" type="text" placeholder="" />
+                      <input formControlName="address" class="form-control" type="text" placeholder="" />
                       <div *ngIf="userAddress?.invalid && (userAddress?.dirty || userAddress?.touched)"
                         class="alert alert-danger mt-1">
                         <div *ngIf="userAddress?.errors?.['required']">Vui lòng không được bỏ

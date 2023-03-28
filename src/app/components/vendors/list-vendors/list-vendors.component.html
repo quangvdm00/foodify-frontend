@@ -10,16 +10,18 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th scope="col">#</th>
                                 <th scope="col">Shop</th>
                                 <th scope="col">Mô tả</th>
                                 <th scope="col" sortable="name">Hoạt động</th>
                                 <th scope="col" sortable="name">Shop sinh viên</th>
-                                <th scope="col" sortable="name">Id người dùng</th>
+                                <!-- <th scope="col" sortable="name">Id người dùng</th> -->
                                 <th scope="col" sortable="name">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let shop of shops, let idx = index">
+                                <td>{{ idx + 1}}</td>
                                 <td scope="row">
                                     <img [src]="shop.imageUrl" class="imgTable" style="width: 20px">
                                     <span>{{shop.name}}</span>
@@ -29,7 +31,7 @@
                                 </td>
                                 <td>{{shop.isEnabled}}</td>
                                 <td>{{shop.isStudent}}</td>
-                                <td>{{shop.userId}}</td>
+                                <!-- <td>{{shop.userId}}</td> -->
                                 <td>
                                     <a style="cursor: pointer" title="Xem">
                                         <a [routerLink]="['/vendors','details',shop.id]">
@@ -41,15 +43,10 @@
                                             <i class='fa fa-edit f-12'></i>
                                         </a>
                                     </a>&nbsp;
-                                    <a title="Xoá" style="cursor: pointer"><i class="fa fa-trash-o"></i></a>
+                                    <a title="Xoá" style="cursor: pointer"
+                                        (click)="openDeleteModal(deleteModal, shop.id)"><i
+                                            class="fa fa-trash-o"></i></a>
                                 </td>
-                                <ng-template #template>
-                                    <div class="modal-body text-center">
-                                        <p>Do you want to delete this product?</p>
-                                        <button type="button" class="btn btn-default">Yes</button>
-                                        <button type="button" class="btn btn-primary">No</button>
-                                    </div>
-                                </ng-template>
                             </tr>
                         </tbody>
                     </table>
@@ -65,8 +62,26 @@
         </div>
     </div>
 </div>
-<ng-template #formEditTemplate>
-    <!-- Modal -->
+
+<ng-template #deleteModal>
+    <div class="modal-body text-center">
+        <p>Bạn chắc chắn muốn xoá người bán này chứ ?</p>
+        <button type="button" class="btn btn-primary" (click)="confirm(deleteSuccess)">Tiếp tục
+        </button>&nbsp;
+        <button type="button" class="btn btn-secondary" (click)="decline()">Quay lại
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #deleteSuccess>
+    <div class="modal-body text-center">
+        <p>Cập nhật thành công</p>
+        <button type="button" class="btn btn-primary" (click)="decline()">Tiếp tục
+        </button>
+    </div>
+</ng-template>
+
+<!-- <ng-template #formEditTemplate>
     <div id="formModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="" role="document">
             <div class="modal-content">
@@ -128,4 +143,4 @@
             </div>
         </div>
     </div>
-</ng-template>
+</ng-template> -->

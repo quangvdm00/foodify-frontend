@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { FormBuilder, FormControl, FormGroup, MinLengthValidator, UntypedFormGroup, Validators } from '@angular/forms';
@@ -53,13 +54,12 @@ export class CreateVendorsComponent {
 
     constructor(
         private formBuilder: FormBuilder,
-        private router: Router,
         private userService: UserService,
         private districtService: DistrictService,
         private wardService: WardService,
         private storage: AngularFireStorage,
         private shopService: ShopService,
-        private modalService: BsModalService
+        private modalService: BsModalService,
     ) {
         this.createUserForm();
         this.createShopForm();
@@ -127,22 +127,23 @@ export class CreateVendorsComponent {
             newUser.isLocked = false;
             newUser.roleName = 'ROLE_SHOP';
 
+            newShop.name = this.shopName
+            newShop.description = this.shopDescription;
+            newShop.isStudent = this.isStudent;
+            newShop.isEnabled = true;
+            newShop.lat = '1';
+            newShop.lng = '1';
+
+            newAddress.address = this.userAddress;
+            newAddress.district = this.userDistrict;
+            if (this.userDistrict != "Huyện Hoàng Sa") newAddress.ward = this.userWard;
+
             this.userService.createUserOnly(newUser).pipe(
                 switchMap((user) => {
                     this.uploadShopImage(this.shopImageFile).then((url) => {
                         newShop.userId = user.id
-                        console.log(user.id)
-                        newShop.name = this.shopName
-                        newShop.description = this.shopDescription;
-                        newShop.isStudent = this.isStudent;
-                        newShop.isEnabled = true;
                         newShop.imageUrl = url;
-                        newShop.lat = '1'
-                        newShop.lng = '1'
                         this.shopService.createShop(newShop).subscribe(() => {
-                            newAddress.address = this.userAddress;
-                            newAddress.district = this.userDistrict;
-                            if (this.userDistrict != "Huyện Hoàng Sa") newAddress.ward = this.userWard;
                             this.userService.createAddressForUser(user.id, newAddress).subscribe()
                         });
                     })

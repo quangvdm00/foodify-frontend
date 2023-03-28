@@ -30,6 +30,10 @@ export class ShopService {
     return this.httpClient.put<Shop>(this.baseUrl + `/${shopId}`, shopUpdate);
   }
 
+  deleteShop(shopId: number) {
+    return this.httpClient.delete(this.baseUrl + `/${shopId}`);
+  }
+
   // downloadImage(url: string) {
   //   this.httpClient.get(url, { responseType: 'arraybuffer' }).subscribe(response => {
   //     const file = new File([response], 'YOUR_IMG.jpg', { type: 'image/jpeg' })

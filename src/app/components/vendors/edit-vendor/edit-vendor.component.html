@@ -215,8 +215,14 @@
                                                     <label for="validationCustom0"><span>*</span> Ảnh đại diện</label>
                                                 </div>
                                                 <div class="col-xl-8 col-md-7">
-                                                    <input class="input-image" type="file" accept="image/*"
-                                                        (change)="onShopFileSelected($event)" />
+                                                    <button *ngIf="!shopEdited" type="submit" class="btn btn-success"
+                                                        (click)="chooseImg(chooseShopImage)">
+                                                        Chọn ảnh
+                                                    </button>
+                                                    <button *ngIf="shopEdited" type="submit" class="btn btn-secondary"
+                                                        (click)="chooseImg(chooseShopImage)">
+                                                        Thay đổi ảnh
+                                                    </button>
                                                     <!-- <div *ngIf="imageUrl?.invalid && (imageUrl?.dirty || imageUrl?.touched)"
                                                 class="alert alert-danger mt-1">
                                                 <div *ngIf="imageUrl?.errors?.['required']">Vui lòng chọn ảnh đại diện.

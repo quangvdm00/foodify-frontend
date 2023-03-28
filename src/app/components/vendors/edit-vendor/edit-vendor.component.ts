@@ -45,8 +45,6 @@ export class EditVendorComponent implements OnInit {
   userImageFile: File;
   shopImageFile: File;
   imageLink;
-  edited: boolean = false;
-  shopEdited: boolean = false;
   fileUserName: string;
 
   // password
@@ -63,6 +61,8 @@ export class EditVendorComponent implements OnInit {
   isEnabled: boolean = true;
   userImg: string;
   shopImg: string;
+  edited: boolean = false;
+  shopEdited: boolean = false;
 
 
   constructor(
@@ -82,6 +82,7 @@ export class EditVendorComponent implements OnInit {
 
   ngOnInit() {
     const shopId = +this.route.snapshot.paramMap.get('id')!;
+    console.log(shopId)
     this.getAllDistrict().then(() => {
       this.shopService.getShopById(shopId).subscribe((data => this.fillFormToUpdate(data)))
     }).catch(error => console.log(error));
@@ -90,7 +91,6 @@ export class EditVendorComponent implements OnInit {
   createUserForm() {
     this.editUserForm = this.formBuilder.group(
       {
-        image: new FormControl("", [Validators.required]),
         fullName: new FormControl("", [Validators.required]),
         email: new FormControl("", [Validators.required, Validators.email]),
         dateOfBirth: new FormControl("", [Validators.required]),
@@ -207,11 +207,42 @@ export class EditVendorComponent implements OnInit {
         ).subscribe();
       })
     } else if (this.edited && !this.shopEdited) {
-      this.uploadUserImage(this.userImageFile).then
+      this.uploadUserImage(this.userImageFile).then((url) => {
+        editUser.imageUrl = url;
+        editShop.imageUrl = this.shopImg;
+        this.userService.updateUser(this.userId, editUser).subscribe();
+        this.shopService.updateShop(this.shopId, editShop).subscribe();
+        this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
+          () => { },
+          (error) => {
+            console.log("Address existed ! No problem")
+          }
+        )
+      })
     } else if (!this.edited && this.shopEdited) {
-      console.log("Edit shop only");
+      this.uploadShopImage(this.shopImageFile).then((url) => {
+        editUser.imageUrl = this.userImg;
+        editShop.imageUrl = url;
+        this.userService.updateUser(this.userId, editUser).subscribe();
+        this.shopService.updateShop(this.shopId, editShop).subscribe();
+        this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
+          () => { },
+          (error) => {
+            console.log("Address existed ! No problem")
+          }
+        )
+      })
     } else {
-      console.log("No need to upload")
+      editUser.imageUrl = this.userImg;
+      editShop.imageUrl = this.shopImg;
+      this.userService.updateUser(this.userId, editUser).subscribe();
+      this.shopService.updateShop(this.shopId, editShop).subscribe();
+      this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
+        () => { },
+        (error) => {
+          console.log("Address existed ! No problem")
+        }
+      )
     }
 
 
@@ -232,7 +263,6 @@ export class EditVendorComponent implements OnInit {
   //Image
   onFileSelected(event) {
     this.edited = true;
-    this.fileUserName = event.target.files[0].name;
     this.userImageFile = (event.target as HTMLInputElement).files[0];
     const reader = new FileReader();
     if (event.target.files && event.target.files.length) {

@@ -3,6 +3,7 @@ import { vendorsDB } from '../../../shared/tables/vendor-list';
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { FormBuilder, FormGroup, NgForm, Validators } from "@angular/forms";
 import { ShopService } from 'src/app/shared/service/shop.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-list-vendors',
@@ -11,13 +12,18 @@ import { ShopService } from 'src/app/shared/service/shop.service';
 })
 export class ListVendorsComponent implements OnInit {
     shops = [];
+    shopId: number;
 
     //Pagination Properties
     thePageNumber = 1;
     thePageSize = 5;
     theTotalElements = 0;
 
-    constructor(private shopService: ShopService) {
+    constructor(
+        private router: Router,
+        private shopService: ShopService,
+        private modalService: BsModalService
+    ) {
 
     }
 
@@ -36,5 +42,30 @@ export class ListVendorsComponent implements OnInit {
             this.thePageSize = data.page.pageSize;
             this.theTotalElements = data.page.totalElements;
         }
+    }
+
+    //Modal
+    modalRef: BsModalRef;
+
+    openDeleteModal(template: TemplateRef<any>, id: number) {
+        this.shopId = id;
+        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+    }
+
+    confirm(template: TemplateRef<any>): void {
+        console.log("Delete shop with id :" + this.shopId);
+        this.shopService.deleteShop(this.shopId).subscribe()
+        this.modalRef.hide();
+        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+    }
+
+    decline(): void {
+        this.modalRef.hide();
+    }
+
+    continue(): void {
+        this.modalRef.hide();
+        this.listShops();
+        this.router.navigate(['/vendors/list']);
     }
 }

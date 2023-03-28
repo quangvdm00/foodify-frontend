@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { FormBuilder, FormControl, FormGroup, MinLengthValidator, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { EMPTY, finalize, mergeMap, switchMap, tap } from 'rxjs';
 import { Observable } from 'rxjs-compat';
 import { DistrictService } from 'src/app/shared/service/district.service';
@@ -30,6 +31,7 @@ export class CreateVendorsComponent {
     avatar: string;
     shopBanner: string;
 
+
     // file
     downloadURL: Observable<string>;
     userImageFile: File;
@@ -45,7 +47,10 @@ export class CreateVendorsComponent {
     districts: District[];
     wards: Ward[];
 
+    userImageChoosen: boolean = false;
+    shopImageChoosen: boolean = false;
     isStudent: boolean = true;
+
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,
@@ -53,7 +58,8 @@ export class CreateVendorsComponent {
         private districtService: DistrictService,
         private wardService: WardService,
         private storage: AngularFireStorage,
-        private shopService: ShopService
+        private shopService: ShopService,
+        private modalService: BsModalService
     ) {
         this.createUserForm();
         this.createShopForm();
@@ -143,13 +149,7 @@ export class CreateVendorsComponent {
                     return EMPTY; // Return an empty observable to prevent nested subscriptions
                 })
             ).subscribe()
-
-
         })
-
-        console.log(newUser);
-        console.log(newAddress)
-        console.log(newShop)
     }
 
     //Districts
@@ -169,9 +169,11 @@ export class CreateVendorsComponent {
         }
     }
 
-    //Image
+    //Image Selected
     onFileSelected(event) {
+        this.userImageChoosen = true;
         this.userImageFile = event.target.files[0];
+
         const reader = new FileReader();
         if (event.target.files && event.target.files.length) {
             const [file] = event.target.files;
@@ -182,11 +184,14 @@ export class CreateVendorsComponent {
                 localStorage.setItem("image", this.avatar);
             }
         }
+        this.modalRef.hide();
     }
 
-    //Shop Image
+    //Shop Image Selected
     onShopFileSelected(event) {
+        this.shopImageChoosen = true;
         this.shopImageFile = event.target.files[0];
+
         console.log(this.shopImageFile)
         const reader = new FileReader();
         if (event.target.files && event.target.files.length) {
@@ -198,6 +203,7 @@ export class CreateVendorsComponent {
                 localStorage.setItem("image", this.shopBanner);
             }
         }
+        this.modalRef.hide();
     }
 
     uploadUserImage(fileUpload: File): Promise<string> {
@@ -252,6 +258,12 @@ export class CreateVendorsComponent {
         })
     }
 
+
+    modalRef: BsModalRef;
+
+    chooseImg(template: TemplateRef<any>) {
+        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+    }
 
     //Getter
     get userFullName() { return this.addUserForm.get("fullName").value; }

@@ -14,22 +14,27 @@
                                 <form [formGroup]="editUserForm" class="needs-validation user-add" novalidate>
                                     <h4>Chi tiết tài khoản</h4>
                                     <!-- avatar -->
-                                    <!-- <div class="form-group row">
-                                          <div class="col-xl-3 col-md-4">
-                                              <label for="validationCustom0"><span>*</span> Ảnh đại diện</label>
-                                          </div>
-                                          <div class="col-xl-8 col-md-7">
-                                              <input class="input-image" formControlName="imageUrl" type="file"
-                                                  accept="image/*" (change)="onFileChange($event)" />
-                                              <img class="rounded-circle border border-dark" [src]="avatar" *ngIf="avatar"
-                                                  style="width: 160px; height: 160px; margin-left: 20px" />
-                                              <div *ngIf="imageUrl?.invalid && (imageUrl?.dirty || imageUrl?.touched)"
-                                                  class="alert alert-danger mt-1">
-                                                  <div *ngIf="imageUrl?.errors?.['required']">Vui lòng chọn ảnh đại diện.
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div> -->
+                                    <div class="form-group row">
+                                        <div class="col-xl-3 col-md-4">
+                                            <label for="validationCustom0"><span>*</span> Ảnh đại diện</label>
+                                        </div>
+                                        <div class="col-xl-8 col-md-7">
+                                            <button *ngIf="!edited" type="submit" class="btn btn-success"
+                                                (click)="chooseImg(chooseUserImage)">
+                                                Chọn ảnh
+                                            </button>
+                                            <button *ngIf="edited" type="submit" class="btn btn-secondary"
+                                                (click)="chooseImg(chooseUserImage)">
+                                                Thay đổi ảnh
+                                            </button>
+                                            <img *ngIf="!edited" class="rounded-circle border border-dark"
+                                                src="{{ userImg }}"
+                                                style="width: 160px; height: 160px; margin-left: 20px" />
+                                            <img class="rounded-circle border border-dark" [src]="avatar" *ngIf="avatar"
+                                                style="width: 160px; height: 160px; margin-left: 20px" />
+                                        </div>
+                                    </div>
+
                                     <!-- full name -->
                                     <div class="form-group row">
                                         <div class="col-xl-3 col-md-4">
@@ -185,16 +190,17 @@
                         <li [ngbNavItem]="2">
                             <a ngbNavLink>Shop đăng ký</a>
                             <ng-template ngbNavContent>
+
+                                <!-- Shop img -->
                                 <div class="row product-adding">
                                     <div class="col-xl-5">
                                         <div class="add-product">
                                             <div class="row">
-                                                <div class="col-xl-9 xl-50 col-sm-6 col-9">
+                                                <div *ngIf="!shopEdited" class="col-xl-9 xl-50 col-sm-6 col-9">
                                                     <img src="{{ shopImg }}" alt="" class="img-fluid image_zoom_1">
                                                 </div>
-                                                <div class="col-xl-3 xl-50 col-sm-6 col-3">
-
-                                                </div>
+                                                <img class="col-xl-9 xl-50 col-sm-6 col-9" [src]="shopBanner"
+                                                    *ngIf="shopBanner" />
                                             </div>
                                         </div>
                                     </div>
@@ -202,6 +208,22 @@
                                     <div class="col-xl-7">
                                         <form [formGroup]="editShopForm" class="needs-validation user-add"
                                             novalidate="">
+
+                                            <!-- Shop Banner -->
+                                            <div class="form-group row">
+                                                <div class="col-xl-3 col-md-4">
+                                                    <label for="validationCustom0"><span>*</span> Ảnh đại diện</label>
+                                                </div>
+                                                <div class="col-xl-8 col-md-7">
+                                                    <input class="input-image" type="file" accept="image/*"
+                                                        (change)="onShopFileSelected($event)" />
+                                                    <!-- <div *ngIf="imageUrl?.invalid && (imageUrl?.dirty || imageUrl?.touched)"
+                                                class="alert alert-danger mt-1">
+                                                <div *ngIf="imageUrl?.errors?.['required']">Vui lòng chọn ảnh đại diện.
+                                                </div>
+                                            </div> -->
+                                                </div>
+                                            </div>
 
                                             <!-- Shop Name -->
                                             <div class="form-group row">
@@ -268,17 +290,6 @@
                                                     </button>
                                                 </div>
                                             </div>
-
-                                            <!-- Image Shop  -->
-                                            <div class="form-group row">
-                                                <div class="col-xl-3 col-md-4">
-                                                    <label for="validationCustom2"><span>*</span> Ảnh</label>
-                                                </div>
-                                                <div class="col-xl-8 col-md-7">
-                                                    <input formControlName="description" class="form-control"
-                                                        type="file" placeholder="Chỉnh sửa" formControlName="image" />
-                                                </div>
-                                            </div>
                                         </form>
                                     </div>
                                 </div>
@@ -287,7 +298,7 @@
                     </ul>
                     <div [ngbNavOutlet]="nav" class="mt-2"></div>
                     <div class="pull-right">
-                        <button type="submit" class="btn btn-primary" (click)="editUser()">Tạo tài khoản</button>
+                        <button type="submit" class="btn btn-primary" (click)="editUser()">Chỉnh sửa</button>
                     </div>
                 </div>
             </div>
@@ -295,3 +306,17 @@
     </div>
 </div>
 <!-- Container-fluid Ends-->
+
+<ng-template #chooseUserImage>
+    <div class="modal-body text-center">
+        <p>Vui lòng chọn 1 ảnh</p>
+        <input class="input-image" type="file" accept="image/*" (change)="onFileSelected($event)" />
+    </div>
+</ng-template>
+
+<ng-template #chooseShopImage>
+    <div class="modal-body text-center">
+        <p>Vui lòng chọn 1 ảnh</p>
+        <input class="input-image" type="file" accept="image/*" (change)="onShopFileSelected($event)" />
+    </div>
+</ng-template>

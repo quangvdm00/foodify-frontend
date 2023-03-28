@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TreeMapModule } from '@swimlane/ngx-charts';
 import { rejects } from 'assert';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { resolve } from 'path';
 import { element } from 'protractor';
+import { EMPTY, finalize, switchMap } from 'rxjs';
 import { Observable } from 'rxjs-compat';
 import { DistrictService } from 'src/app/shared/service/district.service';
 import { ShopService } from 'src/app/shared/service/shop.service';
@@ -23,18 +25,29 @@ import { Ward } from 'src/app/shared/tables/Ward';
   styleUrls: ['./edit-vendor.component.scss']
 })
 export class EditVendorComponent implements OnInit {
+  //ids
+  userId: number;
+  shopId: number;
+  addressId: number;
+
   // form
   public active = 1;
   editUserForm: FormGroup;
   editShopForm: FormGroup;
 
+
   // image
   avatar: string;
+  shopBanner: string;
 
   // file
   downloadURL: Observable<string>;
-  imageFile: File;
+  userImageFile: File;
+  shopImageFile: File;
   imageLink;
+  edited: boolean = false;
+  shopEdited: boolean = false;
+  fileUserName: string;
 
   // password
   showPassword = false;
@@ -48,7 +61,9 @@ export class EditVendorComponent implements OnInit {
   //Shop
   isStudent: boolean = true;
   isEnabled: boolean = true;
+  userImg: string;
   shopImg: string;
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -58,7 +73,8 @@ export class EditVendorComponent implements OnInit {
     private districtService: DistrictService,
     private wardService: WardService,
     private storage: AngularFireStorage,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private modalService: BsModalService
   ) {
     this.createUserForm();
     this.createEditShopForm();
@@ -74,7 +90,7 @@ export class EditVendorComponent implements OnInit {
   createUserForm() {
     this.editUserForm = this.formBuilder.group(
       {
-        imageUrl: new FormControl("", [Validators.required]),
+        image: new FormControl("", [Validators.required]),
         fullName: new FormControl("", [Validators.required]),
         email: new FormControl("", [Validators.required, Validators.email]),
         dateOfBirth: new FormControl("", [Validators.required]),
@@ -102,9 +118,12 @@ export class EditVendorComponent implements OnInit {
   fillFormToUpdate(response: Shop) {
     this.isHaveDistrict = false;
     this.isEnabled = response.isEnabled;
+    this.userImg = response.user.imageUrl;
     this.shopImg = response.imageUrl;
-
-    this.shopService.downloadImage(this.shopImg)
+    this.userId = response.user.id;
+    this.shopId = response.id;
+    this.addressId = response.user.addresses[0].id;
+    console.log(this.userId + " " + this.shopId + " " + this.addressId)
 
     this.districts.forEach((element: District) => {
       if (response.user.addresses[0].district == element.name && response.user.addresses[0].district != "Huyện Hoàng Sa") {
@@ -146,31 +165,56 @@ export class EditVendorComponent implements OnInit {
 
   //Edit vendor
   editUser() {
-    const newUser = new User();
-    const newAddress = new Address();
-    const newShop = new Shop();
+    const editUser = new User();
+    const editAddress = new Address();
+    const editShop = new Shop();
 
-    newUser.fullName = this.userFullName;
-    newUser.email = this.userEmail;
-    newUser.dateOfBirth = this.userDateOfBirth;
-    newUser.phoneNumber = this.userPhoneNumber;
-    newUser.identifiedCode = this.userIdentifiedCode;
-    newUser.defaultAddress = 0;
-    newUser.isLocked = false;
-    newUser.roleName = 'ROLE_SHOP';
+    editUser.fullName = this.userFullName;
+    editUser.email = this.userEmail;
+    editUser.dateOfBirth = this.userDateOfBirth;
+    editUser.phoneNumber = this.userPhoneNumber;
+    editUser.identifiedCode = this.userIdentifiedCode;
+    editUser.defaultAddress = 0;
+    editUser.isLocked = false;
+    editUser.roleName = 'ROLE_SHOP';
 
-    newAddress.address = this.userAddress;
-    newAddress.district = this.userDistrict;
-    if (this.userDistrict != "Huyện Hoàng Sa") newAddress.ward = this.userWard;
+    editAddress.id = this.addressId
+    editAddress.address = this.userAddress;
+    editAddress.district = this.userDistrict;
+    if (this.userDistrict != "Huyện Hoàng Sa") editAddress.ward = this.userWard;
 
-    newShop.name = this.shopName
-    newShop.description = this.shopDescription;
-    newShop.isStudent = this.isStudent;
-    newShop.isEnabled = true;
+    editShop.name = this.shopName
+    editShop.description = this.shopDescription;
+    editShop.isStudent = this.isStudent;
+    editShop.isEnabled = this.isEnabled;
 
-    console.log(newUser);
-    console.log(newAddress)
-    console.log(newShop)
+    if (this.edited == true && this.shopEdited == true) {
+      this.uploadUserImage(this.userImageFile).then((url) => {
+        editUser.imageUrl = url
+        this.userService.updateUser(this.userId, editUser).pipe(
+          switchMap((user) => {
+            this.uploadShopImage(this.shopImageFile).then((url) => {
+              editShop.imageUrl = url;
+              this.shopService.updateShop(this.shopId, editShop).subscribe();
+              this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
+                () => { },
+                (error) => {
+                  console.log("Address existed ! No problem")
+                });
+            })
+            return EMPTY;
+          })
+        ).subscribe();
+      })
+    } else if (this.edited && !this.shopEdited) {
+      this.uploadUserImage(this.userImageFile).then
+    } else if (!this.edited && this.shopEdited) {
+      console.log("Edit shop only");
+    } else {
+      console.log("No need to upload")
+    }
+
+
   }
 
   //Districts
@@ -182,6 +226,94 @@ export class EditVendorComponent implements OnInit {
           resolve();
         }
       )
+    })
+  }
+
+  //Image
+  onFileSelected(event) {
+    this.edited = true;
+    this.fileUserName = event.target.files[0].name;
+    this.userImageFile = (event.target as HTMLInputElement).files[0];
+    const reader = new FileReader();
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file)
+
+      reader.onload = () => {
+        this.avatar = reader.result as string;
+        localStorage.setItem("image", this.avatar);
+      }
+    }
+    this.modalRef.hide();
+  }
+
+  //Shop Image
+  onShopFileSelected(event) {
+    this.shopEdited = true;
+    this.shopImageFile = event.target.files[0];
+    console.log(this.shopImageFile)
+    const reader = new FileReader();
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file)
+
+      reader.onload = () => {
+        this.shopBanner = reader.result as string;
+        localStorage.setItem("image", this.shopBanner);
+      }
+    }
+    this.modalRef.hide();
+  }
+
+  uploadUserImage(fileUpload: File): Promise<string> {
+    return new Promise<string>((resolve) => {
+      let n = Date.now();
+      const filePath = `UserImages/${n}`;
+
+      const fileRef = this.storage.ref(filePath);
+      const task = this.storage.upload(`UserImages/${n}`, fileUpload);
+      task
+        .snapshotChanges()
+        .pipe(
+          finalize(() => {
+            this.downloadURL = fileRef.getDownloadURL();
+            this.downloadURL.subscribe(url => {
+              if (url) {
+                resolve(url);
+              }
+            });
+          })
+        )
+        .subscribe(url => {
+
+        }
+        );
+    })
+  }
+
+  uploadShopImage(fileUpload: File): Promise<string> {
+    return new Promise<string>((resolve) => {
+      let n = Date.now();
+      const filePath = `Shops/${n}`;
+
+      const fileRef = this.storage.ref(filePath);
+      const task = this.storage.upload(`Shops/${n}`, fileUpload);
+      task
+        .snapshotChanges()
+        .pipe(
+          finalize(() => {
+            this.downloadURL = fileRef.getDownloadURL();
+            this.downloadURL.subscribe(url => {
+              if (url) {
+                resolve(url);
+              }
+            });
+          })
+        )
+        .subscribe(url => {
+
+        }
+        );
     })
   }
 
@@ -201,6 +333,13 @@ export class EditVendorComponent implements OnInit {
     else {
       this.isEnabled = true;
     }
+  }
+
+  //Modal
+  modalRef: BsModalRef;
+
+  chooseImg(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
   }
 
 

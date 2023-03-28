@@ -19,15 +19,16 @@
                       <label for="validationCustom0"><span>*</span> Ảnh đại diện</label>
                     </div>
                     <div class="col-xl-8 col-md-7">
-                      <input class="input-image" formControlName="image" type="file" accept="image/*"
-                        (change)="onFileSelected($event)" />
+                      <button *ngIf="!userImageChoosen" type="submit" class="btn btn-success"
+                        (click)="chooseImg(chooseUserImage)">
+                        Chọn ảnh
+                      </button>
+                      <button *ngIf="userImageChoosen" type="submit" class="btn btn-secondary"
+                        (click)="chooseImg(chooseUserImage)">
+                        Thay đổi ảnh
+                      </button>
                       <img class="rounded-circle border border-dark" [src]="avatar" *ngIf="avatar"
                         style="width: 160px; height: 160px; margin-left: 20px" />
-                      <!-- <div *ngIf="imageUrl?.invalid && (imageUrl?.dirty || imageUrl?.touched)"
-                                                class="alert alert-danger mt-1">
-                                                <div *ngIf="imageUrl?.errors?.['required']">Vui lòng chọn ảnh đại diện.
-                                                </div>
-                                            </div> -->
                     </div>
                   </div>
                   <!-- full name -->
@@ -185,9 +186,9 @@
                         <div class="col-xl-9 xl-50 col-sm-6 col-9">
                           <img [src]="shopBanner" *ngIf="shopBanner" alt="" class="img-fluid image_zoom_1">
                         </div>
-                        <div class="col-xl-3 xl-50 col-sm-6 col-3">
+                        <!-- <div class="col-xl-3 xl-50 col-sm-6 col-3">
 
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -198,11 +199,15 @@
                       <!-- Shop Banner -->
                       <div class="form-group row">
                         <div class="col-xl-3 col-md-4">
-                          <label for="validationCustom0"><span>*</span> Ảnh đại diện</label>
+                          <label for="validationCustom0"><span>*</span> Banner shop</label>
                         </div>
                         <div class="col-xl-8 col-md-7">
-                          <input class="input-image" formControlName="image" type="file" accept="image/*"
-                            (change)="onShopFileSelected($event)" />
+                          <button *ngIf="!shopImageChoosen" type="submit" class="btn btn-success"
+                            (click)="chooseImg(chooseShopImage)">Chọn
+                            ảnh</button>
+                          <button *ngIf="shopImageChoosen" type="submit" class="btn btn-secondary"
+                            (click)="chooseImg(chooseShopImage)">Thay đổi ảnh</button>
+
                           <!-- <div *ngIf="imageUrl?.invalid && (imageUrl?.dirty || imageUrl?.touched)"
                                                 class="alert alert-danger mt-1">
                                                 <div *ngIf="imageUrl?.errors?.['required']">Vui lòng chọn ảnh đại diện.
@@ -271,3 +276,17 @@
   </div>
 </div>
 <!-- Container-fluid Ends-->
+
+<ng-template #chooseUserImage>
+  <div class="modal-body text-center">
+    <p>Vui lòng chọn 1 ảnh</p>
+    <input class="input-image" type="file" accept="image/*" (change)="onFileSelected($event)" />
+  </div>
+</ng-template>
+
+<ng-template #chooseShopImage>
+  <div class="modal-body text-center">
+    <p>Vui lòng chọn 1 ảnh</p>
+    <input class="input-image" type="file" accept="image/*" (change)="onShopFileSelected($event)" />
+  </div>
+</ng-template>

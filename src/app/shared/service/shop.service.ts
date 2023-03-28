@@ -26,12 +26,16 @@ export class ShopService {
     return this.httpClient.get<Shop>(this.baseUrl + `/${shopId}`)
   }
 
-  downloadImage(url: string) {
-    this.httpClient.get(url, { responseType: 'arraybuffer' }).subscribe(response => {
-      const file = new File([response], 'YOUR_IMG.jpg', { type: 'image/jpeg' })
-      console.log("File : ", file)
-    })
+  updateShop(shopId: number, shopUpdate: Shop) {
+    return this.httpClient.put<Shop>(this.baseUrl + `/${shopId}`, shopUpdate);
   }
+
+  // downloadImage(url: string) {
+  //   this.httpClient.get(url, { responseType: 'arraybuffer' }).subscribe(response => {
+  //     const file = new File([response], 'YOUR_IMG.jpg', { type: 'image/jpeg' })
+  //     console.log("File : ", file)
+  //   })
+  // }
 }
 
 interface GetResponseShops {

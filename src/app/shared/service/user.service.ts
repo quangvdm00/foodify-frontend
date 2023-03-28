@@ -27,4 +27,10 @@ export class UserService {
   createAddressForUser(userId: number, address: Address) {
     return this.httpClient.post(this.baseUrl + `/${userId}/addresses`, address)
   }
+
+  //Update Address for User
+  updateUserAddress(userId: number, addressId: number, updateAddress: Address) {
+    console.log(this.baseUrl + `/${userId}/addresses/${addressId}`)
+    return this.httpClient.put(this.baseUrl + `/${userId}/addresses/${addressId}`, updateAddress)
+  }
 }

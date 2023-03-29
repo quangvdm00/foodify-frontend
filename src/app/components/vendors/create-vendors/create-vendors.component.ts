@@ -60,6 +60,7 @@ export class CreateVendorsComponent {
         private storage: AngularFireStorage,
         private shopService: ShopService,
         private modalService: BsModalService,
+        private router: Router
     ) {
         this.createUserForm();
         this.createShopForm();
@@ -97,21 +98,10 @@ export class CreateVendorsComponent {
         this.getAllDistrict();
     }
 
-    onDistrictSelected() {
-        this.isHaveDistrict = false;
-        console.log("Choose:  " + this.userDistrict);
-        this.districts.forEach((element: District) => {
-            if (this.userDistrict == element.name && this.userDistrict != 'Huyện Hoàng Sa') {
-                this.isHaveDistrict = true;
-                this.wards = element.wards
-            }
-        });
-    }
-
     /**
      * create User from Form
      */
-    createUser() {
+    createUser(template: TemplateRef<any>) {
         const newUser = new User();
         const newAddress = new Address();
         const newShop = new Shop();
@@ -138,26 +128,40 @@ export class CreateVendorsComponent {
             newAddress.district = this.userDistrict;
             if (this.userDistrict != "Huyện Hoàng Sa") newAddress.ward = this.userWard;
 
-            this.userService.createUserOnly(newUser).pipe(
+            this.userService.createNewUser(newUser).pipe(
                 switchMap((user) => {
                     this.uploadShopImage(this.shopImageFile).then((url) => {
                         newShop.userId = user.id
                         newShop.imageUrl = url;
                         this.shopService.createShop(newShop).subscribe(() => {
                             this.userService.createAddressForUser(user.id, newAddress).subscribe()
+                            this.modalRef = this.modalService.show(template, { class: 'modal-sm' })
                         });
                     })
                     return EMPTY; // Return an empty observable to prevent nested subscriptions
                 })
-            ).subscribe()
+            ).subscribe(() => {
+
+            })
         })
     }
 
-    //Districts
+    //Districts and Wards
     getAllDistrict() {
         this.districtService.getAllDistricts().subscribe((distrs) => {
             this.districts = distrs;
         })
+    }
+
+    onDistrictSelected() {
+        this.isHaveDistrict = false;
+        console.log("Choose:  " + this.userDistrict);
+        this.districts.forEach((element: District) => {
+            if (this.userDistrict == element.name && this.userDistrict != 'Huyện Hoàng Sa') {
+                this.isHaveDistrict = true;
+                this.wards = element.wards
+            }
+        });
     }
 
     swap() {
@@ -264,6 +268,11 @@ export class CreateVendorsComponent {
 
     chooseImg(template: TemplateRef<any>) {
         this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+    }
+
+    continue() {
+        this.modalRef.hide();
+        this.router.navigate(['/vendors/list']);
     }
 
     //Getter

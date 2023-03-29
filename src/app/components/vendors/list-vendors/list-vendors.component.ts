@@ -55,6 +55,7 @@ export class ListVendorsComponent implements OnInit {
     confirm(template: TemplateRef<any>): void {
         console.log("Delete shop with id :" + this.shopId);
         this.shopService.deleteShop(this.shopId).subscribe()
+        this.listShops();
         this.modalRef.hide();
         this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
     }
@@ -65,7 +66,6 @@ export class ListVendorsComponent implements OnInit {
 
     continue(): void {
         this.modalRef.hide();
-        this.listShops();
         this.router.navigate(['/vendors/list']);
     }
 }

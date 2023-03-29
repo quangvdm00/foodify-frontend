@@ -148,8 +148,6 @@ export class EditVendorComponent implements OnInit {
       name: response.name,
       description: response.description
     })
-
-    console.log(this.userWard)
   }
 
   onDistrictSelected() {
@@ -164,7 +162,7 @@ export class EditVendorComponent implements OnInit {
   }
 
   //Edit vendor
-  editUser() {
+  editUser(template: TemplateRef<any>) {
     const editUser = new User();
     const editAddress = new Address();
     const editShop = new Shop();
@@ -197,14 +195,17 @@ export class EditVendorComponent implements OnInit {
               editShop.imageUrl = url;
               this.shopService.updateShop(this.shopId, editShop).subscribe();
               this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
-                () => { },
+                () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
                 (error) => {
-                  console.log("Address existed ! No problem")
+                  console.log("Address existed ! No problem");
+                  this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
                 });
             })
             return EMPTY;
           })
-        ).subscribe();
+        ).subscribe(() => {
+
+        });
       })
     } else if (this.edited && !this.shopEdited) {
       this.uploadUserImage(this.userImageFile).then((url) => {
@@ -213,9 +214,10 @@ export class EditVendorComponent implements OnInit {
         this.userService.updateUser(this.userId, editUser).subscribe();
         this.shopService.updateShop(this.shopId, editShop).subscribe();
         this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
-          () => { },
+          () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
           (error) => {
-            console.log("Address existed ! No problem")
+            console.log("Address existed ! No problem");
+            this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
           }
         )
       })
@@ -226,9 +228,10 @@ export class EditVendorComponent implements OnInit {
         this.userService.updateUser(this.userId, editUser).subscribe();
         this.shopService.updateShop(this.shopId, editShop).subscribe();
         this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
-          () => { },
+          () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
           (error) => {
-            console.log("Address existed ! No problem")
+            console.log("Address existed ! No problem");
+            this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
           }
         )
       })
@@ -238,9 +241,10 @@ export class EditVendorComponent implements OnInit {
       this.userService.updateUser(this.userId, editUser).subscribe();
       this.shopService.updateShop(this.shopId, editShop).subscribe();
       this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
-        () => { },
+        () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
         (error) => {
-          console.log("Address existed ! No problem")
+          console.log("Address existed ! No problem");
+          this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
         }
       )
     }
@@ -372,6 +376,10 @@ export class EditVendorComponent implements OnInit {
     this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
   }
 
+  continue() {
+    this.modalRef.hide();
+    this.router.navigate(['/vendors/details', this.shopId]);
+  }
 
   //Getter
   get userFullName() { return this.editUserForm.get("fullName").value; }

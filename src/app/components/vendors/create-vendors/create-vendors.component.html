@@ -31,13 +31,14 @@
                         style="width: 160px; height: 160px; margin-left: 20px" />
                     </div>
                   </div>
+
                   <!-- full name -->
                   <div class="form-group row">
                     <div class="col-xl-3 col-md-4">
                       <label for="validationCustom0"><span>*</span> Họ và tên</label>
                     </div>
                     <div class="col-xl-8 col-md-7">
-                      <input formControlName="fullName" class="form-control" type="text" placeholder="Họ và tên" />
+                      <input formControlName="fullName" class="form-control" type="text" />
                       <div *ngIf="userFullName?.invalid && (userFullName?.dirty || userFullName?.touched)"
                         class="alert alert-danger mt-1">
                         <div *ngIf="userFullName?.errors?.['required']">Vui lòng không được bỏ trống
@@ -54,7 +55,7 @@
                       <label for="validationCustom2"><span>*</span> Email</label>
                     </div>
                     <div class="col-xl-8 col-md-7">
-                      <input formControlName="email" class="form-control" type="email" placeholder="Email" />
+                      <input formControlName="email" class="form-control" type="email" />
                       <div *ngIf="userEmail?.invalid && (userEmail?.dirty || userEmail?.touched)"
                         class="alert alert-danger mt-1">
                         <div *ngIf="userEmail?.errors?.['required']">Vui lòng không được bỏ trống
@@ -86,8 +87,7 @@
                       <label for="validationCustom2"><span>*</span> Số Điện Thoại</label>
                     </div>
                     <div class="col-xl-8 col-md-7">
-                      <input formControlName="phoneNumber" class="form-control" type="tel"
-                        placeholder="Số điện thoại" />
+                      <input formControlName="phoneNumber" class="form-control" type="tel" />
                       <div *ngIf="userPhoneNumber?.invalid && (userPhoneNumber?.dirty || userPhoneNumber?.touched)"
                         class="alert alert-danger mt-1">
                         <div *ngIf="userPhoneNumber?.errors?.['required']">Vui lòng không được bỏ
@@ -104,8 +104,7 @@
                       <label for="validationCustom2"><span>*</span> CMND/CCCD</label>
                     </div>
                     <div class="col-xl-8 col-md-7">
-                      <input formControlName="identifiedCode" class="form-control" type="number"
-                        placeholder="Số CMND/CCCD" />
+                      <input formControlName="identifiedCode" class="form-control" type="number" />
                       <div
                         *ngIf="userIdentifiedCode?.invalid && (userIdentifiedCode?.dirty || userIdentifiedCode?.touched)"
                         class="alert alert-danger mt-1">
@@ -125,7 +124,7 @@
                       <label for="validationCustom2"><span>*</span>Địa chỉ</label>
                     </div>
                     <div class="col-xl-8 col-md-7">
-                      <input formControlName="address" class="form-control" type="text" placeholder="" />
+                      <input formControlName="address" class="form-control" type="text" />
                       <div *ngIf="userAddress?.invalid && (userAddress?.dirty || userAddress?.touched)"
                         class="alert alert-danger mt-1">
                         <div *ngIf="userAddress?.errors?.['required']">Vui lòng không được bỏ
@@ -222,7 +221,7 @@
                           <label for="validationCustom2"><span>*</span>Tên shop</label>
                         </div>
                         <div class="col-xl-8 col-md-7">
-                          <input formControlName="name" class="form-control" type="text" placeholder="" />
+                          <input formControlName="name" class="form-control" type="text" />
                           <div *ngIf="shopName?.invalid && (shopName?.dirty || shopName?.touched)"
                             class="alert alert-danger mt-1">
                             <div *ngIf="shopName?.errors?.['required']">Vui lòng không được bỏ
@@ -237,8 +236,7 @@
                           <label for="validationCustom2"><span>*</span>Mô tả shop</label>
                         </div>
                         <div class="col-xl-8 col-md-7">
-                          <textarea formControlName="description" class="form-control" type="text"
-                            placeholder=""></textarea>
+                          <textarea formControlName="description" class="form-control" type="text"></textarea>
                           <div *ngIf="shopDescription?.invalid && (shopDescription?.dirty || shopDescription?.touched)"
                             class="alert alert-danger mt-1">
                             <div *ngIf="shopDescription?.errors?.['required']">Vui lòng không được bỏ
@@ -268,7 +266,7 @@
           </ul>
           <div [ngbNavOutlet]="nav" class="mt-2"></div>
           <div class="pull-right">
-            <button type="submit" class="btn btn-primary" (click)="createUser()">Tạo tài khoản</button>
+            <button type="submit" class="btn btn-primary" (click)="createUser(createSuccess)">Tạo tài khoản</button>
           </div>
         </div>
       </div>
@@ -288,5 +286,13 @@
   <div class="modal-body text-center">
     <p>Vui lòng chọn 1 ảnh</p>
     <input class="input-image" type="file" accept="image/*" (change)="onShopFileSelected($event)" />
+  </div>
+</ng-template>
+
+<ng-template #createSuccess>
+  <div class="modal-body text-center">
+    <p>Tạo người bán thành công</p>
+    <button type="button" class="btn btn-primary" (click)="continue()">Tiếp tục
+    </button>
   </div>
 </ng-template>

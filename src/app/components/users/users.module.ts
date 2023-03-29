@@ -10,9 +10,11 @@ import { CreateUserComponent } from './create-user/create-user.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { EditUserComponent } from './edit-user/edit-user.component';
+import { UserDetailComponent } from './user-detail/user-detail.component';
 
 @NgModule({
-  declarations: [ListUserComponent, CreateUserComponent],
+  declarations: [ListUserComponent, CreateUserComponent, EditUserComponent, UserDetailComponent],
   imports: [
     CommonModule,
     NgbModule,

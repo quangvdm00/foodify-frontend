@@ -304,7 +304,8 @@
                     </ul>
                     <div [ngbNavOutlet]="nav" class="mt-2"></div>
                     <div class="pull-right">
-                        <button type="submit" class="btn btn-primary" (click)="editUser()">Chỉnh sửa</button>
+                        <button type="submit" class="btn btn-primary" (click)="editUser(updateSuccess)">Chỉnh
+                            sửa</button>
                     </div>
                 </div>
             </div>
@@ -324,5 +325,12 @@
     <div class="modal-body text-center">
         <p>Vui lòng chọn 1 ảnh</p>
         <input class="input-image" type="file" accept="image/*" (change)="onShopFileSelected($event)" />
+    </div>
+</ng-template>
+
+<ng-template #updateSuccess>
+    <div class="modal-body text-center">
+        <p>Cập nhật shop thành công</p>
+        <button type="button" class="btn btn-primary" (click)="continue()">Tiếp tục</button>
     </div>
 </ng-template>

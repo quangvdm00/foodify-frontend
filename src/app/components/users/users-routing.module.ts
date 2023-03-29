@@ -8,7 +8,7 @@ const routes: Routes = [
     path: '',
     children: [
       {
-        path: 'list-user',
+        path: 'list',
         component: ListUserComponent,
         data: {
           title: "User List",
@@ -16,7 +16,7 @@ const routes: Routes = [
         }
       },
       {
-        path: 'create-user',
+        path: 'create',
         component: CreateUserComponent,
         data: {
           title: "Create User",

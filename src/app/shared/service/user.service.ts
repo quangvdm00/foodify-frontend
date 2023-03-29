@@ -34,4 +34,9 @@ export class UserService {
     console.log(this.baseUrl + `/${userId}/addresses/${addressId}`)
     return this.httpClient.put(this.baseUrl + `/${userId}/addresses/${addressId}`, updateAddress)
   }
+
+  //get All Users
+  getAllUsersByRole(roleName: string, thePage: number, thePageSize: number) {
+    return this.httpClient.get<User>(this.baseUrl + `/roles/${roleName}?pageNo=${thePage}&pageSize=${thePageSize}`);
+  }
 }

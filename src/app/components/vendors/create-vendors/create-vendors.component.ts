@@ -106,16 +106,19 @@ export class CreateVendorsComponent {
         const newAddress = new Address();
         const newShop = new Shop();
 
+        newUser.fullName = this.userFullName;
+        newUser.email = this.userEmail;
+        newUser.dateOfBirth = this.userDateOfBirth;
+        newUser.phoneNumber = this.userPhoneNumber;
+        newUser.identifiedCode = this.userIdentifiedCode;
+        newUser.defaultAddress = 0;
+        newUser.isLocked = false;
+        newUser.roleName = 'ROLE_SHOP';
+
         this.uploadUserImage(this.userImageFile).then((url) => {
-            newUser.fullName = this.userFullName;
-            newUser.email = this.userEmail;
-            newUser.dateOfBirth = this.userDateOfBirth;
-            newUser.phoneNumber = this.userPhoneNumber;
-            newUser.identifiedCode = this.userIdentifiedCode;
+
             newUser.imageUrl = url
-            newUser.defaultAddress = 0;
-            newUser.isLocked = false;
-            newUser.roleName = 'ROLE_SHOP';
+
 
             newShop.name = this.shopName
             newShop.description = this.shopDescription;

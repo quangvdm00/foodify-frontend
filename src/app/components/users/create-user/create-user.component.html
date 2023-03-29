@@ -415,3 +415,11 @@
     <input class="input-image" type="file" accept="image/*" (change)="onFileSelected($event)" />
   </div>
 </ng-template>
+
+<ng-template #createSuccess>
+  <div class="modal-body text-center">
+    <p>Tạo người bán thành công</p>
+    <button type="button" class="btn btn-primary" (click)="continue()">Tiếp tục
+    </button>
+  </div>
+</ng-template>

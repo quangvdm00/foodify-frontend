@@ -16,11 +16,9 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Ảnh đại diện</th>
-                                <th scope="col"><a style="cursor: pointer;" (click)="onSort('fullName')">Họ và tên</a>
-                                </th>
-                                <th scope="col"><a style="cursor: pointer;" (click)="onSort('email')">Email</a></th>
-                                <th scope="col"><a style="cursor: pointer;" (click)="onSort('phoneNumber')">Số điện
-                                        thoại</a></th>
+                                <th scope="col"><a (click)="onSort('fullName')">Họ và tên</a></th>
+                                <th scope="col"><a (click)="onSort('email')">Email</a></th>
+                                <th scope="col"><a (click)="onSort('phoneNumber')">Số điện thoại</a></th>
                                 <th scope="col">Ngày sinh</th>
                                 <th scope="col"></th>
                             </tr>
@@ -38,10 +36,7 @@
                                 <td>{{user.phoneNumber}}</td>
                                 <td>{{user.dateOfBirth}}</td>
                                 <td>
-                                    <a [routerLink]="['/users','detail', user.id]"><i
-                                            class='fa fa-eye f-12'></i></a>&nbsp;
-                                    <a [routerLink]="['/users','edit', user.id]"><i
-                                            class='fa fa-edit f-12'></i></a>&nbsp;
+                                    <a href="javascript:void(0)"><i class='fa fa-edit f-12'></i></a>&nbsp;
                                     <a href="javascript:void(0)"><i class="fa fa-trash-o"></i></a>
                                 </td>
                             </tr>
@@ -50,14 +45,14 @@
 
                     <!-- Pagination -->
                     <div class="d-flex justify-content-center p-2">
-                        <!-- <select [(ngModel)]="role" class="form-select" style="width: auto" name="pageSize"
+                        <select [(ngModel)]="role" class="form-select" style="width: auto" name="pageSize"
                             (change)="listAllUsers()">
                             <option [value]="'ROLE_USER'" [selected]="true" [ngValue]="'ROLE_USER'">Người dùng</option>
                             <option [ngValue]="'ROLE_SHOP'">Shop</option>
                             <option [ngValue]="'ROLE_SHIPPER'">Shipper</option>
                             <option [ngValue]="'ROLE_ADMIN'">Quản trị viên</option>
                             <option [ngValue]="'ALL'">Tất cả</option>
-                        </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+                        </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                         <ngb-pagination [(page)]="thePageNumber" [pageSize]="thePageSize"
                             [collectionSize]="theTotalElements" [maxSize]="5" (pageChange)="listAllUsers()">

@@ -131,12 +131,10 @@
                                         </div>
                                     </div>
 
-                                    <hr>
-
                                     <!-- Address -->
                                     <div class="form-group row">
                                         <div class="col-xl-3 col-md-4">
-                                            <label for="validationCustom2"><span>*</span>Địa chỉ</label>
+                                            <label for="validationCustom2"><span>*</span> Địa chỉ</label>
                                         </div>
                                         <div class="col-xl-8 col-md-7">
                                             <input formControlName="address" class="form-control" type="text"
@@ -150,17 +148,19 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                </form>
+                                <div class="needs-validation user-add">
                                     <!-- District -->
                                     <div class="form-group row">
                                         <div class="col-xl-3 col-md-4">
                                             <label for="validationCustom2"><span>*</span> Quận</label>
                                         </div>
                                         <div class="col-xl-8 col-md-7">
-                                            <select formControlName="district" class="form-control"
+                                            <select [(ngModel)]="district" class="form-control"
                                                 (change)="onDistrictSelected()">
                                                 <option>--- Chọn quận ---</option>
-                                                <option *ngFor="let district of districts">{{ district.name }}
+                                                <option *ngFor="let district of districts" [ngValue]="district.name">{{
+                                                    district.name }}
                                                 </option>
                                             </select>
                                             <!-- <div *ngIf="userAddress?.invalid && (userAddress?.dirty || userAddress?.touched)"
@@ -176,14 +176,14 @@
                                             <label for="validationCustom2"><span>*</span> Phường</label>
                                         </div>
                                         <div class="col-xl-8 col-md-7">
-                                            <select formControlName="ward" class="form-control">
+                                            <select [(ngModel)]="ward" class="form-control">
                                                 <option>--- Chọn phường ---</option>
                                                 <option *ngFor="let ward of wards">{{ ward.name }}
                                                 </option>
                                             </select>
                                         </div>
                                     </div>
-                                </form>
+                                </div>
                             </ng-template>
                         </li>
                         <!-- --------- SHOP ----------- -->

@@ -4,6 +4,7 @@ import { ListUserComponent } from './list-user/list-user.component';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { UserDetailComponent } from './user-detail/user-detail.component';
+import { ListAccountComponent } from './list-account/list-account.component';
 
 const routes: Routes = [
   {
@@ -39,6 +40,14 @@ const routes: Routes = [
         data: {
           title: "Chi tiết người dùng",
           breadcrumb: "Chi tiết"
+        }
+      },
+      {
+        path: 'accounts/list',
+        component: ListAccountComponent,
+        data: {
+          title: "Danh sách tài khoản",
+          breadcrumb: "Danh sách tài khoản"
         }
       }
     ]

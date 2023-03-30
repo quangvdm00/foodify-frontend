@@ -109,6 +109,7 @@ export class NavService {
             title: 'Người dùng', icon: 'user-plus', type: 'sub', active: false, children: [
                 { path: '/users/list', title: 'Danh sách', type: 'link' },
                 { path: '/users/create', title: 'Tạo người dùng', type: 'link' },
+                { path: '/users/accounts/list', title: 'Tài khoản', type: 'link' },
             ]
         },
         {

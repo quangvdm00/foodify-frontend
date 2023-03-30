@@ -8,6 +8,7 @@ import { finalize, switchMap } from "rxjs";
 import { Observable } from "rxjs-compat";
 import { AddressService } from "src/app/shared/service/address.service";
 import { DistrictService } from "src/app/shared/service/district.service";
+import { FirebaseService } from "src/app/shared/service/firebase.service";
 import { UserService } from "src/app/shared/service/user.service";
 import { WardService } from "src/app/shared/service/ward.service";
 import { Address } from "src/app/shared/tables/Address";
@@ -23,6 +24,7 @@ import { Ward } from "src/app/shared/tables/ward";
 export class CreateUserComponent implements OnInit {
     public permissionForm: UntypedFormGroup;
     public active = 1;
+    newId: number;
 
     // form
     addUserForm: FormGroup;
@@ -52,7 +54,8 @@ export class CreateUserComponent implements OnInit {
         private userService: UserService,
         private districtService: DistrictService,
         private storage: AngularFireStorage,
-        private modalService: BsModalService
+        private modalService: BsModalService,
+        private firebaseService: FirebaseService
     ) {
         this.createPermissionForm();
     }
@@ -70,13 +73,15 @@ export class CreateUserComponent implements OnInit {
             identifiedCode: ['', Validators.required],
             address: ['', Validators.required],
             district: ['', Validators.required],
-            ward: ['', Validators.required]
+            ward: ['', Validators.required],
+            password: ['', Validators.required],
+            confirmedPassword: ['', Validators.required]
         });
 
         this.getAllDistrict();
     }
 
-    createUser() {
+    createUser(success: TemplateRef<any>) {
         const newUser = new User();
         const newAddress = new Address();
 
@@ -99,12 +104,15 @@ export class CreateUserComponent implements OnInit {
             this.userService.createNewUser(newUser).subscribe(
                 (user) => {
                     newUser.id = user.id;
+                    this.newId = user.id;
                     this.userService.createAddressForUser(user.id, newAddress).subscribe(
                         () => { },
                         (error) => {
                             console.log("Address existed! No problem!")
                         }
                     )
+                    this.firebaseService.signUp(newUser.email, this.userPassword);
+                    this.layer1 = this.modalService.show(success, { class: 'modal-sm' });
                 }
             )
         })
@@ -125,7 +133,7 @@ export class CreateUserComponent implements OnInit {
                 localStorage.setItem("image", this.avatar);
             }
         }
-        this.modalRef.hide();
+        this.layer1.hide();
     }
 
     uploadUserImage(fileUpload: File): Promise<string> {
@@ -173,15 +181,15 @@ export class CreateUserComponent implements OnInit {
         });
     }
 
-    modalRef: BsModalRef;
+    layer1: BsModalRef;
 
     chooseImg(template: TemplateRef<any>) {
-        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+        this.layer1 = this.modalService.show(template, { class: 'modal-sm' });
     }
 
-    continue() {
-        this.modalRef.hide();
-        this.router.navigate(['/users/list']);
+    closeLayer1() {
+        this.layer1.hide();
+        this.router.navigate(['/users', 'detail', this.newId]);
     }
 
     //Getter
@@ -193,6 +201,7 @@ export class CreateUserComponent implements OnInit {
     get userAddress() { return this.addUserForm.get('address').value; }
     get userDistrict() { return this.addUserForm.get('district').value; }
     get userWard() { return this.addUserForm.get('ward').value; }
+    get userPassword() { return this.addUserForm.get('password').value }
 
     // // Check password and confirm password is match
     // ConfirmedValidator(controlName: string, matchingControlName: string) {

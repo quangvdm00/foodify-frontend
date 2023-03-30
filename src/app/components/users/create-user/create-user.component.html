@@ -172,9 +172,26 @@
                                     Vui lòng chọn Phường.</div>
                                 </div>
                               </div>
+
+
                             </div>
                           </div>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- password -->
+                  <div class="form-group row">
+                    <div class="col-xl-3 col-md-4">
+                      <label for="validationCustom2"><span>*</span> Mật khẩu</label>
+                    </div>
+                    <div class="col-xl-8 col-md-7">
+                      <input formControlName="password" class="form-control" type="text" placeholder="Mật khẩu" />
+                      <div *ngIf="userPassword?.invalid && (userPassword?.dirty || userPassword?.touched)"
+                        class="alert alert-danger mt-1">
+                        <div *ngIf="userPassword?.errors?.['required']">Vui lòng không
+                          được bỏ trống mật khẩu</div>
                       </div>
                     </div>
                   </div>
@@ -241,7 +258,8 @@
                                         </div>
                                     </div> -->
                   <div class="pull-right">
-                    <button type="submit" class="btn btn-primary" (click)="createUser()">Tạo tài khoản</button>
+                    <button type="submit" class="btn btn-primary" (click)="createUser(createSuccess)">Tạo tài
+                      khoản</button>
                   </div>
                 </form>
               </ng-template>
@@ -418,8 +436,8 @@
 
 <ng-template #createSuccess>
   <div class="modal-body text-center">
-    <p>Tạo người bán thành công</p>
-    <button type="button" class="btn btn-primary" (click)="continue()">Tiếp tục
+    <p>Tạo người dùng thành công</p>
+    <button type="button" class="btn btn-primary" (click)="closeLayer1()">Tiếp tục
     </button>
   </div>
 </ng-template>

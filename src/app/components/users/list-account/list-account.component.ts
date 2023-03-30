@@ -1,17 +1,14 @@
-import { DecimalPipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { TableService } from 'src/app/shared/service/table.service';
 import { UserService } from 'src/app/shared/service/user.service';
 import { User } from 'src/app/shared/tables/User';
 
 @Component({
-  selector: 'app-list-user',
-  templateUrl: './list-user.component.html',
-  styleUrls: ['./list-user.component.scss'],
-  providers: [TableService, DecimalPipe]
+  selector: 'app-list-account',
+  templateUrl: './list-account.component.html',
+  styleUrls: ['./list-account.component.scss']
 })
-export class ListUserComponent implements OnInit {
+export class ListAccountComponent {
   users: User[] = [];
 
   searchForm: FormGroup
@@ -39,8 +36,13 @@ export class ListUserComponent implements OnInit {
   }
 
   listAllUsers() {
-    this.userService.getAllUsersByRole(this.role, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
-      .subscribe(this.processResult());
+    if (this.role != 'ALL') {
+      this.userService.getAllUsersByRole(this.role, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir).subscribe(this.processResult());
+    }
+    else {
+      this.userService.getAllUsers(this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir).subscribe(this.processResult())
+    }
+
   }
 
   processResult() {
@@ -71,4 +73,3 @@ export class ListUserComponent implements OnInit {
   get searchName() { return this.searchForm.get('searchName').value }
 
 }
-

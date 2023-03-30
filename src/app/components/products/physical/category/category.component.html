@@ -51,19 +51,6 @@
                                             <a style="cursor: pointer;"
                                                 (click)="openModal(deleteCategory, category.id)"><i
                                                     class="fa fa-trash-o"></i></a>
-                                            <ng-template #deleteCategory>
-                                                <div class="modal-body text-center">
-                                                    <p>Bạn muốn xoá thể loại này chứ ?<br>
-                                                        Tất cả những sản phẩm liên quan sẽ bị xoá ?</p>
-                                                    <button type="button" class="btn btn-default"
-                                                        (click)="confirm(categoryId, deleteSuccess)">
-                                                        Có
-                                                    </button>
-                                                    <button type="button" class="btn btn-primary"
-                                                        (click)="decline()">Không
-                                                    </button>
-                                                </div>
-                                            </ng-template>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -110,6 +97,18 @@
             </div>
         </div>
     </form>
+</ng-template>
+
+<ng-template #deleteCategory>
+    <div class="modal-body text-center">
+        <p>Bạn muốn xoá thể loại này chứ ?<br>
+            Tất cả những sản phẩm liên quan sẽ bị xoá ?</p>
+        <button type="button" class="btn btn-default" (click)="confirm(categoryId, deleteSuccess)">
+            Có
+        </button>
+        <button type="button" class="btn btn-primary" (click)="decline()">Không
+        </button>
+    </div>
 </ng-template>
 
 <ng-template #updateSuccess>

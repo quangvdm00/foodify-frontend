@@ -45,14 +45,14 @@ export class EditVendorComponent implements OnInit {
   userImageFile: File;
   shopImageFile: File;
   imageLink;
-  fileUserName: string;
 
   // password
   showPassword = false;
 
   // address
   isHaveDistrict: boolean;
-  district: District;
+  district: string;
+  ward: string;
   districts: District[];
   wards: Ward[] = [];
 
@@ -71,7 +71,6 @@ export class EditVendorComponent implements OnInit {
     private userService: UserService,
     private shopService: ShopService,
     private districtService: DistrictService,
-    private wardService: WardService,
     private storage: AngularFireStorage,
     private route: ActivatedRoute,
     private modalService: BsModalService
@@ -123,6 +122,9 @@ export class EditVendorComponent implements OnInit {
     this.userId = response.user.id;
     this.shopId = response.id;
     this.addressId = response.user.addresses[0].id;
+    this.district = response.user.addresses[0].district;
+    this.ward = response.user.addresses[0].ward;
+
     console.log(this.userId + " " + this.shopId + " " + this.addressId)
 
     this.districts.forEach((element: District) => {
@@ -139,9 +141,7 @@ export class EditVendorComponent implements OnInit {
       dateOfBirth: response.user.dateOfBirth,
       phoneNumber: response.user.phoneNumber,
       identifiedCode: response.user.identifiedCode,
-      address: response.user.addresses[0].address,
-      district: response.user.addresses[0].district,
-      ward: response.user.addresses[0].ward
+      address: response.user.addresses[0].address
     })
 
     this.editShopForm.patchValue({
@@ -154,7 +154,7 @@ export class EditVendorComponent implements OnInit {
     this.isHaveDistrict = false;
 
     this.districts.forEach((element: District) => {
-      if (this.userDistrict == element.name && this.userDistrict != 'Huyện Hoàng Sa') {
+      if (this.district == element.name && this.district != 'Huyện Hoàng Sa') {
         this.isHaveDistrict = true;
         this.wards = element.wards
       }
@@ -178,8 +178,8 @@ export class EditVendorComponent implements OnInit {
 
     editAddress.id = this.addressId
     editAddress.address = this.userAddress;
-    editAddress.district = this.userDistrict;
-    if (this.userDistrict != "Huyện Hoàng Sa") editAddress.ward = this.userWard;
+    editAddress.district = this.district;
+    if (this.district != "Huyện Hoàng Sa") editAddress.ward = this.ward;
 
     editShop.name = this.shopName
     editShop.description = this.shopDescription;
@@ -388,8 +388,8 @@ export class EditVendorComponent implements OnInit {
   get userPhoneNumber() { return this.editUserForm.get("phoneNumber").value; }
   get userIdentifiedCode() { return this.editUserForm.get("identifiedCode").value }
   get userAddress() { return this.editUserForm.get("address").value; }
-  get userDistrict() { return this.editUserForm.get("district").value; }
-  get userWard() { return this.editUserForm.get("ward").value; }
+  // get userDistrict() { return this.editUserForm.get("district").value; }
+  // get userWard() { return this.editUserForm.get("ward").value; }
   get userPassword() { return this.editUserForm.get("password").value; }
   get userConfirmPassword() { return this.editUserForm.get("confirmPassword").value; }
 

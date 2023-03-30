@@ -35,15 +35,14 @@
                         </div>
                     </div>
                     <div class="product-detail">
-                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-                                class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
+                        <div class="rating"><i class="fa fa-star"></i></div>
                         <a href="javascript:void(0)">
                             <h6>{{product.name}}</h6>
                         </a>
                         <h4>{{product.cost - product.cost * product.discountPercent / 100}}
                             <del *ngIf="product.discountPercent > 0">{{product.cost}}</del>
                         </h4>
-                        <!--                        <ul class="color-variant">-->
+                        <!--                         <ul class="color-variant">-->
                         <!--                            <li class="bg-light0"></li>-->
                         <!--                            <li class="bg-light1"></li>-->
                         <!--                            <li class="bg-light2"></li>-->

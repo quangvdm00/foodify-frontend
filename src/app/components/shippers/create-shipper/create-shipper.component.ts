@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { rejects } from 'assert';
 import { url } from 'inspector';
 import { resolve } from 'path';
 import { finalize, mergeMap, Observable } from 'rxjs';
 import { switchMap } from 'rxjs-compat/operator/switchMap';
+import { Validation } from 'src/app/constants/Validation';
 import { ShipperService } from 'src/app/shared/service/shipper.service';
 import { UserService } from 'src/app/shared/service/user.service';
 import { Shipper } from 'src/app/shared/tables/shipper';
@@ -17,7 +19,7 @@ import { User } from 'src/app/shared/tables/User';
   styleUrls: ['./create-shipper.component.scss']
 })
 export class CreateShipperComponent {
-  public accountForm: UntypedFormGroup;
+  public accountForm: FormGroup;
   public permissionForm: UntypedFormGroup;
   public active = 1;
 
@@ -25,48 +27,81 @@ export class CreateShipperComponent {
   downloadURL: Observable<string>;
   avatar: string;
 
+  // Password
+  showPassword = false;
+
   constructor(
     private formBuilder: UntypedFormBuilder,
     private storage: AngularFireStorage,
     private userService: UserService,
-    private shipperService: ShipperService
+    private shipperService: ShipperService,
+    private router: Router,
   ) {
-    this.createAccountForm();
     this.createPermissionForm();
   }
 
-  createAccountForm() {
-    this.accountForm = this.formBuilder.group({
-      fullName: [''],
-      dob: [''],
-      email: [''],
-      phoneNumber: [''],
-      identifiedCode: [''],
-      image: [''],
-      password: [''],
-      confirmPassword: [''],
-      shopId: ['']
-    });
-  }
+  
 
   createPermissionForm() {
     this.permissionForm = this.formBuilder.group({});
   }
 
   ngOnInit() {
+    this.accountForm = this.formBuilder.group(
+      {
+        fullName: new FormControl("", [Validators.required, Validators.minLength(2)]),
+        url: new FormControl('', [Validators.required]),
+        email: new FormControl("", [Validators.required, Validators.email]),
+        dob: new FormControl("", [Validators.required]),
+        phoneNumber: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Phone)]),
+        identifiedCode: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.IdentifiedCode)]),
+        defaultAddress: new FormControl(""),
+        password: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Password)]),
+        confirmPassword: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Password)]),
+        isLocked: new FormControl(false, [Validators.required]),
+        roleName: new FormControl("ROLE_SHIPPER", [Validators.required]),
+        shopId: new FormControl("", [Validators.required]),
+      },
+      {
+        validator: this.ConfirmedValidator("password", "confirmPassword"),
+      }
+    );
+  }
+
+  // Validation for password and confirm password
+  ConfirmedValidator(controlName: string, matchingControlName: string) {
+    return (formGroup: FormGroup) => {
+      const control = formGroup.controls[controlName];
+      const matchingControl = formGroup.controls[matchingControlName];
+      if (matchingControl.errors && !matchingControl.errors.confirmedValidator) {
+        return;
+      }
+      if (control.value !== matchingControl.value) {
+        matchingControl.setErrors({ confirmedValidator: true });
+      } else {
+        matchingControl.setErrors(null);
+      }
+    };
   }
 
   createShipper(): Promise<void> {
+
+    // Check all validations addUserForm
+    if (this.accountForm.invalid) {
+      this.accountForm.markAllAsTouched();
+      return Promise.reject('Invalid form');
+    }
+
     return new Promise((resolve, rejects) => {
       this.uploadImage(this.imageFile).then((url) => {
         const newUser = new User()
         const newShipper = new Shipper();
-        newUser.fullName = this.shipperFullName;
-        newUser.dateOfBirth = this.shipperDob;
-        newUser.email = this.shipperEmail;
-        newUser.phoneNumber = this.shipperPhoneNum;
-        newUser.identifiedCode = this.shipperIdentifiedCode;
-        newUser.imageUrl = url
+        newUser.fullName = this.shipperFullName.value;
+        newUser.dateOfBirth = this.shipperDob.value;
+        newUser.email = this.shipperEmail.value;
+        newUser.phoneNumber = this.shipperPhoneNumber.value;
+        newUser.identifiedCode = this.shipperIdentifiedCode.value;
+        newUser.imageUrl = url;
         newUser.isLocked = false;
         newUser.defaultAddress = 0;
         newUser.roleName = 'ROLE_SHIPPER'
@@ -80,9 +115,13 @@ export class CreateShipperComponent {
         this.userService.createUserOnly(newUser).pipe(
           mergeMap((user) => {
             newShipper.userId = user.id
-            newShipper.shopId = this.shipperShopId
+            newShipper.shopId = this.shipperShopId.value
             return this.shipperService.createShipper(newShipper)
-          })).subscribe();
+          })).subscribe({
+            next: (shipper) => {
+              this.router.navigate(["shippers/list"]);
+            },
+          });
 
         resolve();
       })
@@ -138,21 +177,21 @@ export class CreateShipperComponent {
   }
 
   //Getter
-  get url() { return this.accountForm.get('shipperImage').value }
+  get url() { return this.accountForm.get('url').value }
 
-  get shipperFullName() { return this.accountForm.get('fullName').value }
+  get shipperFullName() { return this.accountForm.get('fullName') }
 
-  get shipperDob() { return this.accountForm.get('dob').value }
+  get shipperDob() { return this.accountForm.get('dob') }
 
-  get shipperEmail() { return this.accountForm.get('email').value }
+  get shipperEmail() { return this.accountForm.get('email') }
 
-  get shipperPhoneNum() { return this.accountForm.get('phoneNumber').value }
+  get shipperPhoneNumber() { return this.accountForm.get('phoneNumber') }
 
-  get shipperIdentifiedCode() { return this.accountForm.get('identifiedCode').value }
+  get shipperIdentifiedCode() { return this.accountForm.get('identifiedCode')}
 
-  get shipperPassword() { return this.accountForm.get('password').value }
+  get shipperPassword() { return this.accountForm.get('password') }
 
-  get shipperConfirmPassword() { return this.accountForm.get('confirmPassword').value }
+  get shipperConfirmPassword() { return this.accountForm.get('confirmPassword') }
 
-  get shipperShopId() { return this.accountForm.get('shopId').value }
+  get shipperShopId() { return this.accountForm.get('shopId') }
 }

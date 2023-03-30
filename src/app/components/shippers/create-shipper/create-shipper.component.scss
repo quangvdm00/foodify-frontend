@@ -35,3 +35,16 @@
     //   transition: all 0.1s ease;
     // }
   }
+
+  .input-password-holder {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .input-password {
+      border: none;
+      width: 100%;
+    }
+    .icon-holder-eye {
+      color: #999a9b;
+    }
+  }

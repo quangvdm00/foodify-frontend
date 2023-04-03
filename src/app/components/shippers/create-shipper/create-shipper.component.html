@@ -14,29 +14,73 @@
                                 <form [formGroup]="accountForm" class="needs-validation user-add" novalidate>
                                     <h4>Thông tin tài khoản</h4>
 
+                                    <!-- Image -->
+                                    <div class="form-group row">
+                                        <div class="col-xl-3 col-md-4"><label for="validationCustom5"><span>*</span>
+                                                Ảnh</label></div>
+                                        <div class="col-xl-8 col-md-7">
+                                            <!-- <input class="form-control" autocomplete="off"
+                                                (change)="onFileSelected($event)" formControlName="image"
+                                                id="validationCustom5" type="file" required=""> -->
+
+                                            <!-- <input class="input-image" formControlName="url" type="file" accept="image/*" (change)="onFileChange($event)"/>
+                                            <img class="rounded-circle border border-dark" [src]="avatar" *ngIf="avatar" style="width: 160px; height: 160px; margin-left: 20px"/>
+                                            <div *ngIf="accountForm.get('url').invalid && (accountForm.get('url').dirty || accountForm.get('url').touched)" class="alert alert-danger mt-1">
+                                                <div *ngIf="accountForm.get('url').errors?.['required']">Vui lòng chọn ảnh đại diện.</div>
+                                            </div> -->
+
+                                            <div class="d-flex align-items-center">
+                                                <button *ngIf="!edited" class="btn btn-success"
+                                                        (click)="chooseImg(chooseUserImage)">
+                                                        Chọn ảnh
+                                                </button>
+                                                <button *ngIf="edited"  class="btn btn-secondary"
+                                                    (click)="chooseImg(chooseUserImage)">
+                                                    Thay đổi ảnh
+                                                </button>
+                                                <img class="rounded-circle border border-dark" [src]="avatar" *ngIf="avatar" style="width: 160px; height: 160px; margin-left: 20px"/>
+                                            </div>
+                                            <div *ngIf="accountForm.get('url')?.invalid && (accountForm.get('url')?.dirty || accountForm.get('url')?.touched)" class="alert alert-danger mt-1">
+                                                <div *ngIf="accountForm.get('url').errors?.['required']">Vui lòng chọn ảnh đại diện.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <!-- Full Name -->
                                     <div class="form-group row">
                                         <div class="col-xl-3 col-md-4"><label for="validationCustom0"><span>*</span>
                                                 Họ và tên</label></div>
-                                        <div class="col-xl-8 col-md-7"><input class="form-control"
-                                                formControlName="fullName" id="validationCustom0" type="text"
-                                                required=""></div>
+                                        <div class="col-xl-8 col-md-7">
+                                            <input class="form-control" formControlName="fullName" placeholder="Họ và tên" id="validationCustom0" type="text">
+                                            <div *ngIf="shipperFullName?.invalid && (shipperFullName?.dirty || shipperFullName?.touched)" class="alert alert-danger mt-1">
+                                                <div *ngIf="shipperFullName?.errors?.['required']">Vui lòng không được bỏ trống tên</div>
+                                                <div *ngIf="shipperFullName?.errors?.['minlength']">Tên phải có ít nhất 2 kí tự</div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- DoB -->
                                     <div class="form-group row">
                                         <div class="col-xl-3 col-md-4"><label for="validationCustom1"><span>*</span>
                                                 Ngày sinh</label></div>
-                                        <div class="col-xl-8 col-md-7"><input class="form-control" formControlName="dob"
-                                                id="validationCustom1" type="date" required=""></div>
+                                        <div class="col-xl-8 col-md-7">
+                                            <input class="form-control" formControlName="dob" id="validationCustom1" type="date">
+                                            <div *ngIf="shipperDob?.invalid && (shipperDob?.dirty || shipperDob?.touched)" class="alert alert-danger mt-1">
+                                                <div *ngIf="shipperDob?.errors?.['required']">Vui lòng không được bỏ trống ngày sinh</div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- Email -->
                                     <div class="form-group row">
                                         <div class="col-xl-3 col-md-4"><label for="validationCustom2"><span>*</span>
                                                 Email</label></div>
-                                        <div class="col-xl-8 col-md-7"><input class="form-control" autocomplete="off"
-                                                formControlName="email" id="validationCustom2" type="text" required="">
+                                        <div class="col-xl-8 col-md-7">
+                                            <input class="form-control" placeholder="Email" formControlName="email" id="validationCustom2" type="text">
+                                            <div *ngIf="shipperEmail?.invalid && (shipperEmail?.dirty || shipperEmail?.touched)" class="alert alert-danger mt-1">
+                                                <div *ngIf="shipperEmail?.errors?.['required']">Vui lòng không được bỏ trống email</div>
+                                                <div *ngIf="shipperEmail?.errors?.email">Email không hợp lệ, vui lòng nhập lại</div>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -44,27 +88,25 @@
                                     <div class="form-group row">
                                         <div class="col-xl-3 col-md-4"><label for="validationCustom3"><span>*</span>
                                                 Số điện thoại</label></div>
-                                        <div class="col-xl-8 col-md-7"><input class="form-control"
-                                                formControlName="phoneNumber" id="validationCustom3" type="text"
-                                                required=""></div>
+                                        <div class="col-xl-8 col-md-7">
+                                            <input class="form-control" placeholder="Số điện thoại" formControlName="phoneNumber" id="validationCustom3" type="tel">
+                                            <div *ngIf="shipperPhoneNumber?.invalid && (shipperPhoneNumber?.dirty || shipperPhoneNumber?.touched)" class="alert alert-danger mt-1" >
+                                                <div *ngIf="shipperPhoneNumber?.errors?.['required']">Vui lòng không được bỏ trống số điện thoại</div>
+                                                <div *ngIf="shipperPhoneNumber?.errors?.['pattern']">Số điện thoại phải có tối đa 10 số</div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- Identified Code -->
                                     <div class="form-group row">
                                         <div class="col-xl-3 col-md-4"><label for="validationCustom4"><span>*</span>
                                                 CMND/CCCD</label></div>
-                                        <div class="col-xl-8 col-md-7"><input class="form-control"
-                                                formControlName="identifiedCode" id="validationCustom4" type="text"
-                                                required=""></div>
-                                    </div>
-
-                                    <!-- Image -->
-                                    <div class="form-group row">
-                                        <div class="col-xl-3 col-md-4"><label for="validationCustom5"><span>*</span>
-                                                Ảnh</label></div>
-                                        <div class="col-xl-8 col-md-7"><input class="form-control" autocomplete="off"
-                                                (change)="onFileSelected($event)" formControlName="image"
-                                                id="validationCustom5" type="file" required="">
+                                        <div class="col-xl-8 col-md-7">
+                                            <input class="form-control" placeholder="CMND/CCCD" formControlName="identifiedCode" id="validationCustom4" type="number">
+                                            <div *ngIf="shipperIdentifiedCode?.invalid && (shipperIdentifiedCode?.dirty || shipperIdentifiedCode?.touched)" class="alert alert-danger mt-1">
+                                                <div *ngIf="shipperIdentifiedCode?.errors?.['required']">Vui lòng không được bỏ trống CMND/CCCD</div>
+                                                <div *ngIf="shipperIdentifiedCode?.errors?.['pattern']">CMND phải có tối đa 9 số hoặc CCCD phải có tối đa 12 số</div>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -73,27 +115,61 @@
                                         <div class="col-xl-3 col-md-4"><label for="validationCustom6"><span>*</span>
                                                 Mật khẩu</label>
                                         </div>
-                                        <div class="col-xl-8 col-md-7"><input class="form-control"
-                                                formControlName="password" id="validationCustom6" type="password"
-                                                required=""></div>
+                                        <div class="col-xl-8 col-md-7">
+                                            <div class="form-control input-password-holder">
+                                                <input formControlName="password" class="input-password" type="{{ showPassword ? 'text' : 'password' }}" placeholder="Mật khẩu" />
+                                                <span class="icon-holder-eye" (click)="showPassword = !showPassword">
+                                                  <i class="{{ showPassword ? 'fa fa-eye-slash' : 'fa fa-eye' }}"></i>
+                                                </span>
+                                              </div>
+                                              <div *ngIf="shipperPassword?.invalid && (shipperPassword?.dirty || shipperPassword?.touched)" class="alert alert-danger mt-1" >
+                                                <div *ngIf="shipperPassword?.errors?.['required']">Vui lòng không được bỏ trống mật khẩu.</div>
+                                                <div *ngIf="shipperPassword?.errors?.['pattern']">
+                                                  Mật khẩu phải chứa ít nhất 8 ký tự, trong đó gồm một ký tự số, một chữ hoa, một chữ thường và một ký
+                                                  tự đặc biệt.
+                                                  <br />
+                                                  Mật khẩu không được chứa khoảng trắng.
+                                                </div>
+                                              </div>
+                                        </div>
                                     </div>
 
                                     <!-- Confirm Password -->
                                     <div class="form-group row">
                                         <div class="col-xl-3 col-md-4"><label for="validationCustom7"><span>*</span>
                                                 Nhập lại mật khẩu</label></div>
-                                        <div class="col-xl-8 col-md-7"><input class="form-control"
-                                                formControlName="confirmPassword" id="validationCustom7" type="password"
-                                                required=""></div>
+                                        <div class="col-xl-8 col-md-7">
+                                            <div class="form-control input-password-holder">
+                                                <input formControlName="confirmPassword" class="input-password" type="{{ showPassword ? 'text' : 'password' }}" #pwc placeholder="Xác nhận mật khẩu"/>
+                                                <span class="icon-holder-eye" (click)="showPassword = !showPassword">
+                                                  <i class="{{ showPassword ? 'fa fa-eye-slash' : 'fa fa-eye' }}"></i>
+                                                </span>
+                                              </div>
+                                              <div *ngIf="shipperConfirmPassword?.invalid && (shipperConfirmPassword?.dirty || shipperConfirmPassword?.touched)" class="alert alert-danger mt-1">
+                                                <div *ngIf="shipperConfirmPassword?.errors?.['required']">Vui lòng xác nhận mật khẩu.</div>
+                                                <div *ngIf="shipperConfirmPassword?.errors?.['pattern']">
+                                                  Mật khẩu phải chứa ít nhất 8 ký tự, trong đó gồm một ký tự số, một chữ hoa, một chữ thường và một ký
+                                                  tự đặc biệt.
+                                                  <br />
+                                                  Mật khẩu không được chứa khoảng trắng.
+                                                </div>
+                                                <div *ngIf="shipperConfirmPassword?.errors?.['confirmedValidator']">
+                                                  Mật khẩu xác nhận phải giống với mật khẩu đã nhập
+                                                </div>
+                                              </div>
+                                        </div>
                                     </div>
 
                                     <!-- Shop (Admin Only) -->
                                     <div class="form-group row">
                                         <div class="col-xl-3 col-md-4"><label for="validationCustom8"><span>*</span>
-                                                Shop Id (Admin Only)</label></div>
-                                        <div class="col-xl-8 col-md-7"><input class="form-control"
-                                                formControlName="shopId" id="validationCustom8" type="number"
-                                                required=""></div>
+                                                Shop Id (Chỉ Admin)</label></div>
+                                        <div class="col-xl-8 col-md-7">
+                                            <input class="form-control" placeholder="Shop ID" formControlName="shopId" id="validationCustom8" type="number">
+                                            <div *ngIf="shipperShopId?.invalid && (shipperShopId?.dirty || shipperShopId?.touched)" class="alert alert-danger mt-1">
+                                                <div *ngIf="shipperShopId?.errors?.['required']">Vui lòng không được bỏ trống Shop ID</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </form>
                             </ng-template>
@@ -276,7 +352,7 @@
                     </ul>
                     <div [ngbNavOutlet]="nav" class="mt-2"></div>
                     <div class="pull-right">
-                        <button type="button" class="btn btn-primary" (click)="createShipper()">Save</button>
+                        <button type="button" class="btn btn-primary" (click)="createShipper()" >Save</button>
                     </div>
                 </div>
             </div>
@@ -284,3 +360,10 @@
     </div>
 </div>
 <!-- Container-fluid Ends-->
+
+<ng-template #chooseUserImage>
+    <div class="modal-body text-center">
+        <p>Vui lòng chọn 1 ảnh</p>
+        <input formControlName="url" type="file" name="avatar" accept="image/*" (change)="onFileChange($event)" />
+    </div>
+</ng-template>

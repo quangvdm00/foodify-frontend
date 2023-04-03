@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Shipper } from '../tables/shipper';
+import { User } from '../tables/user';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +25,17 @@ export class ShipperService {
     return this.httpClient.get<Shipper>(this.baseUrl + `/${shipperId}`)
   }
 
-  //Active status
-  //Shipping status
+  updateShiperActive(shipperId: number, updateActive: Shipper, isActive: boolean): Observable<Shipper> {
+    return this.httpClient.put<Shipper>(`${this.baseUrl}/${shipperId}/active?isActive=${isActive}`, updateActive)
+  }
+
+  updateShiperShipping(shipperId: number, updateShipping: Shipper, isShipping: boolean): Observable<Shipper> {
+    return this.httpClient.put<Shipper>(`${this.baseUrl}/${shipperId}/shipping?isShipping=${isShipping}`, updateShipping)
+  }
+
+  deleteShipperById(shipperId: number): Observable<Shipper> {
+    return this.httpClient.delete<Shipper>(`${this.baseUrl}/${shipperId}`, {})
+  }
 }
 
 interface GetResponseShippers {

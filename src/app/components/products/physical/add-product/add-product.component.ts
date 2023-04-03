@@ -26,24 +26,13 @@ export class AddProductComponent implements OnInit {
     public productForm: UntypedFormGroup;
     public Editor = ClassicEditor;
 
-    // public url = [{
-    //     img: "assets/images/user.png",
-    // },
-    // {
-    //     img: "assets/images/user.png",
-    // },
-    // {
-    //     img: "assets/images/user.png",
-    // },
-    // {
-    //     img: "assets/images/user.png",
-    // },
-    // {
-    //     img: "assets/images/user.png",
-    // }
-    // ];
+    //Log-in
+    isShop: boolean = false;
+    loggedId: number = Number(localStorage.getItem('user-id'))
+    loggedRole = localStorage.getItem('user-role');
+    shopId: number;
 
-    // @ViewChild('ckEditor') ckEditor: any;
+    adminImg = environment.adminImg;
 
     description: string = '';
     message: string;
@@ -68,6 +57,13 @@ export class AddProductComponent implements OnInit {
         });
     }
 
+    ngOnInit() {
+        if (this.loggedRole != 'ROLE_ADMIN') {
+            this.isShop = true;
+            this.shopId = Number(localStorage.getItem('shop-id'))
+        }
+    }
+
     onAddNewProduct(): Promise<void> {
         return new Promise((resolve, rejects) => {
             const categoryNames: string[] = this.cats.controls.map(control => control.get('categoryName').value);
@@ -90,7 +86,12 @@ export class AddProductComponent implements OnInit {
                 product.cost = this.productPrice;
                 product.averageRating = 0;
                 product.reviewCount = 0;
-                product.shopId = this.productShopId;
+                if (this.isShop) {
+                    product.shopId = this.shopId;
+                }
+                else {
+                    product.shopId = this.productShopId;
+                }
                 product.categoryNames = categoryNames;
 
                 this.productService.addProduct(product).pipe(
@@ -170,9 +171,6 @@ export class AddProductComponent implements OnInit {
 
     get descriptions() { return this.productForm.get('descriptions').value }
 
-    ngOnInit() {
-        // this.addNewCategory();
-    }
 
     //Modal
     modalRef: BsModalRef;

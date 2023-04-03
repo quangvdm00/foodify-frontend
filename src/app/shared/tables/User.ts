@@ -1,4 +1,5 @@
 import { Address } from "./Address";
+import { Role } from "./Role";
 
 export class User {
     id: number;
@@ -14,4 +15,5 @@ export class User {
 
     //Response
     addresses: Address[]
+    role: Role;
 }

@@ -3,9 +3,9 @@
   <div class="row">
     <div class="col-sm-12">
       <div class="card tab2-card">
-        <div class="card-header">
+        <!-- <div class="card-header">
           <h5>Thêm người dùng</h5>
-        </div>
+        </div> -->
         <div class="card-body tab2-card">
           <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
             <li [ngbNavItem]="1">
@@ -134,16 +134,19 @@
                       </div>
                     </div>
                   </div>
+                </form>
 
+                <div class="needs-validation user-add">
                   <!-- District -->
                   <div class="form-group row">
                     <div class="col-xl-3 col-md-4">
                       <label for="validationCustom2"><span>*</span> Quận</label>
                     </div>
                     <div class="col-xl-8 col-md-7">
-                      <select formControlName="district" class="form-control" (change)="onDistrictSelected()">
-                        <option selected=true>--- Chọn quận ---</option>
-                        <option *ngFor="let district of districts">{{ district.name }}
+                      <select [(ngModel)]="district" class="form-control" (change)="onDistrictSelected()">
+                        <option [selected]="true" [ngValue]="'none'">--- Chọn quận ---</option>
+                        <option *ngFor="let district of districts" [ngValue]="district.name">{{
+                          district.name }}
                         </option>
                       </select>
                       <!-- <div *ngIf="userAddress?.invalid && (userAddress?.dirty || userAddress?.touched)"
@@ -154,13 +157,13 @@
                   </div>
 
                   <!-- Wards -->
-                  <div *ngIf="isHaveDistrict == true" class="form-group row">
+                  <div *ngIf="isHaveDistrict" class="form-group row">
                     <div class="col-xl-3 col-md-4">
                       <label for="validationCustom2"><span>*</span> Phường</label>
                     </div>
                     <div class="col-xl-8 col-md-7">
-                      <select formControlName="ward" class="form-control">
-                        <option selected=true>--- Chọn phường ---</option>
+                      <select [(ngModel)]="ward" class="form-control">
+                        <option [ngValue]="'none'">--- Chọn phường ---</option>
                         <option *ngFor="let ward of wards">{{ ward.name }}
                         </option>
                       </select>
@@ -168,7 +171,39 @@
                         class="alert alert-danger mt-1">
                         <div *ngIf="userAddress?.errors?.['required']">Vui lòng không được bỏ
                           trống địa chỉ</div> -->
+                    </div>
+                  </div>
+                </div>
 
+                <form [formGroup]="passwordForm" class="needs-validation user-add" novalidate>
+                  <!-- Password -->
+                  <div class="form-group row">
+                    <div class="col-xl-3 col-md-4">
+                      <label for="validationCustom2"><span>*</span> Mật khẩu</label>
+                    </div>
+                    <div class="col-xl-8 col-md-7">
+                      <input formControlName="password" class="form-control" type="text" />
+                      <div *ngIf="userPassword?.invalid && (userPassword?.dirty || userPassword?.touched)"
+                        class="alert alert-danger mt-1">
+                        <div *ngIf="userPassword?.errors?.['required']">Vui lòng không được bỏ
+                          trống địa chỉ</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Confirm Password -->
+                  <div class="form-group row">
+                    <div class="col-xl-3 col-md-4">
+                      <label for="validationCustom2"><span>*</span>Nhập lại mật khẩu</label>
+                    </div>
+                    <div class="col-xl-8 col-md-7">
+                      <input formControlName="confirmPassword" class="form-control" type="text" />
+                      <div
+                        *ngIf="userConfirmPassword?.invalid && (userConfirmPassword?.dirty || userConfirmPassword?.touched)"
+                        class="alert alert-danger mt-1">
+                        <div *ngIf="userConfirmPassword?.errors?.['required']">Vui lòng không được bỏ
+                          trống địa chỉ</div>
+                      </div>
                     </div>
                   </div>
                 </form>

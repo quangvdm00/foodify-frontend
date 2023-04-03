@@ -1,6 +1,8 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { FirebaseService } from 'src/app/shared/service/firebase.service';
 import { TableService } from 'src/app/shared/service/table.service';
 import { UserService } from 'src/app/shared/service/user.service';
 import { User } from 'src/app/shared/tables/User';
@@ -13,20 +15,23 @@ import { User } from 'src/app/shared/tables/User';
 })
 export class ListUserComponent implements OnInit {
   users: User[] = [];
+  userDel: User;
 
   searchForm: FormGroup
 
   //Pagination Properties
   role: string = 'ROLE_USER'
   thePageNumber = 1;
-  thePageSize = 5;
+  thePageSize = 10;
   sortBy = 'id';
   sortDir = 'asc';
   theTotalElements = 0;
 
   constructor(
     private userService: UserService,
-    private formBuilder: FormBuilder) {
+    private firebaseService: FirebaseService,
+    private formBuilder: FormBuilder,
+    private modalService: BsModalService) {
 
   }
 
@@ -65,6 +70,30 @@ export class ListUserComponent implements OnInit {
       this.sortDir = 'asc'
     }
     this.listAllUsers();
+  }
+
+  //Modal
+  layer1: BsModalRef;
+
+  openModal(user: User, template: TemplateRef<any>) {
+    this.userDel = user;
+    console.log(this.userDel.email)
+    this.layer1 = this.modalService.show(template, { class: 'modal-sm' });
+  }
+
+  confirmDeleted(success: TemplateRef<any>) {
+    this.userService.deleteUserById(this.userDel.id).subscribe()
+    console.log(this.userDel.email)
+    this.firebaseService.deleteUserByEmail(this.userDel.email).subscribe(() => {
+      this.listAllUsers();
+      this.layer1.hide();
+      this.layer1 = this.modalService.show(success, { class: 'modal-sm' });
+    });
+
+  }
+
+  closeLayer1() {
+    this.layer1.hide();
   }
 
 

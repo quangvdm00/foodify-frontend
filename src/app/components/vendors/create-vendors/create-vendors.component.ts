@@ -7,6 +7,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { EMPTY, finalize, mergeMap, switchMap, tap } from 'rxjs';
 import { Observable } from 'rxjs-compat';
 import { DistrictService } from 'src/app/shared/service/district.service';
+import { FirebaseService } from 'src/app/shared/service/firebase.service';
 import { ShopService } from 'src/app/shared/service/shop.service';
 import { UserService } from 'src/app/shared/service/user.service';
 import { WardService } from 'src/app/shared/service/ward.service';
@@ -26,6 +27,7 @@ export class CreateVendorsComponent {
     // form
     public active = 1;
     addUserForm: FormGroup;
+    passwordForm: FormGroup;
     shopForm: FormGroup;
 
     // image
@@ -44,7 +46,9 @@ export class CreateVendorsComponent {
 
     // address
     isHaveDistrict: boolean;
-    district: District;
+    district: string = 'none';
+    ward: string = 'none';
+
     districts: District[];
     wards: Ward[];
 
@@ -60,9 +64,11 @@ export class CreateVendorsComponent {
         private storage: AngularFireStorage,
         private shopService: ShopService,
         private modalService: BsModalService,
-        private router: Router
+        private router: Router,
+        private firebaseService: FirebaseService
     ) {
         this.createUserForm();
+        this.createPasswordForm();
         this.createShopForm();
     }
 
@@ -77,11 +83,16 @@ export class CreateVendorsComponent {
                 identifiedCode: new FormControl("", [Validators.required]),
                 address: new FormControl("", [Validators.required]),
                 district: new FormControl("", [Validators.required]),
-                ward: new FormControl("", [Validators.required]),
-                password: new FormControl("", [Validators.required]),
-                confirmPassword: new FormControl("", [Validators.required]),
+                ward: new FormControl("", [Validators.required])
             }
         );
+    }
+
+    createPasswordForm() {
+        this.passwordForm = this.formBuilder.group({
+            password: new FormControl("", [Validators.required]),
+            confirmPassword: new FormControl("", [Validators.required]),
+        })
     }
 
     createShopForm() {
@@ -128,8 +139,8 @@ export class CreateVendorsComponent {
             newShop.lng = '1';
 
             newAddress.address = this.userAddress;
-            newAddress.district = this.userDistrict;
-            if (this.userDistrict != "Huyện Hoàng Sa") newAddress.ward = this.userWard;
+            newAddress.district = this.district;
+            if (this.district != "Huyện Hoàng Sa") newAddress.ward = this.ward;
 
             this.userService.createNewUser(newUser).pipe(
                 switchMap((user) => {
@@ -137,7 +148,8 @@ export class CreateVendorsComponent {
                         newShop.userId = user.id
                         newShop.imageUrl = url;
                         this.shopService.createShop(newShop).subscribe(() => {
-                            this.userService.createAddressForUser(user.id, newAddress).subscribe()
+                            this.firebaseService.signUp(newUser.email, this.userPassword);
+                            this.userService.createAddressForUser(user.id, newAddress).subscribe();
                             this.modalRef = this.modalService.show(template, { class: 'modal-sm' })
                         });
                     })
@@ -158,9 +170,9 @@ export class CreateVendorsComponent {
 
     onDistrictSelected() {
         this.isHaveDistrict = false;
-        console.log("Choose:  " + this.userDistrict);
+        console.log("Choose:  " + this.district);
         this.districts.forEach((element: District) => {
-            if (this.userDistrict == element.name && this.userDistrict != 'Huyện Hoàng Sa') {
+            if (this.district == element.name && this.district != 'Huyện Hoàng Sa') {
                 this.isHaveDistrict = true;
                 this.wards = element.wards
             }
@@ -285,10 +297,11 @@ export class CreateVendorsComponent {
     get userPhoneNumber() { return this.addUserForm.get("phoneNumber").value; }
     get userIdentifiedCode() { return this.addUserForm.get("identifiedCode").value }
     get userAddress() { return this.addUserForm.get("address").value; }
-    get userDistrict() { return this.addUserForm.get("district").value; }
-    get userWard() { return this.addUserForm.get("ward").value; }
-    get userPassword() { return this.addUserForm.get("password").value; }
-    get userConfirmPassword() { return this.addUserForm.get("confirmPassword").value; }
+    // get userDistrict() { return this.addUserForm.get("district").value; }
+    // get userWard() { return this.addUserForm.get("ward").value; }
+
+    get userPassword() { return this.passwordForm.get("password").value; }
+    get userConfirmPassword() { return this.passwordForm.get("confirmPassword").value; }
 
     //Shop
     get shopName() { return this.shopForm.get("name").value }

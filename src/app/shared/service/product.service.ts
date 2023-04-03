@@ -33,6 +33,10 @@ export class ProductService {
         return this.httpClient.get<GetResponseProducts>(this.baseUrl + `/shops/${shopId}?pageNo=${thePage}&pageSize=${thePageSize}`)
     }
 
+    getProductsByShopIdNoPageable(shopId: number) {
+        return this.httpClient.get<Product[]>(this.baseUrl + `/shops?id=${shopId}`);
+    }
+
     getProductsByCategoryIds(categories: number[], thePage: number, thePageSize: number): Observable<GetResponseProducts> {
         this.idString = `/categories?`;
         categories.forEach(category => {

@@ -15,4 +15,12 @@ export class ProductImageService {
   addProductImage(productImage: ProductImage, productId: number): Observable<ProductImage> {
     return this.httpClient.post<ProductImage>(this.baseUrl + `/${productId}/images`, productImage)
   }
+
+  updateProductImage(productId: number, imageId: number, productImage: ProductImage) {
+    return this.httpClient.put(this.baseUrl + `/${productId}/images/${imageId}`, productImage)
+  }
+
+  deleteProductImage(productId: number, imageId: number) {
+    return this.httpClient.delete(this.baseUrl + `/${productId}/images/${imageId}`);
+  }
 }

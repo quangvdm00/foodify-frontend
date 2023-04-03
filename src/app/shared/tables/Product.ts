@@ -1,4 +1,5 @@
 import { Category } from "./Category";
+import { ProductImage } from "./ProductImage";
 import { Shop } from "./Shop";
 
 export class Product {
@@ -11,10 +12,11 @@ export class Product {
     cost: number;
     averageRating: number;
     reviewCount: number;
-    images: string[];
 
+    sold: number;
     categoryNames: string[];
     categories: Category[];
+    images: ProductImage[];
 
     shopId: number;
     shop: Shop;

@@ -8,6 +8,7 @@ import { finalize } from 'rxjs';
 import { Observable } from 'rxjs-compat';
 import { AddressService } from 'src/app/shared/service/address.service';
 import { DistrictService } from 'src/app/shared/service/district.service';
+import { FirebaseService } from 'src/app/shared/service/firebase.service';
 import { UserService } from 'src/app/shared/service/user.service';
 import { Address } from 'src/app/shared/tables/Address';
 import { District } from 'src/app/shared/tables/District';
@@ -58,7 +59,8 @@ export class EditUserComponent implements OnInit {
     private storage: AngularFireStorage,
     private route: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private firebaseService: FirebaseService
   ) {
 
   }
@@ -313,6 +315,12 @@ export class EditUserComponent implements OnInit {
     this.userService.deleteUserAddress(this.user.id, this.editingAddressId).subscribe(() => {
       this.layer1 = this.modalService.show(deleteSuccess, { class: 'modal-sm' })
     })
+  }
+
+  //Firebase modal
+  openResetPassword(email: string) {
+    console.log(email);
+    this.firebaseService.resetPassword(email);
   }
 
   //getter

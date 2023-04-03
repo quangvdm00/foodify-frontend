@@ -3,9 +3,9 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="card tab2-card">
-                <div class="card-header">
+                <!-- <div class="card-header">
                     <h5>Chỉnh sửa Shop</h5>
-                </div>
+                </div> -->
                 <div class="card-body tab2-card">
                     <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
                         <li [ngbNavItem]="1">
@@ -17,7 +17,7 @@
                                             <div class="row">
                                                 <div class="col-xl-9 xl-50 col-sm-6 col-9">
                                                     <img src="{{ shop.user.imageUrl }}" alt=""
-                                                        class="rounded-circle border border-dark">
+                                                        class="img-fluid image_zoom_1">
                                                 </div>
                                                 <div class="col-xl-3 xl-50 col-sm-6 col-3">
                                                 </div>
@@ -238,50 +238,64 @@
                         <li [ngbNavItem]="3">
                             <a ngbNavLink>Sản phẩm</a>
                             <ng-template ngbNavContent>
-                                <div class="row product-adding">
+                                <div class="container-fluid">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row product-adding">
+                                                <div *ngIf="products" class="table-responsive">
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">#</th>
+                                                                <th scope="col">Ảnh</th>
+                                                                <th scope="col">Tên sản phẩm</th>
+                                                                <th scope="col">Giá</th>
+                                                                <th scope="col"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let product of products; let i = index">
+                                                                <th scope="row">{{ i + 1 }}</th>
+                                                                <td>
+                                                                    <img [src]="[product.images[0].imageUrl]"
+                                                                        class="imgTable" style="width: 20px">
+                                                                </td>
+                                                                <td>{{ product.name }}</td>
+                                                                <td>{{ product.cost - product.cost *
+                                                                    product.discountPercent
+                                                                    /
+                                                                    100 }}
+                                                                </td>
+                                                                <td>
+                                                                    <a
+                                                                        [routerLink]="['/products','product-detail', product.id]"><i
+                                                                            class='fa fa-eye f-12'></i></a>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
 
+                                                    <!-- Pagination -->
+                                                    <div class="d-flex justify-content-center p-2">
+                                                        <ngb-pagination [collectionSize]="theTotalElements"
+                                                            [(page)]="thePageNumber" [maxSize]="5"
+                                                            [pageSize]="thePageSize" [rotate]="true"
+                                                            [boundaryLinks]="true" (pageChange)="listProduct()">
+                                                        </ngb-pagination>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <select class="form-select" style="width: auto; height: 36px;"
+                                                            name="pageSize" (change)="listProduct()"
+                                                            [(ngModel)]="thePageSize">
+                                                            <option [value]="10" [selected]="true" [ngValue]="10">10
+                                                                sản phẩm / trang</option>
+                                                            <option [ngValue]="15">15
+                                                                sản phẩm / trang</option>
+                                                            <option [ngValue]="20">20
+                                                                sản phẩm / trang</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                    <div *ngIf="products" class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">#</th>
-                                                    <th scope="col">Ảnh</th>
-                                                    <th scope="col">Tên sản phẩm</th>
-                                                    <th scope="col">Giá</th>
-                                                    <th scope="col"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr *ngFor="let product of products; let i = index">
-                                                    <th scope="row">{{ i + 1 }}</th>
-                                                    <td>
-                                                        <img [src]="[product.images[0].imageUrl]" class="imgTable"
-                                                            style="width: 20px">
-                                                    </td>
-                                                    <td>{{ product.name }}</td>
-                                                    <td>{{ product.cost - product.cost * product.discountPercent /
-                                                        100 }}
-                                                    </td>
-                                                    <td>
-                                                        <a [routerLink]="['/products','product-detail', product.id]"><i
-                                                                class='fa fa-eye f-12'></i></a>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <div class="d-flex justify-content-between p-2">
-                                            <ngb-pagination [collectionSize]="theTotalElements" [(page)]="thePageNumber"
-                                                [maxSize]="5" [pageSize]="thePageSize" [rotate]="true"
-                                                [boundaryLinks]="true" (pageChange)="listProduct()">
-                                            </ngb-pagination>
-                                            <select class="form-select" style="width: auto" name="pageSize"
-                                                (change)="listProduct()" [(ngModel)]="thePageSize">
-                                                <option [value]="10" [selected]="true" [ngValue]="10">10 items per
-                                                    page</option>
-                                                <option [ngValue]="15">15 items per page</option>
-                                                <option [ngValue]="20">20 items per page</option>
-                                            </select>
                                         </div>
                                     </div>
                                 </div>

@@ -46,7 +46,7 @@ const routes: Routes = [
         component: ProductListComponent,
         data: {
           title: "Danh sách sản phẩm",
-          breadcrumb: "Danh sách sản phẩm"
+          breadcrumb: "Danh sách"
         }
       },
       {
@@ -54,7 +54,7 @@ const routes: Routes = [
         component: ProductDetailComponent,
         data: {
           title: "Chi tiết sản phẩm",
-          breadcrumb: "Chi tiết sản phẩm"
+          breadcrumb: "Chi tiết"
         }
       },
       {
@@ -62,7 +62,7 @@ const routes: Routes = [
         component: AddProductComponent,
         data: {
           title: "Thêm sản phẩm",
-          breadcrumb: "Thêm sản phẩm"
+          breadcrumb: "Thêm"
         }
       },
       {
@@ -78,7 +78,7 @@ const routes: Routes = [
         component: EditProductComponent,
         data: {
           title: "Chỉnh sửa sản phẩm",
-          breadcrumb: "Chỉnh sửa sản phẩm"
+          breadcrumb: "Chỉnh sửa"
         }
       }
       // {

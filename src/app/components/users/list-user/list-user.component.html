@@ -1,9 +1,9 @@
 <!-- Container-fluid starts-->
 <div class="container-fluid">
     <div class="card">
-        <div class="card-header">
-            <h5>User Details</h5>
-        </div>
+        <!-- <div class="card-header">
+            <h5>Danh sách</h5>
+        </div> -->
         <div class="card-body">
             <form class="btn-popup pull-left" [formGroup]="searchForm">
                 <input formControlName="searchName" class="form-control" type="text" placeholder="Tìm kiếm"
@@ -42,7 +42,8 @@
                                             class='fa fa-eye f-12'></i></a>&nbsp;
                                     <a [routerLink]="['/users','edit', user.id]"><i
                                             class='fa fa-edit f-12'></i></a>&nbsp;
-                                    <a href="javascript:void(0)"><i class="fa fa-trash-o"></i></a>
+                                    <a style="cursor: pointer;" (click)="openModal(user, confirmDelete)"><i
+                                            class="fa fa-trash-o"></i></a>
                                 </td>
                             </tr>
                         </tbody>
@@ -65,9 +66,9 @@
 
                         <select [(ngModel)]="thePageSize" class="form-select" style="width: auto" name="pageSize"
                             (change)="listAllUsers()">
-                            <option [value]="5" [selected]="true" [ngValue]="5">5 items per page</option>
-                            <option [ngValue]="10">10 items per page</option>
-                            <option [ngValue]="20">20 items per page</option>
+                            <option [value]="5" [selected]="true" [ngValue]="10">10 người dùng / trang</option>
+                            <option [ngValue]="20">20 người dùng / trang</option>
+                            <option [ngValue]="30">30 người dùng / trang</option>
                         </select>
                     </div>
                 </div>
@@ -76,3 +77,19 @@
     </div>
 </div>
 <!-- Container-fluid Ends-->
+
+<ng-template #confirmDelete>
+    <div class="modal-body text-center">
+        <p>Bạn chắc chắn muốn xoá người dùng này ?</p>
+        <button type="button" class="btn btn-primary" (click)="confirmDeleted(deleteSuccess)">Tiếp
+            tục</button>&nbsp;&nbsp;
+        <button type="button" class="btn btn-secondary" (click)="closeLayer1()">Quay lại</button>
+    </div>
+</ng-template>
+
+<ng-template #deleteSuccess>
+    <div class="modal-body text-center">
+        <p>Xoá người dùng thành công</p>
+        <button type="button" class="btn btn-primary" (click)="closeLayer1()">Tiếp tục</button>
+    </div>
+</ng-template>

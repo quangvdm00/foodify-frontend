@@ -28,7 +28,8 @@
                                         <td>{{ addr.users.length}}</td>
                                         <td>
                                             <!-- <a href="javascript:void(0)"><i class='fa fa-edit f-12'></i></a>&nbsp; -->
-                                            <a (click)="confirmDeleted(confirmDelete, addr.id)"><i
+                                            <a style="cursor: pointer;"
+                                                (click)="confirmDeleted(confirmDelete, addr.id)"><i
                                                     class="fa fa-trash-o"></i></a>
                                         </td>
                                     </tr>
@@ -50,8 +51,8 @@
 <ng-template #confirmDelete>
     <div class="modal-body text-center">
         <p>Bạn có chắc muốn xoá địa chỉ này ?</p>
-        <button type="button" class="btn btn-secondary" (click)="confirm(complete)">Có
-        </button>
+        <button type="button" class="btn btn-secondary" (click)="confirm(complete)">Đồng ý
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button type="button" class="btn btn-primary" (click)="decline()">Không
         </button>
     </div>

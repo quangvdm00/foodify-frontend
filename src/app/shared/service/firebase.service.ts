@@ -1,15 +1,29 @@
 import { Injectable } from '@angular/core';
+import { FirebaseApp } from '@angular/fire/compat';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from "@angular/router";
+import * as firebase from 'firebase/app'
+import { UserService } from './user.service';
+import { ShopService } from './shop.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { StringBoolObject } from '../tables/StringBoolObject';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class FirebaseService {
+    private baseUrl = `${environment.foodOrderingBaseApiUrl}/firebase`
+
     isLoggedIn = false;
     token: string;
 
-    constructor(public firebaseAuth: AngularFireAuth,
+    constructor(
+        public firebaseAuth: AngularFireAuth,
+        private userService: UserService,
+        private shopService: ShopService,
+        private httpClient: HttpClient,
         private router: Router) {
     }
 
@@ -32,28 +46,35 @@ export class FirebaseService {
                                 console.log('Token Firebase: ', { token });
                                 this.token = token;
                                 localStorage.setItem('jwt-token', token);
+
+                                this.userService.getUserByEmailOrPhoneNumber(email).subscribe((user) => {
+                                    if (user.role.roleName == 'ROLE_ADMIN') {
+                                        localStorage.setItem('user-role', user.role.roleName);
+                                        localStorage.setItem('email', user.email);
+                                        localStorage.setItem('user-id', user.id.toString());
+                                    }
+                                    else {
+                                        localStorage.setItem('user-role', user.role.roleName);
+                                        localStorage.setItem('user-email', user.email);
+                                        localStorage.setItem('user-id', user.id.toString());
+                                        this.shopService.getShopByUserId(user.id).subscribe((shop) => {
+                                            localStorage.setItem('shop-id', shop.id.toString());
+                                        })
+                                    }
+                                })
                             }
                         );
                     this.getToken();
+                    this.router.navigate(['/dashboard/default']);
                     // this.csrfService.getToken().subscribe(
                     //     token => this.csrfService.setToken(token)
                     // );
-                    this.router.navigate(['dashboard/default']);
+                    console.log('navigated');
                 }
             ).catch(
-                error => console.log(error)
+                error => console.log("Login error: " + error)
             );
     }
-
-    // async signUp(email: string, password: string) {
-    //     await this.firebaseAuth.createUserWithEmailAndPassword(email, password)
-    //         .then(
-    //             res => {
-    //                 this.isLoggedIn = true;
-    //                 localStorage.setItem('user', JSON.stringify(res.user));
-    //             }
-    //         );
-    // }
 
     getToken() {
         this.firebaseAuth.currentUser.then(
@@ -71,13 +92,22 @@ export class FirebaseService {
         return this.token != null;
     }
 
+    resetPassword(email: string) {
+        this.firebaseAuth.sendPasswordResetEmail(email);
+    }
+
+    deleteUserByEmail(email: string): Observable<StringBoolObject> {
+        return this.httpClient.delete<StringBoolObject>(this.baseUrl + `/${email}`);
+    }
+
     logout() {
         this.firebaseAuth.signOut().then(
             res => {
-                console.log('Log out successfully', res);
+
             }
         );
         this.token = null;
+        localStorage.clear();
         this.router.navigate(['/auth/login']);
     }
 }

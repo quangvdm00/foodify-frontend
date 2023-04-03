@@ -26,6 +26,10 @@ export class ShopService {
     return this.httpClient.get<Shop>(this.baseUrl + `/${shopId}`)
   }
 
+  getShopByUserId(userId: number) {
+    return this.httpClient.get<Shop>(this.baseUrl + `/user?userId=${userId}`)
+  }
+
   updateShop(shopId: number, shopUpdate: Shop) {
     return this.httpClient.put<Shop>(this.baseUrl + `/${shopId}`, shopUpdate);
   }

@@ -1,6 +1,9 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import * as chartData from '../../shared/data/chart';
-import {doughnutData, pieData} from '../../shared/data/chart';
+import { doughnutData, pieData } from '../../shared/data/chart';
+import { ShopService } from 'src/app/shared/service/shop.service';
+import { ProductService } from 'src/app/shared/service/product.service';
+import { Product } from 'src/app/shared/tables/Product';
 
 @Component({
     selector: 'app-dashboard',
@@ -8,12 +11,54 @@ import {doughnutData, pieData} from '../../shared/data/chart';
     styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
+    //Log-in
+    isShop: boolean = false;
+    loggedId: number = Number(localStorage.getItem('user-id'))
+    loggedRole = localStorage.getItem('user-role');
+    shopId: number;
+
+    //Shop Properties
+    // products: Product[]
+    totalRevenue: number = 0;
+    totalProducts: number = 0;
+    totalReviewCount: number = 0;
+    totalAverageRating: number = 0;
+
+    constructor(
+        private shopService: ShopService,
+        private productService: ProductService
+    ) {
+        Object.assign(this, { doughnutData, pieData });
+    }
+
+    ngOnInit() {
+        if (this.loggedRole != 'ROLE_ADMIN') {
+            this.isShop = true;
+            this.shopId = Number(localStorage.getItem('shop-id'))
+
+            this.productService.getProductsByShopIdNoPageable(this.shopId).subscribe((products) => {
+                let i = 0;
+                products.forEach(product => {
+                    this.totalReviewCount = this.totalReviewCount + product.reviewCount;
+                    this.totalProducts = this.totalProducts + product.sold;
+                    if (product.averageRating != 0) {
+                        this.totalAverageRating = this.totalAverageRating + product.averageRating;
+                        i++;
+                    }
+                });
+                this.totalAverageRating = this.totalAverageRating / i;
+            })
+
+        }
+        else {
+            //ADMIN DO HERE
+        }
+    }
+
     public doughnutData = doughnutData;
     public pieData = pieData;
 
-    constructor() {
-        Object.assign(this, {doughnutData, pieData});
-    }
+
 
     // doughnut 2
     public view = chartData.view;
@@ -72,8 +117,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     public chartHovered(e: any): void {
     }
 
-    ngOnInit() {
-    }
+
 
     ngAfterViewInit(): void {
     }

@@ -53,15 +53,15 @@
         </div>
     </div>
 
-    <div class="d-flex justify-content-between p-2">
+    <div class="d-flex justify-content-center p-2">
         <ngb-pagination [collectionSize]="theTotalElements" [(page)]="thePageNumber" [maxSize]="5"
             [pageSize]="thePageSize" [rotate]="true" [boundaryLinks]="true" (pageChange)="listProduct()">
-        </ngb-pagination>
+        </ngb-pagination>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <select class="form-select" style="width: auto" name="pageSize" (change)="listProduct()"
             [(ngModel)]="thePageSize">
-            <option [value]="12" [selected]="true" [ngValue]="12">12 items per page</option>
-            <option [ngValue]="16">16 items per page</option>
-            <option [ngValue]="20">20 items per page</option>
+            <option [value]="12" [selected]="true" [ngValue]="12">12 sản phẩm / trang</option>
+            <option [ngValue]="20">20 sản phẩm / trang</option>
+            <option [ngValue]="28">28 sản phẩm / trang</option>
         </select>
     </div>
     <!-- Confirm Delete -->

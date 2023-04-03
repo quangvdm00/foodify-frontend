@@ -4,7 +4,7 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h5>Products Category</h5>
+                    <h5>Thể loại sản phẩm</h5>
                 </div>
                 <div class="card-body">
                     <!--                    <div class="btn-popup pull-right">-->
@@ -34,8 +34,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor='let category of categories'>
-                                        <th scope="row">{{ category.id }}</th>
+                                    <tr *ngFor='let category of categories; let i = index'>
+                                        <th scope="row">{{ i + 1 }}</th>
                                         <td>
                                             <img [src]="category.imageUrl" class="imgTable" style="width: 20px"
                                                 [routerLink]="['/products','category',category.id]">
@@ -103,9 +103,9 @@
     <div class="modal-body text-center">
         <p>Bạn muốn xoá thể loại này chứ ?<br>
             Tất cả những sản phẩm liên quan sẽ bị xoá ?</p>
-        <button type="button" class="btn btn-default" (click)="confirm(categoryId, deleteSuccess)">
-            Có
-        </button>
+        <button type="button" class="btn btn-secondary" (click)="confirm(categoryId, deleteSuccess)">
+            Đồng ý
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button type="button" class="btn btn-primary" (click)="decline()">Không
         </button>
     </div>

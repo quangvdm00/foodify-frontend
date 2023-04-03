@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs-compat';
 import { environment } from 'src/environments/environment';
 import { Address } from '../tables/Address';
-import { Shipper } from '../tables/shipper';
 import { StringBoolObject } from '../tables/StringBoolObject';
 import { User } from '../tables/User';
 
@@ -20,8 +19,14 @@ export class UserService {
     return this.httpClient.post<User>(this.baseUrl, user);
   }
 
+  //Get User By Id
   getUserById(userId): Observable<User> {
     return this.httpClient.get<User>(this.baseUrl + `/${userId}`)
+  }
+
+  //Get User By Email Or Phone Number
+  getUserByEmailOrPhoneNumber(emailOrPhoneNumber: string) {
+    return this.httpClient.get<User>(this.baseUrl + `/v1/email?emailOrPhoneNumber=${emailOrPhoneNumber}`);
   }
 
   //Update user
@@ -44,18 +49,34 @@ export class UserService {
     return this.httpClient.put(this.baseUrl + `/${userId}/addresses/default?addressId=${defaultAddressId}`, '');
   }
 
+  //Delete User By Id
+  deleteUserById(userId: number) {
+    return this.httpClient.delete(this.baseUrl + `/${userId}`)
+  }
+
   //Delete User Address
   deleteUserAddress(userId: number, addressId: number) {
     return this.httpClient.delete(this.baseUrl + `/${userId}/addresses/${addressId}`)
-  }
-
-  //get All Users
-  getAllUsersByRole(roleName: string, thePage: number, thePageSize: number, sortBy: string, sortDir: string) {
-    return this.httpClient.get(this.baseUrl + `/roles/${roleName}?pageNo=${thePage}&pageSize=${thePageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
   }
 
   //Get All Users
   getAllUsers(thePage: number, thePageSize: number, sortBy: string, sortDir: string) {
     return this.httpClient.get(this.baseUrl + `?pageNo=${thePage}&pageSize=${thePageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
   }
+
+  //Find All Users By Role
+  getAllUsersByRole(roleName: string, thePage: number, thePageSize: number, sortBy: string, sortDir: string) {
+    return this.httpClient.get(this.baseUrl + `/roles/${roleName}?pageNo=${thePage}&pageSize=${thePageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
+  }
+
+  //Find All User By Role And Email/PhoneNumber
+  getAllUsersByRoleAndEmailOrPhoneNumber(emailOrPhoneNumber: string, roleName: string, thePage: number, thePageSize: number, sortBy: string, sortDir: string) {
+    return this.httpClient.get(this.baseUrl + `/roles/${roleName}/email?emailOrPhoneNumber=${emailOrPhoneNumber}&pageNo=${thePage}&pageSize=${thePageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
+  }
+
+  //Find All User By Email/PhoneNumber
+  getAllUsersByEmailOrPhoneNumber(emailOrPhoneNumber: string, thePage: number, thePageSize: number, sortBy: string, sortDir: string) {
+    return this.httpClient.get(this.baseUrl + `/email/search?emailOrPhoneNumber=${emailOrPhoneNumber}&pageNo=${thePage}&pageSize=${thePageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
+  }
+
 }

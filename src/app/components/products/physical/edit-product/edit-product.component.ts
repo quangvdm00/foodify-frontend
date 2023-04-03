@@ -8,6 +8,10 @@ import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'src/app/shared/tables/Category';
+import { ProductImageService } from 'src/app/shared/service/product-image.service';
+import { finalize, Observable } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { ProductImage } from 'src/app/shared/tables/ProductImage';
 
 @Component({
   selector: 'app-edit-product',
@@ -19,18 +23,33 @@ export class EditProductComponent {
   public editProductForm: UntypedFormGroup;
   // public Editor = ClassicEditor;
 
+  active = 1;
+  oldRandomImg: string;
+  editOrDeleteId: number;
+
   editProductId: number;
   product: Product;
   isEnabled: boolean;
-  description: string = '';
   items!: FormArray;
+  imageContent: string;
+  imageUploadFile: File;
+  downloadURL: Observable<string>;
 
   constructor(
     private fb: UntypedFormBuilder,
     private productService: ProductService,
+    private productImageService: ProductImageService,
     private modalService: BsModalService,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private storage: AngularFireStorage) {
+  }
+
+  ngOnInit() {
+    this.reload();
+  }
+
+  createEditForm() {
     this.editProductForm = this.fb.group({
       name: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
       price: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
@@ -41,16 +60,17 @@ export class EditProductComponent {
     });
   }
 
-  ngOnInit() {
-    // this.addNewCategory();
+  reload() {
+    this.createEditForm();
     const productId = +this.route.snapshot.paramMap.get('id')!;
     this.productService.getProductById(productId).subscribe(
-      data => this.fillFormToUpdate(data)
+      product => this.fillFormToUpdate(product)
     )
   }
 
-  fillFormToUpdate(response: Product) {
-    response.categories.forEach((category: Category) => {
+  fillFormToUpdate(product: Product) {
+    this.product = product;
+    product.categories.forEach((category: Category) => {
       console.log(category.name);
       this.items = this.editProductForm.get('categories') as FormArray;
       this.items.push(new FormGroup({
@@ -58,18 +78,18 @@ export class EditProductComponent {
       }))
     })
 
-    this.isEnabled = response.isEnabled;
-    this.editProductId = response.id;
+    this.isEnabled = product.isEnabled;
+    this.editProductId = product.id;
+    this.oldRandomImg = product.images[0].imageUrl;
 
     this.editProductForm.patchValue({
-      id: response.id,
-      name: response.name,
-      price: response.cost,
-      descriptions: response.description,
-      discountPercent: response.discountPercent,
-      shopId: response.shop.id
+      id: product.id,
+      name: product.name,
+      price: product.cost,
+      descriptions: product.description,
+      discountPercent: product.discountPercent,
+      shopId: product.shop.id
     })
-    this.description = response.description;
   }
 
   onUpdateProduct() {
@@ -78,7 +98,7 @@ export class EditProductComponent {
     const product = new Product();
     product.id = 1;
     product.name = this.productName;
-    product.description = this.description;
+    product.description = this.descriptions;
     product.isEnabled = this.isEnabled;
     product.discountPercent = this.discountPercent;
     product.cost = this.productPrice;
@@ -88,12 +108,6 @@ export class EditProductComponent {
     product.categoryNames = categoryNames;
     console.log(product);
     this.productService.updateProductById(this.editProductId, product).subscribe();
-  }
-
-  handleProductDetails() {
-    const productId = +this.route.snapshot.paramMap.get('id')!;
-    this.productService.getProductById(productId).subscribe(data => this.product = data);
-    console.log(this.product)
   }
 
   addNewCategory() {
@@ -113,13 +127,6 @@ export class EditProductComponent {
 
   }
 
-  onChange({ editor }: ChangeEvent) {
-    let data = editor.getData();
-    console.log(data)
-    // const data = EDITTORC.instances.Editor.document.getBody().getText();
-    this.description = data;
-  }
-
   swap() {
     if (this.isEnabled) {
       this.isEnabled = false
@@ -128,6 +135,104 @@ export class EditProductComponent {
       this.isEnabled = true;
       console.log(this.isEnabled);
     }
+  }
+
+  //Image
+  onFileSelected(event) {
+    this.imageUploadFile = (event.target as HTMLInputElement).files[0];
+  }
+
+  uploadProductImage(fileUpload: File): Promise<string> {
+    return new Promise<string>((resolve) => {
+      let n = Date.now();
+      const filePath = `Products/${n}`;
+
+      const fileRef = this.storage.ref(filePath);
+      const task = this.storage.upload(`Products/${n}`, fileUpload);
+      task
+        .snapshotChanges()
+        .pipe(
+          finalize(() => {
+            this.downloadURL = fileRef.getDownloadURL();
+            this.downloadURL.subscribe(url => {
+              if (url) {
+                resolve(url);
+              }
+            });
+          })
+        )
+        .subscribe(url => {
+
+        }
+        );
+    })
+  }
+
+  //Modal
+  layer1: BsModalRef;
+  layer2: BsModalRef;
+
+  openModal(template: TemplateRef<any>) {
+    this.layer1 = this.modalService.show(template, { class: 'modal-sm' });
+  }
+
+  confirm(template: TemplateRef<any>): void {
+    this.layer1.hide();
+    this.layer1 = this.modalService.show(template, { class: 'modal-sm' });
+    this.onUpdateProduct();
+  }
+
+  closeLayer1(): void {
+    this.layer1.hide();
+  }
+
+  closeLayer1AndReload(): void {
+    this.layer1.hide();
+    this.reload();
+  }
+
+  list() {
+    this.layer1.hide();
+    this.router.navigate(["/products/product-list"])
+  }
+
+  openImgModal(id: number, imageTemplate: TemplateRef<any>) {
+    this.editOrDeleteId = id;
+    console.log(this.editOrDeleteId);
+    this.layer1 = this.modalService.show(imageTemplate, { class: 'modal-sm' });
+  }
+
+  uploadNewImage(successTemplate: TemplateRef<any>) {
+    this.imageContent = "Thêm ảnh";
+    const newImage = new ProductImage();
+    newImage.productId = this.product.id;
+    this.uploadProductImage(this.imageUploadFile).then((url) => {
+      newImage.imageUrl = url;
+      this.productImageService.addProductImage(newImage, this.product.id).subscribe(() => {
+        this.layer1.hide();
+        this.layer1 = this.modalService.show(successTemplate, { class: 'modal-sm' });
+      })
+    })
+  }
+
+  updateImage(successTemplate: TemplateRef<any>) {
+    this.imageContent = "Chỉnh sửa ảnh";
+    const editImage = new ProductImage();
+    editImage.productId = this.product.id;
+    this.uploadProductImage(this.imageUploadFile).then((url) => {
+      editImage.imageUrl = url;
+      this.productImageService.updateProductImage(this.product.id, this.editOrDeleteId, editImage).subscribe(() => {
+        this.layer1.hide();
+        this.layer1 = this.modalService.show(successTemplate, { class: 'modal-sm' });
+      })
+    })
+  }
+
+  deleteImage(successTemplate: TemplateRef<any>) {
+    this.imageContent = "Xoá ảnh";
+    this.productImageService.deleteProductImage(this.product.id, this.editOrDeleteId).subscribe();
+    this.layer1.hide();
+    this.layer1 = this.modalService.show(successTemplate, { class: 'modal-sm' });
   }
 
   //Getter
@@ -150,28 +255,4 @@ export class EditProductComponent {
   get descriptions() { return this.editProductForm.get('descriptions').value }
 
   get discountPercent() { return this.editProductForm.get('discountPercent').value }
-
-
-
-  //Modal
-  modalRef: BsModalRef;
-
-  openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
-  }
-
-  confirm(template: TemplateRef<any>): void {
-    this.modalRef.hide();
-    this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
-    this.onUpdateProduct();
-  }
-
-  decline(): void {
-    this.modalRef.hide();
-  }
-
-  list() {
-    this.modalRef.hide();
-    this.router.navigate(["/products/product-list"])
-  }
 }

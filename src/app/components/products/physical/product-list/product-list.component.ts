@@ -10,6 +10,9 @@ import { ProductService } from "../../../../shared/service/product.service";
 })
 
 export class ProductListComponent implements OnInit {
+    //Login Info
+    loggedId: number = Number(localStorage.getItem('user-id'));
+    loggedRole: string = localStorage.getItem('user-role');
 
     products = [];
     deleteProductId: number;
@@ -30,7 +33,12 @@ export class ProductListComponent implements OnInit {
     }
 
     listProduct() {
-        this.productService.getProductsPagination(this.thePageNumber - 1, this.thePageSize).subscribe(this.processResult());
+        if (this.loggedRole == 'ROLE_ADMIN') {
+            this.productService.getProductsPagination(this.thePageNumber - 1, this.thePageSize).subscribe(this.processResult());
+        }
+        else {
+            this.productService.getProductsByShopId(Number(localStorage.getItem('shop-id')), this.thePageNumber - 1, this.thePageSize).subscribe(this.processResult());
+        }
     }
 
     processResult() {

@@ -15,15 +15,15 @@ const routes: Routes = [
         component: ListVendorsComponent,
         data: {
           title: "Danh sách shop",
-          breadcrumb: "Shop"
+          breadcrumb: "Danh sách"
         }
       },
       {
         path: 'create',
         component: CreateVendorsComponent,
         data: {
-          title: "Create Vendor",
-          breadcrumb: "Create Vendor"
+          title: "Tạo người bán hàng",
+          breadcrumb: "Tạo"
         }
       },
       {

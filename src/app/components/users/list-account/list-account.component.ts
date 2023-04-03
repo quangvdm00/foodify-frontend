@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { FirebaseService } from 'src/app/shared/service/firebase.service';
 import { UserService } from 'src/app/shared/service/user.service';
 import { User } from 'src/app/shared/tables/User';
 
@@ -10,28 +12,29 @@ import { User } from 'src/app/shared/tables/User';
 })
 export class ListAccountComponent {
   users: User[] = [];
+  userDel: User
 
-  searchForm: FormGroup
+  searchName: string = '';
 
   //Pagination Properties
-  role: string = 'ROLE_USER'
+  role: string = 'ALL'
   thePageNumber = 1;
-  thePageSize = 5;
+  thePageSize = 10;
   sortBy = 'id';
   sortDir = 'asc';
   theTotalElements = 0;
 
+  isSearch: boolean = false;
+
   constructor(
     private userService: UserService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private firebaseService: FirebaseService,
+    private modalService: BsModalService) {
 
   }
 
   ngOnInit() {
-    this.searchForm = this.formBuilder.group({
-      searchName: ['']
-    })
-
     this.listAllUsers()
   }
 
@@ -40,9 +43,24 @@ export class ListAccountComponent {
       this.userService.getAllUsersByRole(this.role, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir).subscribe(this.processResult());
     }
     else {
-      this.userService.getAllUsers(this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir).subscribe(this.processResult())
+      this.userService.getAllUsers(this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir).subscribe(this.processResult());
     }
 
+  }
+
+  searchUser() {
+    console.log(this.searchName);
+    if (this.searchName.trim() !== '') {
+      if (this.role != 'ALL') {
+        this.userService.getAllUsersByRoleAndEmailOrPhoneNumber(this.searchName, this.role, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir).subscribe(this.processResult());
+      }
+      else {
+        this.userService.getAllUsersByEmailOrPhoneNumber(this.searchName, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir).subscribe(this.processResult());
+      }
+    }
+    else {
+      this.listAllUsers();
+    }
   }
 
   processResult() {
@@ -52,10 +70,6 @@ export class ListAccountComponent {
       this.thePageSize = data.page.pageSize;
       this.theTotalElements = data.page.totalElements;
     }
-  }
-
-  searchUser() {
-    console.log(this.searchName)
   }
 
   onSort(sortItem: string) {
@@ -69,7 +83,28 @@ export class ListAccountComponent {
     this.listAllUsers();
   }
 
+  //Modal
+  layer1: BsModalRef;
 
-  get searchName() { return this.searchForm.get('searchName').value }
+  openModal(user: User, template: TemplateRef<any>) {
+    this.userDel = user;
+    console.log(this.userDel.email)
+    this.layer1 = this.modalService.show(template, { class: 'modal-sm' });
+  }
+
+  confirmDeleted(success: TemplateRef<any>) {
+    this.userService.deleteUserById(this.userDel.id).subscribe()
+    console.log(this.userDel.email)
+    this.firebaseService.deleteUserByEmail(this.userDel.email).subscribe(() => {
+      this.listAllUsers();
+      this.layer1.hide();
+      this.layer1 = this.modalService.show(success, { class: 'modal-sm' });
+    });
+
+  }
+
+  closeLayer1() {
+    this.layer1.hide();
+  }
 
 }

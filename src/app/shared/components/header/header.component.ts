@@ -1,5 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { NavService } from '../../service/nav.service';
+import { User } from '../../tables/User';
+import { UserService } from '../../service/user.service';
+import { FirebaseService } from '../../service/firebase.service';
 
 @Component({
   selector: 'app-header',
@@ -10,11 +13,19 @@ export class HeaderComponent implements OnInit {
   public right_sidebar: boolean = false;
   public open: boolean = false;
   public openNav: boolean = false;
-  public isOpenMobile : boolean;
+  public isOpenMobile: boolean;
+  public user: User;
 
   @Output() rightSidebarEvent = new EventEmitter<boolean>();
 
-  constructor(public navServices: NavService) { }
+  constructor(
+    public navServices: NavService,
+    private userService: UserService,
+    private firebaseService: FirebaseService) {
+    this.userService.getUserById(Number(localStorage.getItem('user-id').toString())).subscribe((user) => {
+      this.user = user;
+    })
+  }
 
   collapseSidebar() {
     this.open = !this.open;
@@ -30,6 +41,10 @@ export class HeaderComponent implements OnInit {
   }
 
 
-  ngOnInit() {  }
+  ngOnInit() { }
+
+  logOut() {
+    this.firebaseService.logout();
+  }
 
 }

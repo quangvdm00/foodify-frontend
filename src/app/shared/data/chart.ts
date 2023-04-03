@@ -1,5 +1,5 @@
 import * as Chartist from 'chartist';
-import {ChartEvent, ChartType} from 'ng-chartist';
+import { ChartEvent, ChartType } from 'ng-chartist';
 
 export interface Chart {
     type: ChartType;
@@ -33,7 +33,7 @@ export var view: any[] = [409, 204];
 
 export var pieData = [
     {
-        value: 300,
+        value: 1500,
         name: "Frontend"
 
     },
@@ -84,9 +84,9 @@ export var chart5: Chart = {
 
 //line chart
 export var lineChartData: Array<any> = [
-    {data: [20, 5, 80, 10, 100, 15]},
-    {data: [0, 50, 20, 70, 30, 27]},
-    {data: [0, 30, 40, 10, 86, 40]}
+    { data: [20, 5, 80, 10, 100, 15] },
+    { data: [0, 50, 20, 70, 30, 27] },
+    { data: [0, 30, 40, 10, 86, 40] }
 ];
 export var lineChartLabels: Array<any> = ["1 min.", "10 min.", "20 min.", "30 min.", "40 min.", "50 min."];
 export var lineChartOptions: any = {
@@ -143,7 +143,7 @@ export var lineChartType = 'line';
 
 //line chart
 export var smallLineChartData: Array<any> = [
-    {data: [20, 5, 120, 10, 140, 15]},
+    { data: [20, 5, 120, 10, 140, 15] },
 ];
 export var smallLineChartLabels: Array<any> = ["", "", "", "", "", ""];
 export var smallLineChartOptions: any = {
@@ -185,7 +185,7 @@ export var smallLineChartType = 'line';
 
 //line chart
 export var smallLine2ChartData: Array<any> = [
-    {data: [85, 83, 90, 70, 85, 60, 65, 63, 68, 68, 65, 40, 60, 75, 70, 90]},
+    { data: [85, 83, 90, 70, 85, 60, 65, 63, 68, 68, 65, 40, 60, 75, 70, 90] },
 ];
 export var smallLine2ChartLabels: Array<any> = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17'];
 export var smallLine2ChartOptions: any = {
@@ -228,7 +228,7 @@ export var smallLine2ChartType = 'line';
 
 //line chart
 export var smallLine3ChartData: Array<any> = [
-    {data: [85, 83, 90, 70, 85, 60, 65, 63, 68, 68, 65, 40, 60, 75, 70, 90]},
+    { data: [85, 83, 90, 70, 85, 60, 65, 63, 68, 68, 65, 40, 60, 75, 70, 90] },
 ];
 export var smallLine3ChartLabels: Array<any> = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17'];
 export var smallLine3ChartOptions: any = {
@@ -273,7 +273,7 @@ export var smallLine3ChartType = 'line';
 
 //line chart
 export var smallLine4ChartData: Array<any> = [
-    {data: [85, 83, 90, 70, 85, 60, 65, 63, 68, 68, 65, 40, 60, 68, 75, 70, 90]},
+    { data: [85, 83, 90, 70, 85, 60, 65, 63, 68, 68, 65, 40, 60, 68, 75, 70, 90] },
 ];
 export var smallLine4ChartLabels: Array<any> = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17'];
 export var smallLine4ChartOptions: any = {
@@ -363,9 +363,9 @@ export var chart3: Chart = {
 
 //line chart
 export var salesChartData: Array<any> = [
-    {data: [10, 50, 0, 80, 10, 70]},
-    {data: [20, 40, 15, 70, 30, 27]},
-    {data: [5, 30, 20, 40, 50, 20]}
+    { data: [10, 50, 0, 80, 10, 70] },
+    { data: [20, 40, 15, 70, 30, 27] },
+    { data: [5, 30, 20, 40, 50, 20] }
 ];
 export var salesChartLabels: Array<any> = ["1 min.", "10 min.", "20 min.", "30 min.", "40 min.", "50 min."];
 export var salesChartOptions: any = {
@@ -430,8 +430,8 @@ export var areaChart1: any = {
     ],
     options: {
         title: 'Company Performance',
-        hAxis: {title: 'Year', titleTextStyle: {color: '#333'}},
-        vAxis: {minValue: 0},
+        hAxis: { title: 'Year', titleTextStyle: { color: '#333' } },
+        vAxis: { minValue: 0 },
         width: '100%',
         height: 340,
         colors: ["#ff7f83", "#a5a5a5"],
@@ -453,7 +453,7 @@ export var columnChart1: any = {
         ["800", 1.5, 2.8]
     ],
     options: {
-        legend: {position: 'none'},
+        legend: { position: 'none' },
         bars: "vertical",
         vAxis: {
             format: "decimal"
@@ -481,7 +481,7 @@ export var lineChart: any = {
     ],
     options: {
         colors: ["#ff8084", "#a5a5a5"],
-        legend: {position: 'none'},
+        legend: { position: 'none' },
         height: 500,
         width: '100%',
         backgroundColor: 'transparent'

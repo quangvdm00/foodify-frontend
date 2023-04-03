@@ -1,14 +1,14 @@
 <!-- Container-fluid starts-->
 <div class="container-fluid">
     <div class="card">
-        <div class="card-header">
+        <!-- <div class="card-header">
             <h5>User Details</h5>
-        </div>
+        </div> -->
         <div class="card-body">
-            <form class="btn-popup pull-left" [formGroup]="searchForm">
-                <input formControlName="searchName" class="form-control" type="text" placeholder="Tìm kiếm"
+            <div class="btn-popup pull-left">
+                <input [(ngModel)]="searchName" class="form-control" type="text" placeholder="Tìm kiếm"
                     (change)="searchUser()" />
-            </form>
+            </div>
             <div id="batchDelete" class="category-table custom-datatable transcation-datatable user-image">
                 <div class="table-responsive">
                     <table class="table table-striped">
@@ -19,7 +19,7 @@
                                 <th scope="col"><a (click)="onSort('fullName')">Họ và tên</a></th>
                                 <th scope="col"><a (click)="onSort('email')">Email</a></th>
                                 <th scope="col"><a (click)="onSort('phoneNumber')">Số điện thoại</a></th>
-                                <th scope="col">Ngày sinh</th>
+                                <th scope="col">Vai trò</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -34,10 +34,17 @@
                                 </td>
                                 <td>{{user.email}}</td>
                                 <td>{{user.phoneNumber}}</td>
-                                <td>{{user.dateOfBirth}}</td>
                                 <td>
-                                    <a href="javascript:void(0)"><i class='fa fa-edit f-12'></i></a>&nbsp;
-                                    <a href="javascript:void(0)"><i class="fa fa-trash-o"></i></a>
+                                    <a *ngIf="user.role.roleName == 'ROLE_ADMIN'">Quản trị viên</a>
+                                    <a *ngIf="user.role.roleName == 'ROLE_USER'">Người dùng</a>
+                                    <a *ngIf="user.role.roleName == 'ROLE_SHOP'">Người bán hàng</a>
+                                    <a *ngIf="user.role.roleName == 'ROLE_SHIPPER'">Shipper</a>
+                                </td>
+                                <td>
+                                    <a style="cursor: pointer" href="javascript:void(0)"><i
+                                            class='fa fa-edit f-12'></i></a>&nbsp;
+                                    <a style="cursor: pointer" (click)="openModal(user, confirmDelete)"><i
+                                            class="fa fa-trash-o"></i></a>
                                 </td>
                             </tr>
                         </tbody>
@@ -47,11 +54,11 @@
                     <div class="d-flex justify-content-center p-2">
                         <select [(ngModel)]="role" class="form-select" style="width: auto" name="pageSize"
                             (change)="listAllUsers()">
-                            <option [value]="'ROLE_USER'" [selected]="true" [ngValue]="'ROLE_USER'">Người dùng</option>
-                            <option [ngValue]="'ROLE_SHOP'">Shop</option>
-                            <option [ngValue]="'ROLE_SHIPPER'">Shipper</option>
+                            <option [selected]="true" [ngValue]="'ALL'">Tất cả</option>
                             <option [ngValue]="'ROLE_ADMIN'">Quản trị viên</option>
-                            <option [ngValue]="'ALL'">Tất cả</option>
+                            <option [value]="'ROLE_USER'" [ngValue]="'ROLE_USER'">Người dùng</option>
+                            <option [ngValue]="'ROLE_SHOP'">Người bán hàng</option>
+                            <option [ngValue]="'ROLE_SHIPPER'">Shipper</option>
                         </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                         <ngb-pagination [(page)]="thePageNumber" [pageSize]="thePageSize"
@@ -60,9 +67,9 @@
 
                         <select [(ngModel)]="thePageSize" class="form-select" style="width: auto" name="pageSize"
                             (change)="listAllUsers()">
-                            <option [value]="5" [selected]="true" [ngValue]="5">5 items per page</option>
-                            <option [ngValue]="10">10 items per page</option>
-                            <option [ngValue]="20">20 items per page</option>
+                            <option [value]="10" [selected]="true" [ngValue]="10">10 tài khoản / trang</option>
+                            <option [ngValue]="20">20 tài khoản / trang</option>
+                            <option [ngValue]="30">30 tài khoản / trang</option>
                         </select>
                     </div>
                 </div>
@@ -71,3 +78,19 @@
     </div>
 </div>
 <!-- Container-fluid Ends-->
+
+<ng-template #confirmDelete>
+    <div class="modal-body text-center">
+        <p>Bạn chắc chắn muốn xoá người dùng này ?</p>
+        <button type="button" class="btn btn-primary" (click)="confirmDeleted(deleteSuccess)">Tiếp
+            tục</button>&nbsp;&nbsp;
+        <button type="button" class="btn btn-secondary" (click)="closeLayer1()">Quay lại</button>
+    </div>
+</ng-template>
+
+<ng-template #deleteSuccess>
+    <div class="modal-body text-center">
+        <p>Xoá người dùng thành công</p>
+        <button type="button" class="btn btn-primary" (click)="closeLayer1()">Tiếp tục</button>
+    </div>
+</ng-template>

@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { rejects } from 'assert';
 import { url } from 'inspector';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { resolve } from 'path';
-import { finalize, mergeMap, Observable } from 'rxjs';
+import { finalize, mergeMap, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs-compat/operator/switchMap';
 import { Validation } from 'src/app/constants/Validation';
+import { FirebaseService } from 'src/app/shared/service/firebase.service';
 import { ShipperService } from 'src/app/shared/service/shipper.service';
 import { UserService } from 'src/app/shared/service/user.service';
 import { Shipper } from 'src/app/shared/tables/shipper';
@@ -26,6 +28,7 @@ export class CreateShipperComponent {
   imageFile: File;
   downloadURL: Observable<string>;
   avatar: string;
+  edited: boolean = false;
 
   // Password
   showPassword = false;
@@ -36,6 +39,8 @@ export class CreateShipperComponent {
     private userService: UserService,
     private shipperService: ShipperService,
     private router: Router,
+    private modalService: BsModalService,
+    private firebaseService: FirebaseService
   ) {
     this.createPermissionForm();
   }
@@ -119,8 +124,12 @@ export class CreateShipperComponent {
             return this.shipperService.createShipper(newShipper)
           })).subscribe({
             next: (shipper) => {
-              this.router.navigate(["shippers/list"]);
-            },
+              of(this.firebaseService.signUp(newUser.email, this.shipperPassword.value)).subscribe({
+                next: () => {
+                  this.router.navigate(["shippers/list"]);
+                }
+              });
+            }
           });
 
         resolve();
@@ -130,6 +139,7 @@ export class CreateShipperComponent {
 
   //Image
   onFileSelected(event) {
+    this.edited = true;
     this.imageFile = event.target.files[0];
     console.log(this.imageFile.name)
   }
@@ -146,6 +156,7 @@ export class CreateShipperComponent {
       };
     }
     this.imageFile = event.target.files[0];
+    this.modalRef.hide()
   }
 
   uploadImage(fileUpload: File): Promise<string> {
@@ -174,6 +185,12 @@ export class CreateShipperComponent {
         }
         );
     })
+  }
+
+  modalRef: BsModalRef
+
+  chooseImg(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
   }
 
   //Getter

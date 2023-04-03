@@ -1,0 +1,21 @@
+th, td {
+    text-align: center;
+}
+
+
+.undertaker-box {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 3px solid #cccbcb;
+
+    .total-box {
+        .total-text {
+            width: 205px;
+        }
+    
+        .price-text {
+            margin-left: 10px;
+        }
+    }
+
+}

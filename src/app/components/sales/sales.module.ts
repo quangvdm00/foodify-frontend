@@ -7,11 +7,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { DetailOrderComponent } from './detail-order/detail-order.component';
+
 
 
 @NgModule({
 
-  declarations: [OrdersComponent, TransactionsComponent],
+  declarations: [OrdersComponent, TransactionsComponent, DetailOrderComponent],
   imports: [
     CommonModule,
     SalesRoutingModule,

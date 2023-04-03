@@ -7,7 +7,7 @@ import { UserService } from './user.service';
 import { ShopService } from './shop.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { StringBoolObject } from '../tables/stringboolobject';
+import { StringBoolObject } from '../tables/string-bool-object';
 import { Observable } from 'rxjs';
 
 @Injectable({

@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { NavService } from '../../service/nav.service';
-import { User } from '../../tables/User';
+import { User } from '../../tables/user';
 import { UserService } from '../../service/user.service';
 import { FirebaseService } from '../../service/firebase.service';
 
@@ -9,6 +9,7 @@ import { FirebaseService } from '../../service/firebase.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
+
 export class HeaderComponent implements OnInit {
   public right_sidebar: boolean = false;
   public open: boolean = false;

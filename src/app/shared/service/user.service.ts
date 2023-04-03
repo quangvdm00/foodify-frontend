@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs-compat';
 import { environment } from 'src/environments/environment';
 import { Address } from '../tables/Address';
-import { StringBoolObject } from '../tables/StringBoolObject';
+import { StringBoolObject } from '../tables/string-bool-object';
 import { User } from '../tables/user';
 
 @Injectable({

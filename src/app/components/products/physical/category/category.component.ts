@@ -4,7 +4,7 @@ import { TableService } from 'src/app/shared/service/table.service';
 import { CategoryService } from 'src/app/shared/service/category.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Category } from 'src/app/shared/tables/Category';
+import { Category } from 'src/app/shared/tables/category';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize, Observable } from 'rxjs';
 import { resolve } from 'path';

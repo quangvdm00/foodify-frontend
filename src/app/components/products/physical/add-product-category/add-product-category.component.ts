@@ -1,9 +1,9 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {ChangeEvent} from "@ckeditor/ckeditor5-angular";
-import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
-import {Product} from "../../../../shared/tables/Product";
+import { ChangeEvent } from "@ckeditor/ckeditor5-angular";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { Product } from "../../../../shared/tables/product";
 
 @Component({
     selector: 'app-add-product-category',
@@ -17,18 +17,18 @@ export class AddProductCategoryComponent {
     public url = [{
         img: "assets/images/user.png",
     },
-        {
-            img: "assets/images/user.png",
-        },
-        {
-            img: "assets/images/user.png",
-        },
-        {
-            img: "assets/images/user.png",
-        },
-        {
-            img: "assets/images/user.png",
-        }
+    {
+        img: "assets/images/user.png",
+    },
+    {
+        img: "assets/images/user.png",
+    },
+    {
+        img: "assets/images/user.png",
+    },
+    {
+        img: "assets/images/user.png",
+    }
     ];
 
 
@@ -41,7 +41,7 @@ export class AddProductCategoryComponent {
     message: string;
 
     constructor(private fb: UntypedFormBuilder,
-                private modalService: BsModalService) {
+        private modalService: BsModalService) {
         this.productForm = this.fb.group({
             name: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
             price: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
@@ -61,7 +61,7 @@ export class AddProductCategoryComponent {
         this.productForm.reset();
     }
 
-    onChange({editor}: ChangeEvent) {
+    onChange({ editor }: ChangeEvent) {
         let data = editor.getData();
         // const data = EDITTORC.instances.Editor.document.getBody().getText();
         this.description = data;
@@ -114,7 +114,7 @@ export class AddProductCategoryComponent {
     }
 
     openModal(template: TemplateRef<any>) {
-        this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
     }
 
     confirm(): void {

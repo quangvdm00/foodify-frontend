@@ -1,5 +1,4 @@
-import { Address } from "./Address";
-import { User } from "./User";
+import { User } from "./user";
 
 export class Shop {
     id: number;

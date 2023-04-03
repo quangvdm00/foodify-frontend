@@ -13,7 +13,7 @@ import { FirebaseService } from 'src/app/shared/service/firebase.service';
 import { ShipperService } from 'src/app/shared/service/shipper.service';
 import { UserService } from 'src/app/shared/service/user.service';
 import { Shipper } from 'src/app/shared/tables/shipper';
-import { User } from 'src/app/shared/tables/User';
+import { User } from 'src/app/shared/tables/user';
 
 @Component({
   selector: 'app-create-shipper',
@@ -45,7 +45,7 @@ export class CreateShipperComponent {
     this.createPermissionForm();
   }
 
-  
+
 
   createPermissionForm() {
     this.permissionForm = this.formBuilder.group({});
@@ -55,7 +55,6 @@ export class CreateShipperComponent {
     this.accountForm = this.formBuilder.group(
       {
         fullName: new FormControl("", [Validators.required, Validators.minLength(2)]),
-        url: new FormControl('', [Validators.required]),
         email: new FormControl("", [Validators.required, Validators.email]),
         dob: new FormControl("", [Validators.required]),
         phoneNumber: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Phone)]),
@@ -204,7 +203,7 @@ export class CreateShipperComponent {
 
   get shipperPhoneNumber() { return this.accountForm.get('phoneNumber') }
 
-  get shipperIdentifiedCode() { return this.accountForm.get('identifiedCode')}
+  get shipperIdentifiedCode() { return this.accountForm.get('identifiedCode') }
 
   get shipperPassword() { return this.accountForm.get('password') }
 

@@ -3,7 +3,7 @@ import * as chartData from '../../shared/data/chart';
 import { doughnutData, pieData } from '../../shared/data/chart';
 import { ShopService } from 'src/app/shared/service/shop.service';
 import { ProductService } from 'src/app/shared/service/product.service';
-import { Product } from 'src/app/shared/tables/Product';
+import { Product } from 'src/app/shared/tables/product';
 
 @Component({
     selector: 'app-dashboard',

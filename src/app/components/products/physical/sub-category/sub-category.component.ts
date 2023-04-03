@@ -1,7 +1,7 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, QueryList, ViewChildren } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Category } from 'src/app/shared/tables/Category';
+import { Category } from 'src/app/shared/tables/category';
 import { TableService } from '../../../../shared/service/table.service';
 import { SortEvent } from '../../../../shared/directives/shorting.directive';
 import { NgbdSortableHeader } from "../../../../shared/directives/NgbdSortableHeader";

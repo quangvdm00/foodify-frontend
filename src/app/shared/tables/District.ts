@@ -1,7 +1,7 @@
-import { Ward } from "./Ward";
+import { Ward } from "./ward";
 
 export class District {
-    id: number;
-    name: string;
+    id: number
+    name: string
     wards: Ward[];
 }

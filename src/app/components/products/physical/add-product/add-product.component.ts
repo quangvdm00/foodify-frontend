@@ -3,8 +3,8 @@ import { FormArray, FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { ChangeEvent } from "@ckeditor/ckeditor5-angular";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { Product } from "../../../../shared/tables/Product";
-import { Category } from "../../../../shared/tables/Category";
+import { Product } from "../../../../shared/tables/product";
+import { Category } from "../../../../shared/tables/category";
 import { ProductService } from 'src/app/shared/service/product.service';
 import { environment } from 'src/environments/environment';
 import { concatMap, finalize, Observable, switchMap } from 'rxjs';
@@ -12,7 +12,7 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { resolve } from 'path';
 import { rejects } from 'assert';
 import { ProductImageService } from 'src/app/shared/service/product-image.service';
-import { ProductImage } from 'src/app/shared/tables/ProductImage';
+import { ProductImage } from 'src/app/shared/tables/product-image';
 
 
 @Component({

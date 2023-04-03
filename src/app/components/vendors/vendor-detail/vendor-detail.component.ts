@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from 'src/app/shared/service/product.service';
 import { ShopService } from 'src/app/shared/service/shop.service';
-import { Shop } from 'src/app/shared/tables/Shop';
+import { Shop } from 'src/app/shared/tables/shop';
 
 @Component({
   selector: 'app-vendor-detail',

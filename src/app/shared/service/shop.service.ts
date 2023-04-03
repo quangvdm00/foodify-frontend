@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Address } from '../tables/Address';
-import { Shop } from '../tables/Shop';
+import { Shop } from '../tables/shop';
 import { GoogleResponse } from '../tables/google-response';
 
 @Injectable({

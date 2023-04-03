@@ -13,7 +13,7 @@ import { UserService } from 'src/app/shared/service/user.service';
 import { WardService } from 'src/app/shared/service/ward.service';
 import { Address } from 'src/app/shared/tables/Address';
 import { District } from 'src/app/shared/tables/District';
-import { Shop } from 'src/app/shared/tables/Shop';
+import { Shop } from 'src/app/shared/tables/shop';
 import { User } from 'src/app/shared/tables/User';
 import { Ward } from 'src/app/shared/tables/Ward';
 import { vendorsDB } from "../../../shared/tables/vendor-list";

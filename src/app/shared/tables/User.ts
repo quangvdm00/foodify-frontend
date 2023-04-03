@@ -1,4 +1,5 @@
-import { Address } from "./address";
+import { Address } from "./Address";
+import { Role } from "./role";
 
 export class User {
     id: number;
@@ -12,23 +13,7 @@ export class User {
     roleName: string;
     defaultAddress: number
 
-    // create a new user
+    //Response
     addresses: Address[]
+    role: Role;
 }
-
-export class UserCreate {
-    addressDto: {
-      address: string;
-      district: string;
-      ward: string;
-    };
-    dateOfBirth: string;
-    email: string;
-    fullName: string;
-    identifiedCode: string;
-    imageUrl: string;
-    isLocked: boolean;
-    phoneNumber: string;
-    roleName: string;
-  }
-

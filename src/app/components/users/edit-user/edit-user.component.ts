@@ -11,9 +11,9 @@ import { DistrictService } from 'src/app/shared/service/district.service';
 import { FirebaseService } from 'src/app/shared/service/firebase.service';
 import { UserService } from 'src/app/shared/service/user.service';
 import { Address } from 'src/app/shared/tables/Address';
-import { District } from 'src/app/shared/tables/District';
-import { User } from 'src/app/shared/tables/User';
-import { Ward } from 'src/app/shared/tables/Ward';
+import { District } from 'src/app/shared/tables/district';
+import { User } from 'src/app/shared/tables/user';
+import { Ward } from 'src/app/shared/tables/ward';
 
 @Component({
   selector: 'app-edit-user',

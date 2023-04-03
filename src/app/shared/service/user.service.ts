@@ -4,26 +4,15 @@ import { Observable } from 'rxjs-compat';
 import { environment } from 'src/environments/environment';
 import { Address } from '../tables/Address';
 import { StringBoolObject } from '../tables/StringBoolObject';
-import { User } from '../tables/User';
+import { User } from '../tables/user';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class UserService {
-  private userUrl = `${environment.foodOrderingBaseApiUrl}/users`;
+  private baseUrl = `${environment.foodOrderingBaseApiUrl}/users`;
 
   constructor(private httpClient: HttpClient) { }
-
-  getUsersPagination(thePage: number, thePageSize: number): Observable<GetResponseUsers> {
-    return this.httpClient.get<GetResponseUsers>(this.userUrl + `?pageNo=${thePage}&pageSize=${thePageSize}`);
-  }
-
-  createUserWithOneAddress(createUser: UserCreate): Observable<UserCreate> {
-    let createApi = `${environment.foodOrderingBaseApiUrl}/auth/signup`;
-    return this.httpClient.post<UserCreate>(createApi, createUser);
-  }
-
-  private baseUrl = `${environment.foodOrderingBaseApiUrl}/users`;
 
   //Create new User
   createNewUser(user: User): Observable<User> {

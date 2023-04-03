@@ -1,7 +1,7 @@
 import { Component, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AddressService } from 'src/app/shared/service/address.service';
-import { AddressResponse } from 'src/app/shared/tables/AddressResponse';
+import { AddressResponse } from 'src/app/shared/tables/addressresponse';
 
 @Component({
   selector: 'app-list-address',

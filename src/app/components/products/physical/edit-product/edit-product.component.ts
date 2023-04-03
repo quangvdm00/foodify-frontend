@@ -3,15 +3,15 @@ import { FormArray, FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ProductService } from 'src/app/shared/service/product.service';
-import { Product } from 'src/app/shared/tables/Product';
+import { Product } from 'src/app/shared/tables/product';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Category } from 'src/app/shared/tables/Category';
+import { Category } from 'src/app/shared/tables/category';
 import { ProductImageService } from 'src/app/shared/service/product-image.service';
 import { finalize, Observable } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { ProductImage } from 'src/app/shared/tables/ProductImage';
+import { ProductImage } from 'src/app/shared/tables/product-image';
 
 @Component({
   selector: 'app-edit-product',

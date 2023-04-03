@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from 'src/app/shared/service/order.service';
 import { Order } from 'src/app/shared/tables/order-list';
-import { Product } from 'src/app/shared/tables/Product';
+import { Product } from 'src/app/shared/tables/product';
 
 @Component({
   selector: 'app-detail-order',
@@ -10,12 +10,12 @@ import { Product } from 'src/app/shared/tables/Product';
   styleUrls: ['./detail-order.component.scss']
 })
 export class DetailOrderComponent {
-  constructor(private route: ActivatedRoute, 
-              private orderService: OrderService,
-              private router: Router) {}
+  constructor(private route: ActivatedRoute,
+    private orderService: OrderService,
+    private router: Router) { }
 
   order: Order
-  products: Product[]=[]
+  products: Product[] = []
 
 
   ngOnInit() {

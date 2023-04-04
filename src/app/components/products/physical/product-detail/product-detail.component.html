@@ -2,14 +2,15 @@
     <div class="card">
         <div class="row product-page-main card-body">
             <div class="col-xl-4">
-                <section>
-                    <ks-carousel [id]="101" [images]="imagesRect">
+                <!-- <section>
+                    <ks-carousel [items]="imagesRect">
                     </ks-carousel>
-                </section>
+                </section> -->
+                <img src="{{ product?.images[0].imageUrl }}" alt="" class="img-fluid image_zoom_1">
             </div>
             <div class="col-xl-8">
                 <div class="product-page-details product-right mb-0">
-                    <h2>{{ product.name }}</h2>
+                    <h2>{{ product?.name }}</h2>
                     <!-- <ngb-rating class="ratings-sec" [(rate)]="currentRate">
                         <ng-template let-fill="fill" let-index="index">
                             <span class="star" [class.filled]="fill === 100" [class.bad]="index < 3"><i
@@ -17,11 +18,11 @@
                         </ng-template>
                     </ngb-rating> -->
                     <hr>
-                    <h6 class="product-title">Shop: {{ product.shop.name }}</h6>
-                    <p class="mb-0">{{ product.description }}</p>
+                    <h6 class="product-title">Shop: {{ product?.shop.name }}</h6>
+                    <p class="mb-0">{{ product?.description }}</p>
                     <div>
-                        <h3> {{ product.cost- (product.cost * product.discountPercent)/100}} <del
-                                *ngIf="product.discountPercent > 0">{{ product.cost }}</del></h3>
+                        <h3> {{ product?.cost- (product?.cost * product?.discountPercent)/100}} <del
+                                *ngIf="product?.discountPercent > 0">{{ product?.cost }}</del></h3>
                     </div>
                     <!-- <ul class="color-variant">
                         <li class="bg-light0"></li>
@@ -47,9 +48,9 @@
                         </div>
                     </ng-template> -->
                     <div>
-                        <ul *ngFor="let category of product.categories">
+                        <ul *ngFor="let category of product?.categories">
                             <!-- <li class="active"><a href="javascript:void(0)">s</a></li> -->
-                            <li><a href="javascript:void(0)">{{ category.name }}</a></li>
+                            <li><a href="javascript:void(0)">{{ category?.name }}</a></li>
                         </ul>
                     </div>
                     <!-- <div class="add-product-form">
@@ -65,16 +66,16 @@
                     <hr>
                     <h6 class="product-title">Thông tin khác</h6>
                     <div>
-                        <p>Giảm giá : {{ product.discountPercent}}%</p>
-                        <p *ngIf="product.isEnabled == true">Đang được bán</p>
-                        <p *ngIf="product.isEnabled == false">Không được bán</p>
-                        <p>Đã đánh giá : {{ product.reviewCount }}</p>
+                        <p>Giảm giá : {{ product?.discountPercent}}%</p>
+                        <p *ngIf="product?.isEnabled == true">Đang được bán</p>
+                        <p *ngIf="product?.isEnabled == false">Không được bán</p>
+                        <p>Đã đánh giá : {{ product?.reviewCount }}</p>
                     </div>
                     <div class="m-t-15">
                         <button class="btn btn-primary m-r-10" type="button"
-                            [routerLink]="['/products', 'edit-product', product.id]">Chỉnh sửa</button>
+                            [routerLink]="['/products', 'edit-product', product?.id]">Chỉnh sửa</button>
                         <button class="btn btn-secondary" type="button"
-                            (click)="openModal(confirm_Delete, product.id)">Xoá</button>
+                            (click)="openModal(confirm_Delete, product?.id)">Xoá</button>
                     </div>
                 </div>
             </div>
@@ -83,8 +84,8 @@
     <ng-template #confirm_Delete>
         <div class="modal-body text-center">
             <p>Bạn chắc chắc xoá sản phẩm này chứ ?</p>
-            <button type="button" class="btn btn-default" (click)="confirm(deleteProductId, success)">Có
-            </button>
+            <button type="button" class="btn btn-default" (click)="confirm(deleteProductId, success)">Đồng ý
+            </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button type="button" class="btn btn-primary" (click)="decline()">Không
             </button>
         </div>

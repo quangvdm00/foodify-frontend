@@ -16,6 +16,12 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
   providers: [TableService, DecimalPipe],
 })
 export class OrdersComponent implements OnInit {
+  //Log-in
+  isShop: boolean = false;
+  loggedId: number = Number(localStorage.getItem('user-id'))
+  loggedRole = localStorage.getItem('user-role');
+  shopId: number;
+
   //Required properties
   oldid: number = 1;
   userId: number;
@@ -39,16 +45,27 @@ export class OrdersComponent implements OnInit {
 
   orderStatuses = ["Chờ xác nhận", "Đã xác nhận", "Đang giao hàng", "Giao thành công", "Đã huỷ đơn"];
 
-  constructor(private orderService: OrderService, private modalService: BsModalService) {}
+  constructor(private orderService: OrderService, private modalService: BsModalService) { }
 
   ngOnInit() {
+    if (this.loggedRole != 'ROLE_ADMIN') {
+      this.isShop = true;
+      this.shopId = Number(localStorage.getItem('shop-id'))
+    }
     this.listOrder();
   }
 
   listOrder() {
-    this.orderService
-      .getOrdersPagination(this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
-      .subscribe(this.processResult());
+    if (this.isShop) {
+      this.orderService.getOrdersByShopId(this.shopId, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
+        .subscribe(this.processResult());
+    }
+    else {
+      this.orderService
+        .getOrdersPagination(this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
+        .subscribe(this.processResult());
+    }
+
   }
 
   processResult() {
@@ -77,7 +94,7 @@ export class OrdersComponent implements OnInit {
   }
 
   confirmBoxChangeStatus(successChangeStatus: TemplateRef<any>) {
-    this.orderService.updateOrderStatus(this.userId, this.orderId, this.selectedStatus).subscribe((res) => {});
+    this.orderService.updateOrderStatus(this.userId, this.orderId, this.selectedStatus).subscribe((res) => { });
     this.modalRef.hide();
     this.modalRef = this.modalService.show(successChangeStatus, { class: "modal-sm" });
   }
@@ -98,7 +115,7 @@ export class OrdersComponent implements OnInit {
     this.orderId = orderId
     console.log('userId: ' + this.userId);
     console.log('orderId: ' + this.orderId);
-    
+
     this.modalRef = this.modalService.show(confirmBoxDelete, { class: "modal-sm" });
   }
 

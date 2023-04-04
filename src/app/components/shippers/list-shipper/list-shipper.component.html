@@ -61,7 +61,8 @@
                                                 style="cursor: pointer;"><i class="fa fa-eye f-12"></i></a>&nbsp;
                                             <a [routerLink]="['/shippers', 'edit', shipper.id]"
                                                 style="cursor: pointer;"><i class='fa fa-edit f-12'></i></a>&nbsp;
-                                            <a (click)="openModal(confirm_Delete, shipper.id)" style="cursor: pointer;"><i class="fa fa-trash-o"></i></a>
+                                            <a (click)="openModal(confirm_Delete, shipper.id)"
+                                                style="cursor: pointer;"><i class="fa fa-trash-o"></i></a>
                                             <!-- <ng-template #deleteCategory>
                                                 <div class="modal-body text-center">
                                                     <p>Bạn muốn xoá thể loại này chứ ?</p>
@@ -78,11 +79,11 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div class="d-flex justify-content-between p-2">
+                            <div class="d-flex justify-content-center p-2">
                                 <ngb-pagination [collectionSize]="theTotalElements" [(page)]="thePageNumber"
                                     [maxSize]="5" [pageSize]="thePageSize" [rotate]="true" [boundaryLinks]="true"
                                     (pageChange)="listAllShipper()">
-                                </ngb-pagination>
+                                </ngb-pagination>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <select class="form-select" style="width: auto" name="pageSize"
                                     (change)="listAllShipper()" [(ngModel)]="thePageSize">
                                     <option [value]="10" [selected]="true" [ngValue]="10">10 items per page</option>
@@ -141,18 +142,19 @@
 <!-- Confirm delete -->
 <ng-template #confirm_Delete>
     <div class=" modal-confirm-delete">
-      <div class="modal-confirm-text">Bạn chắc chắc xoá người dùng này chứ ?</div>
-      <div class="modal-btn-option">
-        <button type="button" class="btn btn-default width-btn" (click)="confirmBox(shipperId, success)">Xoá</button>
-        <button type="button" class="btn btn-primary width-btn" (click)="decline()">Huỷ</button>
-      </div>
+        <div class="modal-confirm-text">Bạn chắc chắc xoá người dùng này chứ ?</div>
+        <div class="modal-btn-option">
+            <button type="button" class="btn btn-default width-btn"
+                (click)="confirmBox(shipperId, success)">Xoá</button>
+            <button type="button" class="btn btn-primary width-btn" (click)="decline()">Huỷ</button>
+        </div>
     </div>
-  </ng-template>
-  
-  <!--Delete success -->
-  <ng-template #success>
+</ng-template>
+
+<!--Delete success -->
+<ng-template #success>
     <div class="modal-body text-center">
-      <p class="modal-confirm-text">Xoá người dùng thành công</p>
-      <button type="button" class="btn btn-primary" (click)="successDelete()">Tiếp tục</button>
+        <p class="modal-confirm-text">Xoá người dùng thành công</p>
+        <button type="button" class="btn btn-primary" (click)="successDelete()">Tiếp tục</button>
     </div>
-  </ng-template>
+</ng-template>

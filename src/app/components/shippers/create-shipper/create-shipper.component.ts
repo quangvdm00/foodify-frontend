@@ -1,4 +1,4 @@
-import { Component, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,10 +20,16 @@ import { User } from 'src/app/shared/tables/user';
   templateUrl: './create-shipper.component.html',
   styleUrls: ['./create-shipper.component.scss']
 })
-export class CreateShipperComponent {
+export class CreateShipperComponent implements OnInit {
   public accountForm: FormGroup;
   public permissionForm: UntypedFormGroup;
   public active = 1;
+
+  //Log-in
+  isShop: boolean = false;
+  loggedId: number = Number(localStorage.getItem('user-id'))
+  loggedRole = localStorage.getItem('user-role');
+  shopId: number;
 
   imageFile: File;
   downloadURL: Observable<string>;
@@ -70,6 +76,11 @@ export class CreateShipperComponent {
         validator: this.ConfirmedValidator("password", "confirmPassword"),
       }
     );
+
+    if (this.loggedRole != 'ROLE_ADMIN') {
+      this.isShop = true;
+      this.shopId = Number(localStorage.getItem('shop-id'))
+    }
   }
 
   // Validation for password and confirm password
@@ -110,16 +121,16 @@ export class CreateShipperComponent {
         newUser.defaultAddress = 0;
         newUser.roleName = 'ROLE_SHIPPER'
         console.log(newUser);
-        // this.userService.createUser(newUser).subscribe((user) => {
-        //   newShipper.userId = user.id;
-        //   newShipper.shopId = this.shipperShopId;
-        //   console.log(user.id)
-        // })
 
         this.userService.createNewUser(newUser).pipe(
           mergeMap((user) => {
             newShipper.userId = user.id
-            newShipper.shopId = this.shipperShopId.value
+            if (this.isShop) {
+              newShipper.shopId = this.shopId;
+            }
+            else {
+              newShipper.shopId = this.shipperShopId.value
+            }
             return this.shipperService.createShipper(newShipper)
           })).subscribe({
             next: (shipper) => {

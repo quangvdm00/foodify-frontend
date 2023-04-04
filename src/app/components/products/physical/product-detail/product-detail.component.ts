@@ -6,6 +6,7 @@ import { Product } from 'src/app/shared/tables/product';
 import { ProductService } from 'src/app/shared/service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { ProductImage } from 'src/app/shared/tables/product-image';
 
 @Component({
     selector: 'app-product-detail',
@@ -16,14 +17,9 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 export class ProductDetailComponent implements OnInit {
     product: Product
-    imageUrls: string[];
     deleteProductId: number;
-
-    public imagesRect: Image[] = [
-        new Image(0, { img: 'assets/images/pro3/2.jpg' }, { img: 'assets/images/pro3/1.jpg' }),
-        new Image(1, { img: 'assets/images/pro3/27.jpg' }, { img: 'assets/images/pro3/27.jpg' }),
-        new Image(2, { img: 'assets/images/pro3/1.jpg' }, { img: 'assets/images/pro3/1.jpg' }),
-        new Image(3, { img: 'assets/images/pro3/2.jpg' }, { img: 'assets/images/pro3/2.jpg' })]
+    imageUrls: ProductImage[] = [];
+    imagesRect: Image[] = [];
 
 
     constructor(private modalService: BsModalService,
@@ -34,7 +30,9 @@ export class ProductDetailComponent implements OnInit {
 
     handleProductDetails() {
         const productId = +this.route.snapshot.paramMap.get('id')!;
-        this.productService.getProductById(productId).subscribe(data => this.product = data);
+        this.productService.getProductById(productId).subscribe(data => {
+            this.product = data
+        });
     }
     ngOnInit() {
         this.route.paramMap.subscribe(() => this.handleProductDetails());

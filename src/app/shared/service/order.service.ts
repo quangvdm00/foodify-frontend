@@ -24,6 +24,10 @@ export class OrderService {
     );
   }
 
+  getOrdersByShopId(shopId: number, thePage: number, thePageSize: number, sortBy: string, sortDir: string) {
+    return this.httpClient.get<GetResponseOrders>(environment.foodOrderingBaseApiUrl + `/shops/${shopId}/orders?pageNo=${thePage}&pageSize=${thePageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
+  }
+
   getOrderById(userId: number, orderId: number): Observable<Order> {
     return this.httpClient.get<Order>(`${this.getOrderUrl}/${userId}/orders/${orderId}`);
   }
@@ -34,6 +38,14 @@ export class OrderService {
 
   deleteOrderById(userId: number, orderId: number): Observable<Order> {
     return this.httpClient.delete<Order>(`${this.getOrderUrl}/${userId}/orders/${orderId}`, {});
+  }
+
+  countOrderByDistrict(districtName: string) {
+    return this.httpClient.get<number>(this.orderUrl + `/count?districtName=${districtName}`)
+  }
+
+  countShopOrderByDistrict(shopId: number, districtName: string) {
+    return this.httpClient.get<number>(this.orderUrl + `/shop/${shopId}/count?districtName=${districtName}`)
   }
 }
 

@@ -1,3 +1,4 @@
+import { PieData } from '@swimlane/ngx-charts';
 import * as Chartist from 'chartist';
 import { ChartEvent, ChartType } from 'ng-chartist';
 
@@ -8,6 +9,7 @@ export interface Chart {
     responsiveOptions?: any;
     events?: ChartEvent;
 }
+
 
 export var doughnutData = [
     {
@@ -31,20 +33,41 @@ export var doughnutData = [
 
 export var view: any[] = [409, 204];
 
+//District
 export var pieData = [
     {
-        value: 1500,
-        name: "Frontend"
+        value: 150,
+        name: "Quận Thanh Khê"
 
     },
     {
         value: 50,
-        name: "Backend"
+        name: "Quận Sơn Trà"
     },
     {
         value: 100,
-        name: "Api"
+        name: "Quận Cẩm Lệ"
     },
+    {
+        value: 100,
+        name: "Quận Liên Chiểu"
+    },
+    {
+        value: 100,
+        name: "Quận Hải Châu"
+    },
+    {
+        value: 100,
+        name: "Huyện Hoà Vang"
+    },
+    {
+        value: 100,
+        name: "Quận Ngũ Hành Sơn"
+    },
+    {
+        value: 10,
+        name: "Huyện Hoàng Sa"
+    }
 ]
 
 //Options
@@ -52,7 +75,7 @@ export var doughnutChartShowLabels = false;
 export var doughnutChartTooltip = false;
 export var doughnutChartGradient = false;
 export var doughnutChartcolorScheme = {
-    domain: ["#ff7f83", "#02cccd", "#a5a5a5", "#ffbc58"],
+    domain: ["#ff7f83", "#02cccd", "#a5a5a5", "#ffbc58", "#32CD32", "#9370DB", "deepskyblue", "olive"],
 };
 
 // Chart 5 Line chart with area

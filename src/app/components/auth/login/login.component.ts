@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {FirebaseService} from "../../../shared/service/firebase.service";
+import { Component, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FirebaseService } from "../../../shared/service/firebase.service";
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-login',
@@ -13,7 +14,9 @@ export class LoginComponent implements OnInit {
     public registerForm: UntypedFormGroup;
     public active = 1;
 
-    constructor(private formBuilder: UntypedFormBuilder, private firebaseAuthService: FirebaseService) {
+    constructor(private formBuilder: UntypedFormBuilder,
+        private firebaseAuthService: FirebaseService,
+        private router: Router) {
         this.createLoginForm();
         this.createRegisterForm();
     }

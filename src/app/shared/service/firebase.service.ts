@@ -42,8 +42,8 @@ export class FirebaseService {
                     response.user.getIdToken()
                         .then(
                             (token: string) => {
-                                this.token = token;
-                                console.log('Token Firebase: ', { token });
+                                // this.token = token;
+                                // console.log('Token Firebase: ', { token });
                                 this.token = token;
                                 localStorage.setItem('jwt-token', token);
 
@@ -61,15 +61,11 @@ export class FirebaseService {
                                             localStorage.setItem('shop-id', shop.id.toString());
                                         })
                                     }
+                                    console.log('Shop Id: ' + localStorage.getItem('shop-id'));
+                                    this.router.navigate(['/dashboard/default']);
                                 })
                             }
                         );
-                    this.getToken();
-                    this.router.navigate(['/dashboard/default']);
-                    // this.csrfService.getToken().subscribe(
-                    //     token => this.csrfService.setToken(token)
-                    // );
-                    console.log('navigated');
                 }
             ).catch(
                 error => console.log("Login error: " + error)

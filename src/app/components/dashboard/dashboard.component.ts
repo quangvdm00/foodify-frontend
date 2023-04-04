@@ -4,6 +4,9 @@ import { doughnutData, pieData } from '../../shared/data/chart';
 import { ShopService } from 'src/app/shared/service/shop.service';
 import { ProductService } from 'src/app/shared/service/product.service';
 import { Product } from 'src/app/shared/tables/product';
+import { Order } from 'src/app/shared/tables/order-list';
+import { OrderService } from 'src/app/shared/service/order.service';
+import { resolve } from 'path';
 
 @Component({
     selector: 'app-dashboard',
@@ -18,41 +21,79 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     shopId: number;
 
     //Shop Properties
-    // products: Product[]
     totalRevenue: number = 0;
     totalProducts: number = 0;
     totalReviewCount: number = 0;
     totalAverageRating: number = 0;
 
+    //Orders
+    orders: Order[] = [];
+
+    //Pagination Properties
+    thePageNumber = 1;
+    thePageSize = 5;
+    sortBy = "orderTime";
+    sortDir = "desc";
+    theTotalElements = 0;
+
     constructor(
         private shopService: ShopService,
-        private productService: ProductService
+        private productService: ProductService,
+        private orderService: OrderService,
     ) {
         Object.assign(this, { doughnutData, pieData });
     }
 
+
     ngOnInit() {
         if (this.loggedRole != 'ROLE_ADMIN') {
             this.isShop = true;
-            this.shopId = Number(localStorage.getItem('shop-id'))
+            // this.shopId = Number(localStorage.getItem('shop-id'))
 
-            this.productService.getProductsByShopIdNoPageable(this.shopId).subscribe((products) => {
-                let i = 0;
-                products.forEach(product => {
-                    this.totalReviewCount = this.totalReviewCount + product.reviewCount;
-                    this.totalProducts = this.totalProducts + product.sold;
-                    if (product.averageRating != 0) {
-                        this.totalAverageRating = this.totalAverageRating + product.averageRating;
-                        i++;
-                    }
-                });
-                this.totalAverageRating = this.totalAverageRating / i;
+            const shopIdPromise = new Promise<number>((resolve) => {
+                const shopId = Number(localStorage.getItem('shop-id'));
+                resolve(shopId);
             })
 
+            shopIdPromise.then((shopId) => {
+                this.shopId = shopId;
+                console.log(shopId);
+
+                this.productService.getProductsByShopIdNoPageable(this.shopId).subscribe((products) => {
+                    let i = 0;
+                    products.forEach(product => {
+                        this.totalReviewCount = this.totalReviewCount + product.reviewCount;
+                        this.totalProducts = this.totalProducts + product.sold;
+                        if (product.averageRating != 0) {
+                            this.totalAverageRating = this.totalAverageRating + product.averageRating;
+                            i++;
+                        }
+                    });
+                    this.totalAverageRating = this.totalAverageRating / i;
+                })
+
+                this.orderService.getOrdersByShopId(this.shopId, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
+                    .subscribe(this.processResult());
+                this.shopService.getShopRevenue(this.shopId, 30).subscribe((res) => {
+                    this.totalRevenue = res;
+                });
+            })
         }
         else {
             //ADMIN DO HERE
+            this.orderService
+                .getOrdersPagination(this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
+                .subscribe(this.processResult());
         }
+    }
+
+    processResult() {
+        return (data: any) => {
+            this.orders = data.orders;
+            this.thePageNumber = data.page.pageNo + 1;
+            this.thePageSize = data.page.pageSize;
+            this.theTotalElements = data.page.totalElements;
+        };
     }
 
     public doughnutData = doughnutData;
@@ -121,5 +162,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
     }
+
 
 }

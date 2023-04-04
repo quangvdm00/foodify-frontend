@@ -2,9 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Address } from '../tables/Address';
 import { Shop } from '../tables/shop';
-import { GoogleResponse } from '../tables/google-response';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +26,10 @@ export class ShopService {
 
   getShopByUserId(userId: number) {
     return this.httpClient.get<Shop>(this.baseUrl + `/user?userId=${userId}`)
+  }
+
+  getShopRevenue(shopId: number, day: number) {
+    return this.httpClient.get<number>(this.baseUrl + `/${shopId}/revenue?day=${day}`);
   }
 
   updateShop(shopId: number, shopUpdate: Shop) {

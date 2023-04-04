@@ -10,12 +10,20 @@ import { Shipper } from 'src/app/shared/tables/shipper';
   styleUrls: ['./list-shipper.component.scss']
 })
 export class ListShipperComponent {
+  //Log-in properties
+  isShop: boolean = false;
+  loggedId: number = Number(localStorage.getItem('user-id'))
+  loggedRole = localStorage.getItem('user-role');
+  shopId: number;
+
   shippers: Shipper[] = [];
 
   //Pagination Properties
   thePageNumber = 1;
   thePageSize = 10;
   theTotalElements = 0;
+  sortBy: string = 'isShipping';
+  sortDir: string = 'asc';
 
   modalRef: BsModalRef;
   shipperId: number
@@ -26,11 +34,21 @@ export class ListShipperComponent {
   }
 
   ngOnInit() {
+    if (this.loggedRole != 'ROLE_ADMIN') {
+      this.isShop = true;
+      this.shopId = Number(localStorage.getItem('shop-id'))
+    }
     this.listAllShipper();
   }
 
   listAllShipper() {
-    return this.shipperService.getShipperPagination(this.thePageNumber - 1, this.thePageSize).subscribe(this.processResult())
+    if (this.isShop) {
+      return this.shipperService.getShipperByShopId(this.shopId, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
+        .subscribe(this.processResult());
+    }
+    else {
+      return this.shipperService.getShipperPagination(this.thePageNumber - 1, this.thePageSize).subscribe(this.processResult())
+    }
   }
 
   processResult() {

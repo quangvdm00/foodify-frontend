@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
     public navServices: NavService,
     private userService: UserService,
     private firebaseService: FirebaseService) {
-    this.userService.getUserById(Number(localStorage.getItem('user-id').toString())).subscribe((user) => {
+    this.userService.getUserById(Number(localStorage.getItem('user-id'))).subscribe((user) => {
       this.user = user;
     })
   }

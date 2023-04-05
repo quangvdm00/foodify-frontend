@@ -1779,7 +1779,7 @@ div{
       }
       td, th {
         text-align: center;
-        vertical-align: baseline;
+        // vertical-align: baseline;
         &:nth-child(2) {
           text-align: left;
         }

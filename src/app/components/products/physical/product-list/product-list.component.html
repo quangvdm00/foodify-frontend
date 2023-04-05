@@ -14,7 +14,7 @@
                         <div class="img-wrapper">
                             <div class="lable-block"><span class="lable3" *ngIf="product.discountPercent > 0">{{
                                     product.discountPercent}}%</span>
-                                <!-- <span class="lable4" *ngIf="product.discountPercent > 0">on sale</span> -->
+                                <span class="lable4" *ngIf="!product.isEnabled">Không mở bán</span>
                             </div>
                             <div class="front">
                                 <a href="javascript:void(0)">

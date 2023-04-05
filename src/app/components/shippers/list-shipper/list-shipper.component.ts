@@ -1,6 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { FirebaseService } from 'src/app/shared/service/firebase.service';
 import { ShipperService } from 'src/app/shared/service/shipper.service';
 import { Shipper } from 'src/app/shared/tables/shipper';
 
@@ -29,10 +30,12 @@ export class ListShipperComponent {
 
   modalRef: BsModalRef;
   shipperId: number
+  email: string;
 
   constructor(private shipperService: ShipperService,
     private modalService: BsModalService,
-    private router: Router) {
+    private router: Router,
+    private firebaseService: FirebaseService) {
   }
 
   ngOnInit() {
@@ -79,16 +82,19 @@ export class ListShipperComponent {
 
   openModal(template: TemplateRef<any>, id: number) {
     this.shipperId = id;
-    console.log(this.shipperId);
+    this.shipperService.getShipperById(this.shipperId).subscribe((shipper) => {
+      this.email = shipper.user.email;
+    })
     this.modalRef = this.modalService.show(template, { class: "modal-sm" });
   }
 
   confirmBox(shipperId: number, template: TemplateRef<any>) {
-    this.shipperService.deleteShipperById(shipperId).subscribe(res => {
+    this.shipperService.deleteShipperById(shipperId).subscribe()
+    this.firebaseService.deleteUserByEmail(this.email).subscribe(() => {
       this.listAllShipper();
-    });
-    this.modalRef.hide();
-    this.modalRef = this.modalService.show(template, { class: "modal-sm" });
+      this.modalRef.hide();
+      this.modalRef = this.modalService.show(template, { class: "modal-sm" });
+    })
   }
 
   decline(): void {
@@ -97,7 +103,7 @@ export class ListShipperComponent {
 
   successDelete() {
     this.modalRef.hide();
-    this.listAllShipper();
+    // this.listAllShipper();
     this.router.navigate(["shippers/list"]);
   }
 }

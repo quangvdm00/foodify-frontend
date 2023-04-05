@@ -136,7 +136,7 @@
                         <div class="card-body">
                             <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
                                 <li [ngbNavItem]="1">
-                                    <a ngbNavLink>Login</a>
+                                    <a ngbNavLink>Đăng nhập</a>
                                     <ng-template ngbNavContent>
                                         <div class="tab-pane fade active show" id="account" role="tabpanel"
                                             aria-labelledby="account-tab">
@@ -188,15 +188,34 @@
                                     </ng-template>
                                 </li>
                                 <li [ngbNavItem]="2">
-                                    <a ngbNavLink>Register</a>
+                                    <a ngbNavLink>Đăng ký</a>
                                     <ng-template ngbNavContent>
-                                        <form (ngSubmit)="onSignUp()" [formGroup]="registerForm"
-                                            class="form-horizontal auth-form" novalidate>
+                                        <form [formGroup]="registerForm" class="form-horizontal auth-form" novalidate>
+                                            <!-- Name -->
                                             <div class="form-group">
                                                 <input required="" name="login[username]" type="email"
                                                     class="form-control" placeholder="email" formControlName="email"
                                                     id="exampleInputEmail12">
                                             </div>
+                                            <!-- Email -->
+                                            <div class="form-group">
+                                                <input required="" name="login[username]" type="email"
+                                                    class="form-control" placeholder="email" formControlName="email"
+                                                    id="exampleInputEmail12">
+                                            </div>
+                                            <!-- Phone number -->
+                                            <div class="form-group">
+                                                <input required="" name="login[username]" type="email"
+                                                    class="form-control" placeholder="email" formControlName="email"
+                                                    id="exampleInputEmail12">
+                                            </div>
+                                            <!-- Dob -->
+                                            <div class="form-group">
+                                                <input required="" name="login[username]" type="email"
+                                                    class="form-control" placeholder="email" formControlName="email"
+                                                    id="exampleInputEmail12">
+                                            </div>
+
                                             <div class="form-group">
                                                 <input required="" name="login[password]" type="password"
                                                     class="form-control" placeholder="Password"
@@ -243,10 +262,10 @@
                     </div>
                 </div>
             </div>
-            <a [routerLink]="'/dashboard/default'" class="btn btn-primary back-btn">
+            <!-- <a [routerLink]="'/dashboard/default'" class="btn btn-primary back-btn">
                 <app-feather-icons [icon]="'arrow-left'"></app-feather-icons>
                 back
-            </a>
+            </a> -->
         </div>
     </div>
 </div>

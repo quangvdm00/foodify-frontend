@@ -3,9 +3,9 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="card">
-                <div class="card-header">
+                <!-- <div class="card-header">
                     <h5>Thông tin shipper</h5>
-                </div>
+                </div> -->
                 <div class="card-body">
                     <div class="row product-adding">
                         <div class="col-xl-5">
@@ -73,6 +73,18 @@
                                     </div>
                                     <div class="col-xl-8 col-sm-7">
                                         <p class="mb-0 text-size text-dark">{{ shipper.user.identifiedCode }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Shipper Email -->
+                            <div class="add-product-form">
+                                <div class="form-group row">
+                                    <div class="col-xl-3 col-sm-4">
+                                        <label class="mb-0">Email:</label>
+                                    </div>
+                                    <div class="col-xl-8 col-sm-7">
+                                        <p class="mb-0 text-size text-dark">{{ shipper.user.email }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -160,7 +172,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary" [routerLink]="['/shippers', 'edit', shipper.id]">Chỉnh sửa
+                            <button type="submit" class="btn btn-primary"
+                                [routerLink]="['/shippers', 'edit', shipper.id]">Chỉnh sửa
                                 thông tin</button>
                         </div>
                     </div>

@@ -9,6 +9,7 @@ import { resolve } from 'path';
 import { finalize, mergeMap, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs-compat/operator/switchMap';
 import { Validation } from 'src/app/constants/Validation';
+import { AuthService } from 'src/app/shared/service/auth.service';
 import { FirebaseService } from 'src/app/shared/service/firebase.service';
 import { ShipperService } from 'src/app/shared/service/shipper.service';
 import { UserService } from 'src/app/shared/service/user.service';
@@ -41,6 +42,8 @@ export class CreateShipperComponent implements OnInit {
   // Password
   showPassword = false;
 
+  failureContent: string = '';
+
   constructor(
     private formBuilder: UntypedFormBuilder,
     private storage: AngularFireStorage,
@@ -48,7 +51,8 @@ export class CreateShipperComponent implements OnInit {
     private shipperService: ShipperService,
     private router: Router,
     private modalService: BsModalService,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    private authService: AuthService
   ) {
     this.createPermissionForm();
   }
@@ -105,12 +109,11 @@ export class CreateShipperComponent implements OnInit {
     };
   }
 
-  createShipper(): Promise<void> {
+  createShipper(failure: TemplateRef<any>): Promise<void> {
 
     // Check all validations addUserForm
     if (this.accountForm.invalid) {
       this.accountForm.markAllAsTouched();
-      console.error('Invalid form');
       return Promise.reject('Invalid form');
     }
 
@@ -124,6 +127,19 @@ export class CreateShipperComponent implements OnInit {
     newUser.isLocked = false;
     newUser.defaultAddress = 0;
     newUser.roleName = 'ROLE_SHIPPER'
+
+    this.authService.checkEmailOrPhoneNumberExist(newUser).subscribe((result) => {
+      if (result.title == 'emailExist') {
+        this.failureContent = 'Email'
+        this.layer1 = this.modalService.show(failure, { class: 'modal-sm' });
+        return;
+      }
+      else if (result.title == 'phoneNumExist') {
+        this.failureContent = 'Số điện thoại'
+        this.layer1 = this.modalService.show(failure, { class: 'modal-sm' });
+        return;
+      }
+    })
 
     return new Promise((resolve, rejects) => {
       if (this.edited) {
@@ -146,6 +162,11 @@ export class CreateShipperComponent implements OnInit {
                     this.router.navigate(["shippers/list"]);
                   }
                 });
+              },
+              error: () => {
+                this.failureContent = 'CCCD/CMND'
+                this.layer1 = this.modalService.show(failure, { class: 'modal-sm' });
+                return;
               }
             });
 
@@ -198,7 +219,7 @@ export class CreateShipperComponent implements OnInit {
       };
     }
     this.imageFile = event.target.files[0];
-    this.modalRef.hide()
+    this.layer1.hide()
   }
 
   uploadImage(fileUpload: File): Promise<string> {
@@ -229,10 +250,14 @@ export class CreateShipperComponent implements OnInit {
     })
   }
 
-  modalRef: BsModalRef
+  layer1: BsModalRef
 
   chooseImg(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+    this.layer1 = this.modalService.show(template, { class: 'modal-sm' });
+  }
+
+  closeLayer1() {
+    this.layer1.hide();
   }
 
   //Getter

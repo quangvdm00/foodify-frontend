@@ -7,7 +7,7 @@ import { LoginComponent } from './components/auth/login/login.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard/default',
+    redirectTo: 'auth/login',
     pathMatch: 'full'
   },
   {
@@ -24,7 +24,7 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes, {
     scrollPositionRestoration: 'enabled'
-})],
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

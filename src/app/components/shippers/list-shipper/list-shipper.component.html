@@ -152,7 +152,7 @@
 <!-- Confirm delete -->
 <ng-template #confirm_Delete>
     <div class=" modal-confirm-delete">
-        <div class="modal-confirm-text">Bạn chắc chắc xoá người dùng này chứ ?</div>
+        <div class="modal-confirm-text">Bạn chắc chắc muốn xoá shipper này chứ ?</div>
         <div class="modal-btn-option">
             <button type="button" class="btn btn-default width-btn"
                 (click)="confirmBox(shipperId, success)">Xoá</button>
@@ -164,7 +164,7 @@
 <!--Delete success -->
 <ng-template #success>
     <div class="modal-body text-center">
-        <p class="modal-confirm-text">Xoá người dùng thành công</p>
+        <p class="modal-confirm-text">Xoá shipper thành công</p>
         <button type="button" class="btn btn-primary" (click)="successDelete()">Tiếp tục</button>
     </div>
 </ng-template>

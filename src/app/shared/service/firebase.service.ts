@@ -53,15 +53,23 @@ export class FirebaseService {
                                         localStorage.setItem('user-id', user.id.toString());
                                         this.router.navigate(['/dashboard/default']);
                                     }
-                                    else {
+                                    else if (user.role.roleName == 'ROLE_SHOP') {
                                         localStorage.setItem('user-role', user.role.roleName);
                                         localStorage.setItem('user-email', user.email);
                                         localStorage.setItem('user-id', user.id.toString());
                                         this.shopService.getShopByUserId(user.id).subscribe((shop) => {
                                             localStorage.setItem('shop-id', shop.id.toString());
-                                            console.log('Shop Id: ' + localStorage.getItem('shop-id'));
                                             this.router.navigate(['/dashboard/default']);
                                         })
+                                    }
+                                    else {
+                                        this.firebaseAuth.signOut().then(
+                                            res => {
+                                                this.token = null;
+                                                localStorage.clear();
+                                                this.router.navigate(['/auth', 'forbidden']);
+                                            }
+                                        );
                                     }
                                 })
                             }

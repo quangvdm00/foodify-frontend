@@ -103,35 +103,35 @@
           </table>
 
           <div class="d-flex flex-column undertaker-box">
-            <div class="total-box">
-              <div class="d-flex">
-                <div class="total-text">
-                  <label class="text-uppercase font-weight-bold">Tổng giá đơn hàng</label>
+            <div class="total-box mt-2 mb-2">
+              <div class="d-flex align-items-center">
+                <div class="total-text d-flex align-items-center justify-content-start">
+                  <p class="text-uppercase text-weight text-dark">Tổng giá đơn hàng</p>
                 </div>
                 <div class="price-text">
-                  <p class="font-weight-bold text-dark">: {{ order?.productCost | currency : "VND" }}</p>
+                  <p class="font-weight-bold text-size text-dark">: {{ order?.productCost | currency : "VND" }}</p>
                 </div>
               </div>
             </div>
 
-            <div class="total-box">
-              <div class="d-flex">
-                <div class="total-text">
-                  <label class="text-uppercase font-weight-bold">giá vận chuyển</label>
+            <div class="total-box mt-2 mb-2">
+              <div class="d-flex align-items-center">
+                <div class="total-text d-flex align-items-center justify-content-start">
+                  <p class="text-uppercase text-weight text-dark">giá vận chuyển</p>
                 </div>
                 <div class="price-text">
-                  <p class="font-weight-bold text-dark">: {{ order?.shippingCost | currency : "VND" }}</p>
+                  <p class="font-weight-bold text-size text-dark">: {{ order?.shippingCost | currency : "VND" }}</p>
                 </div>
               </div>
             </div>
 
-            <div class="total-box">
-              <div class="d-flex">
-                <div class="total-text">
-                  <label class="text-uppercase font-weight-bold">Số tiền cần thanh toán</label>
+            <div class="total-box mt-2 mb-2">
+              <div class="d-flex align-items-center">
+                <div class="total-text d-flex align-items-center justify-content-start">
+                  <p class="text-uppercase text-weight text-dark">Số tiền cần thanh toán</p>
                 </div>
                 <div class="price-text">
-                  <p class="font-weight-bold text-dark">: {{ order?.total | currency : "VND" }}</p>
+                  <p class="font-weight-bold text-size text-dark">: {{ order?.total | currency : "VND" }}</p>
                 </div>
               </div>
             </div>

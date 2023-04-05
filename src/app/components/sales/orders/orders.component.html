@@ -38,13 +38,13 @@
                     <span
                       [ngClass]="{
                         badge: true,
-                        'badge-info': order.paymentMethod === 'Zalo Pay',
+                        'badge-info': order.paymentMethod === 'ZALO PAY',
                         'badge-success': order.paymentMethod === 'CASH'
                       }"
                     >
                       {{ order.paymentMethod === "CASH"
                            ? "Tiền mặt"
-                           : order.paymentMethod === "Zalo Pay"
+                           : order.paymentMethod === "ZALO PAY"
                            ? "Zalo Pay"
                            : ""
                       }}

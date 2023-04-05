@@ -5,7 +5,7 @@
       <div class="card">
         <div class="card-body">
           <div class="card-header">
-            <h5>Chi tiết đơn hàng</h5>
+            <h5>Thông tin đơn hàng</h5>
           </div>
           <!-- Infor order -->
           <table class="table table-striped">
@@ -31,14 +31,14 @@
                   <span
                     [ngClass]="{
                       badge: true,
-                      'badge-info': order?.paymentMethod === 'Zalo Pay',
+                      'badge-info': order?.paymentMethod === 'ZALO PAY',
                       'badge-success': order?.paymentMethod === 'CASH'
                     }"
                   >
                     {{
                       order?.paymentMethod === "CASH"
                         ? "Tiền mặt"
-                        : order?.paymentMethod === "Zalo Pay"
+                        : order?.paymentMethod === "ZALO PAY"
                         ? "Zalo Pay"
                         : ""
                     }}
@@ -91,13 +91,13 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let product of products; let i = index">
+              <tr *ngFor="let orderDetail of orderDetails; let i = index">
                 <th scope="row">{{ i + 1 }}</th>
-                <td>{{ product?.images }}</td>
-                <td>{{ product?.name }}</td>
-                <td>{{ product?.soluong }}</td>
-                <td>{{ product?.discountPercent }}</td>
-                <td>{{ product?.mlem }}</td>
+                <td><img class="imgTable" src="{{ orderDetail?.product?.images[0].imageUrl }}" alt=""></td>
+                <td>{{ orderDetail?.product?.name }}</td>
+                <td>{{ orderDetail?.quantity }}</td>
+                <td>{{ orderDetail?.product?.discountPercent }}%</td>
+                <td>{{ orderDetail?.subtotal }}</td>
               </tr>
             </tbody>
           </table>

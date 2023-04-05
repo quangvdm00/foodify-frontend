@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ProductService } from 'src/app/shared/service/product.service';
-import { ShopService } from 'src/app/shared/service/shop.service';
-import { Shop } from 'src/app/shared/tables/shop';
+import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+import { ProductService } from "src/app/shared/service/product.service";
+import { ShopService } from "src/app/shared/service/shop.service";
+import { Shop } from "src/app/shared/tables/shop";
 
 @Component({
-  selector: 'app-vendor-detail',
-  templateUrl: './vendor-detail.component.html',
-  styleUrls: ['./vendor-detail.component.scss']
+  selector: "app-vendor-detail",
+  templateUrl: "./vendor-detail.component.html",
+  styleUrls: ["./vendor-detail.component.scss"],
 })
 export class VendorDetailComponent implements OnInit {
   products = [];
@@ -23,24 +23,24 @@ export class VendorDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     private shopService: ShopService
-  ) {
-
-  }
+  ) {}
   ngOnInit(): void {
     this.loadShopDetails();
     this.listProduct();
   }
 
   loadShopDetails() {
-    const shopId = +this.route.snapshot.paramMap.get('id')!
+    const shopId = +this.route.snapshot.paramMap.get("id")!;
     this.shopService.getShopById(shopId).subscribe((shop) => {
-      this.shop = shop
-    })
+      this.shop = shop;
+    });
   }
 
   listProduct() {
-    const shopId = +this.route.snapshot.paramMap.get('id')!
-    this.productService.getProductsByShopId(shopId, this.thePageNumber - 1, this.thePageSize).subscribe(this.processResult());
+    const shopId = +this.route.snapshot.paramMap.get("id")!;
+    this.productService
+      .getProductsByShopId(shopId, this.thePageNumber - 1, this.thePageSize)
+      .subscribe(this.processResult());
   }
 
   processResult() {
@@ -49,7 +49,6 @@ export class VendorDetailComponent implements OnInit {
       this.thePageNumber = data.page.pageNo + 1;
       this.thePageSize = data.page.pageSize;
       this.theTotalElements = data.page.totalElements;
-    }
+    };
   }
-
 }

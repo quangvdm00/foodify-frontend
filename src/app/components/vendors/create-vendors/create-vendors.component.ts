@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { EMPTY, finalize, mergeMap, switchMap, tap } from 'rxjs';
 import { Observable } from 'rxjs-compat';
+import { Validation } from 'src/app/constants/Validation';
 import { DistrictService } from 'src/app/shared/service/district.service';
 import { FirebaseService } from 'src/app/shared/service/firebase.service';
 import { ShopService } from 'src/app/shared/service/shop.service';
@@ -48,6 +49,8 @@ export class CreateVendorsComponent {
     isHaveDistrict: boolean;
     district: string = 'none';
     ward: string = 'none';
+    validDistrict = true
+    validWard = true
 
     districts: District[];
     wards: Ward[];
@@ -75,32 +78,51 @@ export class CreateVendorsComponent {
     createUserForm() {
         this.addUserForm = this.formBuilder.group(
             {
-                image: new FormControl("", [Validators.required]),
-                fullName: new FormControl("", [Validators.required]),
+                // image: new FormControl("", [Validators.required]),
+                fullName: new FormControl("", [Validators.required, Validators.minLength(2)]),
                 email: new FormControl("", [Validators.required, Validators.email]),
                 dateOfBirth: new FormControl("", [Validators.required]),
-                phoneNumber: new FormControl("", [Validators.required]),
-                identifiedCode: new FormControl("", [Validators.required]),
-                address: new FormControl("", [Validators.required]),
-                district: new FormControl("", [Validators.required]),
-                ward: new FormControl("", [Validators.required])
+                phoneNumber: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Phone)]),
+                identifiedCode: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.IdentifiedCode)]),
+                address: new FormControl("", [Validators.required, Validators.minLength(8)]),
+                // district: new FormControl("", [Validators.required]),
+                // ward: new FormControl("", [Validators.required])
             }
         );
     }
 
     createPasswordForm() {
         this.passwordForm = this.formBuilder.group({
-            password: new FormControl("", [Validators.required]),
-            confirmPassword: new FormControl("", [Validators.required]),
+            password: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Password)]),
+            confirmPassword: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Password)]),
+        },
+        {
+          validator: this.ConfirmedValidator("password", "confirmPassword"),
         })
     }
+
+    // Validation for password and confirm password
+  ConfirmedValidator(controlName: string, matchingControlName: string) {
+    return (formGroup: FormGroup) => {
+      const control = formGroup.controls[controlName];
+      const matchingControl = formGroup.controls[matchingControlName];
+      if (matchingControl.errors && !matchingControl.errors.confirmedValidator) {
+        return;
+      }
+      if (control.value !== matchingControl.value) {
+        matchingControl.setErrors({ confirmedValidator: true });
+      } else {
+        matchingControl.setErrors(null);
+      }
+    };
+  }
 
     createShopForm() {
         this.shopForm = this.formBuilder.group(
             {
-                name: new FormControl("", [Validators.required]),
-                description: new FormControl("", [Validators.required]),
-                image: new FormControl(""),
+                name: new FormControl("", [Validators.required, Validators.minLength(2)]),
+                description: new FormControl("", [Validators.required, Validators.minLength(8)]),
+                // banner: new FormControl("", [Validators.required]),
             }
         );
     }
@@ -108,6 +130,8 @@ export class CreateVendorsComponent {
     ngOnInit() {
         this.getAllDistrict();
     }
+
+    
 
     /**
      * create User from Form
@@ -117,28 +141,48 @@ export class CreateVendorsComponent {
         const newAddress = new Address();
         const newShop = new Shop();
 
-        newUser.fullName = this.userFullName;
-        newUser.email = this.userEmail;
-        newUser.dateOfBirth = this.userDateOfBirth;
-        newUser.phoneNumber = this.userPhoneNumber;
-        newUser.identifiedCode = this.userIdentifiedCode;
+        newUser.fullName = this.userFullName.value;
+        newUser.email = this.userEmail.value;
+        newUser.dateOfBirth = this.userDateOfBirth.value;
+        newUser.phoneNumber = this.userPhoneNumber.value;
+        newUser.identifiedCode = this.userIdentifiedCode.value;
         newUser.defaultAddress = 0;
         newUser.isLocked = false;
         newUser.roleName = 'ROLE_SHOP';
+
+        if (this.district === 'none' || this.ward === 'none') {
+            this.validDistrict = this.district !== 'none';
+            this.validWard = this.ward !== 'none';
+        } else {
+            // Tiếp tục với quá trình tạo tài khoản
+            this.validDistrict = true;
+            this.validWard = true;
+        }
+        
+
+        if (this.addUserForm.invalid || this.passwordForm.invalid || this.shopForm.invalid || this.district == 'none') {
+            this.addUserForm.markAllAsTouched();
+            this.passwordForm.markAllAsTouched();
+            this.shopForm.markAllAsTouched();
+            console.log(this.addUserForm);
+            console.log(this.passwordForm);
+            console.log(this.shopForm);
+            return;
+        }
 
         this.uploadUserImage(this.userImageFile).then((url) => {
 
             newUser.imageUrl = url
 
 
-            newShop.name = this.shopName
-            newShop.description = this.shopDescription;
+            newShop.name = this.shopName.value
+            newShop.description = this.shopDescription.value;
             newShop.isStudent = this.isStudent;
             newShop.isEnabled = true;
             newShop.lat = '1';
             newShop.lng = '1';
 
-            newAddress.address = this.userAddress;
+            newAddress.address = this.userAddress.value;
             newAddress.district = this.district;
             if (this.district != "Huyện Hoàng Sa") newAddress.ward = this.ward;
 
@@ -148,7 +192,7 @@ export class CreateVendorsComponent {
                         newShop.userId = user.id
                         newShop.imageUrl = url;
                         this.shopService.createShop(newShop).subscribe(() => {
-                            this.firebaseService.signUp(newUser.email, this.userPassword);
+                            this.firebaseService.signUp(newUser.email, this.userPassword.value);
                             this.userService.createAddressForUser(user.id, newAddress).subscribe();
                             this.modalRef = this.modalService.show(template, { class: 'modal-sm' })
                         });
@@ -159,6 +203,9 @@ export class CreateVendorsComponent {
 
             })
         })
+
+        
+        
     }
 
     //Districts and Wards
@@ -291,21 +338,23 @@ export class CreateVendorsComponent {
     }
 
     //Getter
-    get userFullName() { return this.addUserForm.get("fullName").value; }
-    get userEmail() { return this.addUserForm.get("email").value; }
-    get userDateOfBirth() { return this.addUserForm.get("dateOfBirth").value; }
-    get userPhoneNumber() { return this.addUserForm.get("phoneNumber").value; }
-    get userIdentifiedCode() { return this.addUserForm.get("identifiedCode").value }
-    get userAddress() { return this.addUserForm.get("address").value; }
-    // get userDistrict() { return this.addUserForm.get("district").value; }
-    // get userWard() { return this.addUserForm.get("ward").value; }
+    get image() { return this.addUserForm.get("image")}
+    get userFullName() { return this.addUserForm.get("fullName") }
+    get userEmail() { return this.addUserForm.get("email") }
+    get userDateOfBirth() { return this.addUserForm.get("dateOfBirth") }
+    get userPhoneNumber() { return this.addUserForm.get("phoneNumber") }
+    get userIdentifiedCode() { return this.addUserForm.get("identifiedCode") }
+    get userAddress() { return this.addUserForm.get("address") }
+    get userDistrict() { return this.addUserForm.get("district") }
+    get userWard() { return this.addUserForm.get("ward") }
 
-    get userPassword() { return this.passwordForm.get("password").value; }
-    get userConfirmPassword() { return this.passwordForm.get("confirmPassword").value; }
+    get userPassword() { return this.passwordForm.get("password") }
+    get userConfirmPassword() { return this.passwordForm.get("confirmPassword") }
 
     //Shop
-    get shopName() { return this.shopForm.get("name").value }
-    get shopDescription() { return this.shopForm.get("description").value }
+    get banner() { return this.shopForm.get("banner") }
+    get shopName() { return this.shopForm.get("name") }
+    get shopDescription() { return this.shopForm.get("description") }
 
     // // Set avatar image
     // onFileChange(event) {

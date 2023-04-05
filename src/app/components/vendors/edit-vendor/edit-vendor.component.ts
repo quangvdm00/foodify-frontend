@@ -96,10 +96,10 @@ export class EditVendorComponent implements OnInit {
         phoneNumber: new FormControl("", [Validators.required]),
         identifiedCode: new FormControl("", [Validators.required]),
         address: new FormControl("", [Validators.required]),
-        district: new FormControl("", [Validators.required]),
-        ward: new FormControl("", [Validators.required]),
-        password: new FormControl("", [Validators.required]),
-        confirmPassword: new FormControl("", [Validators.required]),
+        // district: new FormControl("", [Validators.required]),
+        // ward: new FormControl("", [Validators.required]),
+        // password: new FormControl("", [Validators.required]),
+        // confirmPassword: new FormControl("", [Validators.required]),
       }
     );
   }
@@ -167,24 +167,32 @@ export class EditVendorComponent implements OnInit {
     const editAddress = new Address();
     const editShop = new Shop();
 
-    editUser.fullName = this.userFullName;
-    editUser.email = this.userEmail;
-    editUser.dateOfBirth = this.userDateOfBirth;
-    editUser.phoneNumber = this.userPhoneNumber;
-    editUser.identifiedCode = this.userIdentifiedCode;
+    editUser.fullName = this.userFullName.value;
+    editUser.email = this.userEmail.value;
+    editUser.dateOfBirth = this.userDateOfBirth.value;
+    editUser.phoneNumber = this.userPhoneNumber.value;
+    editUser.identifiedCode = this.userIdentifiedCode.value;
     editUser.defaultAddress = 0;
     editUser.isLocked = false;
     editUser.roleName = 'ROLE_SHOP';
 
     editAddress.id = this.addressId
-    editAddress.address = this.userAddress;
+    editAddress.address = this.userAddress.value;
     editAddress.district = this.district;
     if (this.district != "Huyện Hoàng Sa") editAddress.ward = this.ward;
 
-    editShop.name = this.shopName
-    editShop.description = this.shopDescription;
+    editShop.name = this.shopName.value
+    editShop.description = this.shopDescription.value;
     editShop.isStudent = this.isStudent;
     editShop.isEnabled = this.isEnabled;
+
+    if (this.editUserForm.invalid || this.editShopForm.invalid) {
+      this.editUserForm.markAllAsTouched();
+      this.editShopForm.markAllAsTouched();
+      console.log(this.editUserForm);
+      console.log(this.editShopForm);
+      return;
+    }
 
     if (this.edited == true && this.shopEdited == true) {
       this.uploadUserImage(this.userImageFile).then((url) => {
@@ -382,20 +390,20 @@ export class EditVendorComponent implements OnInit {
   }
 
   //Getter
-  get userFullName() { return this.editUserForm.get("fullName").value; }
-  get userEmail() { return this.editUserForm.get("email").value; }
-  get userDateOfBirth() { return this.editUserForm.get("dateOfBirth").value; }
-  get userPhoneNumber() { return this.editUserForm.get("phoneNumber").value; }
-  get userIdentifiedCode() { return this.editUserForm.get("identifiedCode").value }
-  get userAddress() { return this.editUserForm.get("address").value; }
+  get userFullName() { return this.editUserForm.get("fullName")}
+  get userEmail() { return this.editUserForm.get("email") }
+  get userDateOfBirth() { return this.editUserForm.get("dateOfBirth") }
+  get userPhoneNumber() { return this.editUserForm.get("phoneNumber") }
+  get userIdentifiedCode() { return this.editUserForm.get("identifiedCode") }
+  get userAddress() { return this.editUserForm.get("address")}
   // get userDistrict() { return this.editUserForm.get("district").value; }
   // get userWard() { return this.editUserForm.get("ward").value; }
   get userPassword() { return this.editUserForm.get("password").value; }
   get userConfirmPassword() { return this.editUserForm.get("confirmPassword").value; }
 
   //Shop
-  get shopName() { return this.editShopForm.get("name").value }
-  get shopDescription() { return this.editShopForm.get("description").value }
+  get shopName() { return this.editShopForm.get("name") }
+  get shopDescription() { return this.editShopForm.get("description") }
 
   // // Set avatar image
   // onFileChange(event) {

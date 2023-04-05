@@ -54,6 +54,7 @@ export class CreateShipperComponent {
   ngOnInit() {
     this.accountForm = this.formBuilder.group(
       {
+        // url: new FormControl("", [Validators.required]),
         fullName: new FormControl("", [Validators.required, Validators.minLength(2)]),
         email: new FormControl("", [Validators.required, Validators.email]),
         dob: new FormControl("", [Validators.required]),
@@ -93,6 +94,7 @@ export class CreateShipperComponent {
     // Check all validations addUserForm
     if (this.accountForm.invalid) {
       this.accountForm.markAllAsTouched();
+      console.error('Invalid form');
       return Promise.reject('Invalid form');
     }
 
@@ -144,6 +146,7 @@ export class CreateShipperComponent {
   }
 
   onFileChange(event) {
+    this.edited = true;
     const reader = new FileReader();
     if (event.target.files && event.target.files.length) {
       const [file] = event.target.files;

@@ -38,10 +38,14 @@
                                                     </div>
                                                     <div class="col-xl-8 col-sm-7">
                                                         <input class="form-control" id="validationCustom01" type="text"
-                                                            [formControl]="editProductForm.controls['name']" required>
-                                                        <div *ngIf="editProductForm.controls.name.touched && editProductForm.controls.name.errors?.required"
+                                                            [formControl]="editProductForm.controls['name']">
+                                                        <!-- <div *ngIf="editProductForm.controls.name.touched && editProductForm.controls.name.errors?.required"
                                                             class="text text-danger">
                                                             Tên sản phẩm không được bỏ trống.
+                                                        </div> -->
+                                                        <div *ngIf="productName?.invalid && (productName?.dirty || productName?.touched)" class="alert alert-danger mt-1">
+                                                            <div *ngIf="productName?.errors?.['required']">Tên sản phẩm không được bỏ trống.</div>
+                                                            <div *ngIf="productName?.errors?.['minlength']">Tên sản phẩm phải có ít nhất 2 kí tự.</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -55,11 +59,14 @@
                                                     <div class="col-xl-8 col-sm-7">
                                                         <input class="form-control" id="validationCustom02"
                                                             type="number"
-                                                            [formControl]="editProductForm.controls['price']"
-                                                            required="">
-                                                        <div *ngIf="editProductForm.controls.price.touched && editProductForm.controls.price.errors?.required"
+                                                            [formControl]="editProductForm.controls['price']">
+                                                        <!-- <div *ngIf="editProductForm.controls.price.touched && editProductForm.controls.price.errors?.required"
                                                             class="text text-danger">
                                                             Giá sản phẩm không được bỏ trống.
+                                                        </div> -->
+                                                        <div *ngIf="productPrice?.invalid && (productPrice?.dirty || productPrice?.touched)" class="alert alert-danger mt-1">
+                                                            <div *ngIf="productPrice?.errors?.['required']">Giá sản phẩm không được bỏ trống.</div>
+                                                            <div *ngIf="productPrice?.errors?.['pattern']">Giá sản phẩm phải là ký tự số.</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -74,7 +81,7 @@
                                                     <div class="col-xl-8 col-sm-7" formArrayName="categories">
                                                         <div *ngFor="let item of categories.controls; let i = index">
                                                             <div formGroupName="{{i}}">
-                                                                <input class="form-control" id="validationCustom03"
+                                                                <!-- <input class="form-control" id="validationCustom03"
                                                                     formControlName="categoryName" required="">
                                                                 <div
                                                                     *ngIf="categories.controls[i].get('categoryName').invalid &&
@@ -88,7 +95,23 @@
                                                                 <button type="button" class="btn btn-light"
                                                                     (click)="deleteCategory(i)">
                                                                     Xoá
-                                                                </button>
+                                                                </button> -->
+                                                                <div class="d-flex mb-2 mt-2">
+                                                                    <input class="form-control" id="validationCustom03"
+                                                                        formControlName="categoryName">
+                                                                    <button type="button" class="btn btn-light ml-2"
+                                                                        (click)="deleteCategory(i)">
+                                                                        Xoá
+                                                                    </button>
+                                                                </div>
+                                                                <div
+                                                                    *ngIf="categories.controls[i].get('categoryName').invalid &&
+                                                                    (categories.controls[i].get('categoryName').dirty || categories.controls[i].get('categoryName').touched)" class="alert alert-danger mt-1">
+                                                                    <div
+                                                                        *ngIf="categories.controls[i].get('categoryName')?.errors?.['required']">
+                                                                        Không được để trống loại sản phẩm
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
 
@@ -133,11 +156,10 @@
                                                     </div>
                                                     <div class="col-xl-8 col-sm-7">
                                                         <textarea class="form-control" id="validationCustom02"
-                                                            type="number" formControlName="descriptions"
-                                                            required=""></textarea>
-                                                        <div *ngIf="editProductForm.controls.descriptions.touched && editProductForm.controls.descriptions.errors?.required"
-                                                            class="text text-danger">
-                                                            Mô tả không được bỏ trống.
+                                                            type="number" formControlName="descriptions"></textarea>
+                                                        <div *ngIf="descriptions?.invalid && (descriptions?.dirty || descriptions?.touched)" class="alert alert-danger mt-1">
+                                                            <div *ngIf="descriptions?.errors?.['required']">Mô tả sản phẩm không được bỏ trống.</div>
+                                                            <div *ngIf="descriptions?.errors?.['minlength']">Mô tả sản phẩm phải có ít nhất 8 kí tự.</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -172,11 +194,10 @@
                                                     <div class="col-xl-8 col-sm-7">
                                                         <input class="form-control" id="validationCustom02"
                                                             type="number"
-                                                            [formControl]="editProductForm.controls['discountPercent']"
-                                                            required="">
-                                                        <div *ngIf="editProductForm.controls.discountPercent.touched && editProductForm.controls.discountPercent.errors?.required"
-                                                            class="text text-danger">
-                                                            Giá sản phẩm không được bỏ trống.
+                                                            [formControl]="editProductForm.controls['discountPercent']">
+                                                        <div *ngIf="discountPercent?.invalid && (discountPercent?.dirty || discountPercent?.touched)" class="alert alert-danger mt-1">
+                                                            <div *ngIf="discountPercent?.errors?.['required']">Mã giảm giá (%) không được bỏ trống.</div>
+                                                            <div *ngIf="discountPercent?.errors?.['pattern']">Mã giảm giá (%) phải là ký tự số.</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -188,11 +209,9 @@
                                                     </div>
                                                     <div class="col-xl-8 col-sm-7">
                                                         <input class="form-control" id="validationCustom03"
-                                                            [formControl]="editProductForm.controls['shopId']"
-                                                            required="">
-                                                        <div *ngIf="editProductForm.controls.shopId.touched && editProductForm.controls.shopId.errors?.required"
-                                                            class="text text-danger">
-                                                            Id shop không được bỏ trống.
+                                                            [formControl]="editProductForm.controls['shopId']">
+                                                        <div *ngIf="productShopId?.invalid && (productShopId?.dirty || productShopId?.touched)" class="alert alert-danger mt-1">
+                                                            <div *ngIf="productShopId?.errors?.['required']">Id shop không được bỏ trống.</div>
                                                         </div>
                                                     </div>
                                                 </div>

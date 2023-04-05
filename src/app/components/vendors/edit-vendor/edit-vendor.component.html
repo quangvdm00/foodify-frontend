@@ -167,6 +167,9 @@
                                                 class="alert alert-danger mt-1">
                                                 <div *ngIf="userAddress?.errors?.['required']">Vui lòng không được bỏ
                                                     trống địa chỉ</div> -->
+                                            <!-- <div *ngIf="district == ''" class="alert alert-danger mt-1" >
+                                                Vui lòng không được bỏ trống quận
+                                            </div>  -->
                                         </div>
                                     </div>
 
@@ -181,6 +184,9 @@
                                                 <option *ngFor="let ward of wards">{{ ward.name }}
                                                 </option>
                                             </select>
+                                            <!-- <div *ngIf="!validWard" class="alert alert-danger mt-1" >
+                                                Vui lòng không được bỏ trống phường
+                                            </div>  -->
                                         </div>
                                     </div>
                                 </div>
@@ -304,7 +310,7 @@
                     </ul>
                     <div [ngbNavOutlet]="nav" class="mt-2"></div>
                     <div class="pull-right">
-                        <button type="submit" class="btn btn-primary" (click)="editUser(updateSuccess)">Chỉnh
+                        <button type="submit" class="btn btn-primary"  (click)="editUser(updateSuccess)">Chỉnh
                             sửa</button>
                     </div>
                 </div>

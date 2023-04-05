@@ -42,9 +42,9 @@
                                                     *ngIf="avatar"
                                                     style="width: 160px; height: 160px; margin-left: 20px" />
                                             </div>
-                                            <!-- <div *ngIf="accountForm.get('url')?.invalid && (accountForm.get('url')?.dirty || accountForm.get('url')?.touched)" class="alert alert-danger mt-1">
+                                            <div *ngIf="!edited && (accountForm.get('url')?.dirty || accountForm.get('url')?.touched)" class="alert alert-danger mt-1">
                                                 <div *ngIf="accountForm.get('url').errors?.['required']">Vui lòng chọn ảnh đại diện.</div>
-                                            </div> -->
+                                            </div>
                                         </div>
                                     </div>
 

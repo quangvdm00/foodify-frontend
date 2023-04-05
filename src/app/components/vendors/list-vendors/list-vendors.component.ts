@@ -19,8 +19,10 @@ export class ListVendorsComponent implements OnInit {
 
     //Pagination Properties
     thePageNumber = 1;
-    thePageSize = 5;
+    thePageSize = 10;
     theTotalElements = 0;
+
+    searchName: string = '';
 
     constructor(
         private router: Router,
@@ -32,11 +34,21 @@ export class ListVendorsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.listShops();
+        this.listAllShops();
     }
 
-    listShops() {
+    listAllShops() {
         this.shopService.getShopsPagination(this.thePageNumber - 1, this.thePageSize).subscribe(this.processResult());
+    }
+
+    searchShop() {
+        if (this.searchName.trim() !== '') {
+            this.shopService.findShopByName(this.searchName, this.thePageNumber - 1, this.thePageSize)
+                .subscribe(this.processResult());
+        }
+        else {
+            this.listAllShops()
+        }
     }
 
     processResult() {
@@ -62,7 +74,7 @@ export class ListVendorsComponent implements OnInit {
     confirm(template: TemplateRef<any>): void {
         this.shopService.deleteShop(this.shopId).subscribe();
         this.firebaseService.deleteUserByEmail(this.emailDelete).subscribe(() => {
-            this.listShops();
+            this.listAllShops();
             this.modalRef.hide();
             this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
         })

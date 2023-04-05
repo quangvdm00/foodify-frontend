@@ -1,10 +1,14 @@
 <!-- Container-fluid starts-->
 <div class="container-fluid">
     <div class="card">
-        <div class="card-header">
+        <!-- <div class="card-header">
             <h5>Vendor Details</h5>
-        </div>
+        </div> -->
         <div class="card-body vendor-table">
+            <div class="btn-popup pull-left">
+                <input [(ngModel)]="searchName" class="form-control" type="text" placeholder="Tìm kiếm"
+                    (change)="searchShop()" />
+            </div>
             <div id="batchDelete" class="custom-datatable vendor-list">
                 <div class="table-responsive ">
                     <table class="table table-striped">
@@ -62,9 +66,16 @@
                     <!-- Pagination -->
                     <div class="d-flex justify-content-center p-2">
                         <ngb-pagination [(page)]="thePageNumber" [pageSize]="thePageSize"
-                            [collectionSize]="theTotalElements" [maxSize]="5" (pageChange)="listShops()"
+                            [collectionSize]="theTotalElements" [maxSize]="5" (pageChange)="listAllShops()"
                             [boundaryLinks]="true">
-                        </ngb-pagination>
+                        </ngb-pagination>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <select [(ngModel)]="thePageSize" class="form-select" style="width: auto" name="pageSize"
+                            (change)="listAllShops()">
+                            <option [value]="10" [selected]="true" [ngValue]="10">10 cửa hàng / trang</option>
+                            <option [ngValue]="20">20 cửa hàng / trang</option>
+                            <option [ngValue]="30">30 cửa hàng / trang</option>
+                        </select>
                     </div>
                 </div>
             </div>

@@ -20,6 +20,10 @@ export class ShopService {
     return this.httpClient.get<GetResponseShops>(this.baseUrl + `?pageNo=${thePage}&pageSize=${thePageSize}`);
   }
 
+  findShopByName(shopName: string, thePage: number, thePageSize: number) {
+    return this.httpClient.get<GetResponseShops>(this.baseUrl + `/search?shopName=${shopName}&pageNo=${thePage}&pageSize=${thePageSize}`);
+  }
+
   getShopById(shopId: number) {
     return this.httpClient.get<Shop>(this.baseUrl + `/${shopId}`)
   }

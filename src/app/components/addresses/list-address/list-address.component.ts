@@ -10,6 +10,7 @@ import { AddressResponse } from 'src/app/shared/tables/address-response';
 })
 export class ListAddressComponent {
 
+  searchName: string = '';
   addresses: AddressResponse[];
   deleteAddressId: number;
 
@@ -29,6 +30,17 @@ export class ListAddressComponent {
 
   listAllAddress() {
     this.addressService.getAllAddressPagination(this.thePageNumber - 1, this.thePageSize).subscribe(this.processResult());
+  }
+
+  searchAddress() {
+    console.log(this.searchName);
+    if (this.searchName.trim() !== '') {
+      this.addressService.findAddressesByName(this.searchName, this.thePageNumber - 1, this.thePageSize)
+        .subscribe(this.processResult())
+    }
+    else {
+      this.listAllAddress()
+    }
   }
 
   processResult() {

@@ -2,10 +2,15 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="card">
-                <div class="card-header">
+                <!-- <div class="card-header">
                     <h5>Danh sách địa chỉ</h5>
-                </div>
+                </div> -->
                 <div class="card-body">
+                    <div class="btn-popup pull-left">
+                        <input [(ngModel)]="searchName" class="form-control" type="text" placeholder="Tìm kiếm"
+                            (change)="searchAddress()" />
+                    </div>
+
                     <div id="batchDelete" class="custom-datatable">
                         <div class="table-responsive">
                             <table class="table table-striped">

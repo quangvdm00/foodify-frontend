@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Address } from '../tables/Address';
+import { Address } from '../tables/address';
 import { AddressResponse } from '../tables/address-response';
 
 @Injectable({
@@ -24,6 +24,10 @@ export class AddressService {
 
   getAllAddressPagination(thePage: number, thePageSize: number): Observable<GetResponseAddresses> {
     return this.httpClient.get<GetResponseAddresses>(this.baseUrl + `?pageNo=${thePage}&pageSize=${thePageSize}`);
+  }
+
+  findAddressesByName(name: string, thePage: number, thePageSize: number) {
+    return this.httpClient.get<GetResponseAddresses>(this.baseUrl + `/search?address=${name}&pageNo=${thePage}&pageSize=${thePageSize}`);
   }
 }
 

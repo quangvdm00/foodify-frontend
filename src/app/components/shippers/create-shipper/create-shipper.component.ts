@@ -132,12 +132,12 @@ export class CreateShipperComponent implements OnInit {
       if (result.title == 'emailExist') {
         this.failureContent = 'Email'
         this.layer1 = this.modalService.show(failure, { class: 'modal-sm' });
-        return;
+        return Promise.reject();
       }
       else if (result.title == 'phoneNumExist') {
         this.failureContent = 'Số điện thoại'
         this.layer1 = this.modalService.show(failure, { class: 'modal-sm' });
-        return;
+        return Promise.reject();
       }
     })
 
@@ -166,10 +166,8 @@ export class CreateShipperComponent implements OnInit {
               error: () => {
                 this.failureContent = 'CCCD/CMND'
                 this.layer1 = this.modalService.show(failure, { class: 'modal-sm' });
-                return;
               }
             });
-
           resolve();
         })
       }
@@ -192,10 +190,13 @@ export class CreateShipperComponent implements OnInit {
                   this.router.navigate(["shippers/list"]);
                 }
               });
+            },
+            error: () => {
+              this.failureContent = 'CCCD/CMND'
+              this.layer1 = this.modalService.show(failure, { class: 'modal-sm' });
             }
           });
       }
-
     })
   }
 

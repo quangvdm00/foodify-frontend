@@ -28,16 +28,18 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th class="d-flex justify-content-center align-item-center " scope="col">Ảnh
-                                        </th>
+                                        <th class="d-flex justify-content-center align-items-center" scope="col">
+                                            <span>Ảnh</span></th>
                                         <th scope="col">Tên loại</th>
                                         <th scope="col"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor='let category of categories; let i = index'>
-                                        <td scope="row">{{ i + 1 }}</td>
-                                        <td class="d-flex justify-content-center align-item-center ">
+                                        <th scope="row">
+                                            <div>{{ i + 1 }}</div>
+                                        </th>
+                                        <td class="d-flex justify-content-center align-items-center ">
                                             <img [src]="category.imageUrl" class="imgTable" style="width: 20px"
                                                 [routerLink]="['/products','category',category.id]">
                                         </td>

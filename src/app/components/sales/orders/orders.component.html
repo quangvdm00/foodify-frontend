@@ -72,7 +72,7 @@
                       }}
                     </span>
                   </td>
-                  <td>{{ order.total | currency : "VND" }}</td>
+                  <td style="font-size: 16px;">{{ order.total | currency : "VND" }}</td>
                   <td scope="row">
                     <a [routerLink]="['/sales', 'detail-order', 'user', order.user.id, 'order', order.id]"
                       style="cursor: pointer;">

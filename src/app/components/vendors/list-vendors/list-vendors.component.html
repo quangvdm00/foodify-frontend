@@ -33,8 +33,8 @@
                                     {{shop.description}}
                                 </td>
                                 <td>
-                                    <span
-                                        [ngClass]="{badge: true,'badge-success': shop.isEnabled, 'badge-dark': !shop.isEnabled}">
+                                    <span class="text-size"
+                                        [ngClass]="{badge: true,'badge-success': shop.isEnabled, 'badge-primary': !shop.isEnabled}">
                                         {{ shop.isEnabled ? 'Đang hoạt động' : 'Đang tạm ngưng' }}
                                     </span>
                                 </td>

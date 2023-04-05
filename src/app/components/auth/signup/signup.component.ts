@@ -373,6 +373,10 @@ export class SignupComponent {
     this.router.navigate(["/vendors/list"]);
   }
 
+  goBackToLogin() {
+    this.router.navigate(['/auth/login']);
+  }
+
   //Getter
   get image() {
     return this.addUserForm.get("image");

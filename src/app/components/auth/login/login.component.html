@@ -1,5 +1,5 @@
 <div class="page-wrapper">
-    <div class="authentication-box">
+    <div class="authentication-box backgound-food">
         <div class="container">
             <div class="row">
                 <div class="col-md-5 p-0 card-left">
@@ -153,24 +153,20 @@
                                                         formControlName="password">
                                                 </div>
                                                 <div class="form-terms">
-                                                    <div
-                                                        class="custom-control custom-checkbox d-flex align-items-center flex-wrap">
-                                                        <input type="checkbox" class="custom-control-input me-2"
-                                                            id="customControlAutosizing">
-                                                        <label class="custom-control-label"
-                                                            for="customControlAutosizing">Remember
-                                                            me</label>&nbsp;&nbsp;&nbsp;
-                                                        <a href="javascript:void(0)"
-                                                            class="btn btn-default forgot-pass ms-auto">Forgot
-                                                            password</a>
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input me-2" id="customControlAutosizing">
+                                                        <label class="custom-control-label" for="customControlAutosizing">Remember me</label>
+                                                    </div>
+                                                    <div class="d-flex mt-3">
+                                                        <a href="javascript:void(0)" class="">Quên mật khẩu</a>
                                                     </div>
                                                 </div>
                                                 <div class="form-button">
-                                                    <!--                                                    <a [routerLink]="'/dashboard/default'">-->
-                                                    <!--                                                        -->
-                                                    <!--                                                    </a>-->
-                                                    <button class="btn btn-primary" type="submit"
-                                                        (click)="onSignIn()">Login</button>
+                                                    <button class="btn btn-primary" type="submit" (click)="onSignIn()">Đăng nhập</button>
+                                                </div>
+                                                <div class="d-flex justify-content-start align-items-center mt-3">
+                                                    <p class="mb-0 text-secondary">Trở thành người bán hàng của foodify?</p>
+                                                    <a class="ml-2" [routerLink]="['/auth', 'signup']">Đăng ký ngay</a>
                                                 </div>
                                                 <!-- <div class="form-footer">
                                                     <span>Or Login up with social platforms</span>
@@ -187,29 +183,29 @@
                                         </div>
                                     </ng-template>
                                 </li>
-                                <li [ngbNavItem]="2">
+                                <!-- <li [ngbNavItem]="2">
                                     <a ngbNavLink>Đăng ký</a>
                                     <ng-template ngbNavContent>
                                         <form [formGroup]="registerForm" class="form-horizontal auth-form" novalidate>
-                                            <!-- Name -->
+                                            
                                             <div class="form-group">
                                                 <input required="" name="login[username]" type="email"
                                                     class="form-control" placeholder="email" formControlName="email"
                                                     id="exampleInputEmail12">
                                             </div>
-                                            <!-- Email -->
+                                            
                                             <div class="form-group">
                                                 <input required="" name="login[username]" type="email"
                                                     class="form-control" placeholder="email" formControlName="email"
                                                     id="exampleInputEmail12">
                                             </div>
-                                            <!-- Phone number -->
+                                            
                                             <div class="form-group">
                                                 <input required="" name="login[username]" type="email"
                                                     class="form-control" placeholder="email" formControlName="email"
                                                     id="exampleInputEmail12">
                                             </div>
-                                            <!-- Dob -->
+                                            
                                             <div class="form-group">
                                                 <input required="" name="login[username]" type="email"
                                                     class="form-control" placeholder="email" formControlName="email"
@@ -233,10 +229,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-button">
-                                                <!--                                                <a [routerLink]="'/dashboard/default'">-->
-                                                <!--                                                   -->
-                                                <!--                                                    -->
-                                                <!--                                                </a>-->
+                                                
                                                 <button class="btn btn-primary" type="submit">Register
                                                 </button>
                                             </div>
@@ -255,7 +248,7 @@
                                             </div>
                                         </form>
                                     </ng-template>
-                                </li>
+                                </li> -->
                             </ul>
                             <div [ngbNavOutlet]="nav" class="mt-2"></div>
                         </div>

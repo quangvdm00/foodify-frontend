@@ -14,6 +14,7 @@ import { ShipperService } from 'src/app/shared/service/shipper.service';
 import { UserService } from 'src/app/shared/service/user.service';
 import { Shipper } from 'src/app/shared/tables/shipper';
 import { User } from 'src/app/shared/tables/user';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-create-shipper',
@@ -35,6 +36,7 @@ export class CreateShipperComponent implements OnInit {
   downloadURL: Observable<string>;
   avatar: string;
   edited: boolean = false;
+  defaultUserImg = environment.userDefaultImg;
 
   // Password
   showPassword = false;
@@ -112,21 +114,46 @@ export class CreateShipperComponent implements OnInit {
       return Promise.reject('Invalid form');
     }
 
-    return new Promise((resolve, rejects) => {
-      this.uploadImage(this.imageFile).then((url) => {
-        const newUser = new User()
-        const newShipper = new Shipper();
-        newUser.fullName = this.shipperFullName.value;
-        newUser.dateOfBirth = this.shipperDob.value;
-        newUser.email = this.shipperEmail.value;
-        newUser.phoneNumber = this.shipperPhoneNumber.value;
-        newUser.identifiedCode = this.shipperIdentifiedCode.value;
-        newUser.imageUrl = url;
-        newUser.isLocked = false;
-        newUser.defaultAddress = 0;
-        newUser.roleName = 'ROLE_SHIPPER'
-        console.log(newUser);
+    const newUser = new User()
+    const newShipper = new Shipper();
+    newUser.fullName = this.shipperFullName.value;
+    newUser.dateOfBirth = this.shipperDob.value;
+    newUser.email = this.shipperEmail.value;
+    newUser.phoneNumber = this.shipperPhoneNumber.value;
+    newUser.identifiedCode = this.shipperIdentifiedCode.value;
+    newUser.isLocked = false;
+    newUser.defaultAddress = 0;
+    newUser.roleName = 'ROLE_SHIPPER'
 
+    return new Promise((resolve, rejects) => {
+      if (this.edited) {
+        this.uploadImage(this.imageFile).then((url) => {
+          newUser.imageUrl = url;
+          this.userService.createNewUser(newUser).pipe(
+            mergeMap((user) => {
+              newShipper.userId = user.id
+              if (this.isShop) {
+                newShipper.shopId = this.shopId;
+              }
+              else {
+                newShipper.shopId = this.shipperShopId.value
+              }
+              return this.shipperService.createShipper(newShipper)
+            })).subscribe({
+              next: (shipper) => {
+                of(this.firebaseService.signUp(newUser.email, this.shipperPassword.value)).subscribe({
+                  next: () => {
+                    this.router.navigate(["shippers/list"]);
+                  }
+                });
+              }
+            });
+
+          resolve();
+        })
+      }
+      else {
+        newUser.imageUrl = this.defaultUserImg;
         this.userService.createNewUser(newUser).pipe(
           mergeMap((user) => {
             newShipper.userId = user.id
@@ -146,9 +173,8 @@ export class CreateShipperComponent implements OnInit {
               });
             }
           });
+      }
 
-        resolve();
-      })
     })
   }
 

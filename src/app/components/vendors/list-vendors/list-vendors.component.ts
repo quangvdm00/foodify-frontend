@@ -4,6 +4,8 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { FormBuilder, FormGroup, NgForm, Validators } from "@angular/forms";
 import { ShopService } from 'src/app/shared/service/shop.service';
 import { Router } from '@angular/router';
+import { Shop } from 'src/app/shared/tables/shop';
+import { FirebaseService } from 'src/app/shared/service/firebase.service';
 
 @Component({
     selector: 'app-list-vendors',
@@ -13,6 +15,7 @@ import { Router } from '@angular/router';
 export class ListVendorsComponent implements OnInit {
     shops = [];
     shopId: number;
+    emailDelete: string;
 
     //Pagination Properties
     thePageNumber = 1;
@@ -22,7 +25,8 @@ export class ListVendorsComponent implements OnInit {
     constructor(
         private router: Router,
         private shopService: ShopService,
-        private modalService: BsModalService
+        private modalService: BsModalService,
+        private firebaseService: FirebaseService
     ) {
 
     }
@@ -47,17 +51,21 @@ export class ListVendorsComponent implements OnInit {
     //Modal
     modalRef: BsModalRef;
 
-    openDeleteModal(template: TemplateRef<any>, id: number) {
-        this.shopId = id;
-        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+    openDeleteModal(template: TemplateRef<any>, shopId: number) {
+        this.shopId = shopId;
+        this.shopService.getShopById(this.shopId).subscribe((shop) => {
+            this.emailDelete = shop.user.email;
+            this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+        })
     }
 
     confirm(template: TemplateRef<any>): void {
-        console.log("Delete shop with id :" + this.shopId);
-        this.shopService.deleteShop(this.shopId).subscribe()
-        this.listShops();
-        this.modalRef.hide();
-        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+        this.shopService.deleteShop(this.shopId).subscribe();
+        this.firebaseService.deleteUserByEmail(this.emailDelete).subscribe(() => {
+            this.listShops();
+            this.modalRef.hide();
+            this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+        })
     }
 
     decline(): void {

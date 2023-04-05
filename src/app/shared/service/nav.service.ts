@@ -143,9 +143,9 @@ export class NavService {
         //         {path: '/localization/taxes', title: 'Taxes', type: 'link'},
         //     ]
         // },
-        {
-            title: 'Báo cáo', path: '/reports', icon: 'bar-chart', type: 'link', active: false
-        },
+        // {
+        //     title: 'Báo cáo', path: '/reports', icon: 'bar-chart', type: 'link', active: false
+        // },
         // {
         //     title: 'Hoá đơn', path: '/invoice', icon: 'archive', type: 'link', active: false
         // },
@@ -234,9 +234,9 @@ export class NavService {
         //         {path: '/localization/taxes', title: 'Taxes', type: 'link'},
         //     ]
         // },
-        {
-            title: 'Báo cáo', path: '/reports', icon: 'bar-chart', type: 'link', active: false
-        },
+        // {
+        //     title: 'Báo cáo', path: '/reports', icon: 'bar-chart', type: 'link', active: false
+        // },
         // {
         //     title: 'Hoá đơn', path: '/invoice', icon: 'archive', type: 'link', active: false
         // },

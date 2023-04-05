@@ -23,18 +23,19 @@
                         <tbody>
                             <tr *ngFor="let shop of shops, let idx = index">
                                 <th>{{ idx + 1}}</th>
-                                <td  scope="row">
+                                <td scope="row">
                                     <img [src]="shop.imageUrl" class="imgTable" style="width: 20px">
                                 </td>
-                                <td  scope="row">
+                                <td scope="row">
                                     <span>{{shop.name}}</span>
                                 </td>
                                 <td>
                                     {{shop.description}}
                                 </td>
                                 <td>
-                                    <span [ngClass]="{badge: true,'badge-success': shop.isEnabled, 'badge-dark': !shop.isEnabled}">
-                                      {{ shop.isEnabled ? 'Đang hoạt động' : 'Đang tạm ngưng' }}
+                                    <span
+                                        [ngClass]="{badge: true,'badge-success': shop.isEnabled, 'badge-dark': !shop.isEnabled}">
+                                        {{ shop.isEnabled ? 'Đang hoạt động' : 'Đang tạm ngưng' }}
                                     </span>
                                 </td>
                                 <td>{{ shop.isStudent ? 'Cửa hàng sinh viên' : 'Cửa hàng thường' }}</td>
@@ -61,7 +62,8 @@
                     <!-- Pagination -->
                     <div class="d-flex justify-content-center p-2">
                         <ngb-pagination [(page)]="thePageNumber" [pageSize]="thePageSize"
-                            [collectionSize]="theTotalElements" [maxSize]="5" (pageChange)="listShops()" [boundaryLinks]="true">
+                            [collectionSize]="theTotalElements" [maxSize]="5" (pageChange)="listShops()"
+                            [boundaryLinks]="true">
                         </ngb-pagination>
                     </div>
                 </div>

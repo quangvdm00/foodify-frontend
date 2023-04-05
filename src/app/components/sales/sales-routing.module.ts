@@ -12,8 +12,8 @@ const routes: Routes = [
         path: "orders",
         component: OrdersComponent,
         data: {
-          title: "Orders",
-          breadcrumb: "Orders",
+          title: "Danh sách đơn hàng",
+          breadcrumb: "Danh sách",
         },
       },
       {
@@ -28,8 +28,8 @@ const routes: Routes = [
         path: "transactions",
         component: TransactionsComponent,
         data: {
-          title: "Transactions",
-          breadcrumb: "Transactions",
+          title: "Danh sách giao dịch",
+          breadcrumb: "Giao dịch",
         },
       },
     ],
@@ -40,4 +40,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class SalesRoutingModule {}
+export class SalesRoutingModule { }

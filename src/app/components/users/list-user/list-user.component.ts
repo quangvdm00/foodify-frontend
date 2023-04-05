@@ -5,7 +5,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { FirebaseService } from 'src/app/shared/service/firebase.service';
 import { TableService } from 'src/app/shared/service/table.service';
 import { UserService } from 'src/app/shared/service/user.service';
-import { User } from 'src/app/shared/tables/User';
+import { User } from 'src/app/shared/tables/user';
 
 @Component({
   selector: 'app-list-user',
@@ -83,7 +83,6 @@ export class ListUserComponent implements OnInit {
 
   confirmDeleted(success: TemplateRef<any>) {
     this.userService.deleteUserById(this.userDel.id).subscribe()
-    console.log(this.userDel.email)
     this.firebaseService.deleteUserByEmail(this.userDel.email).subscribe(() => {
       this.listAllUsers();
       this.layer1.hide();

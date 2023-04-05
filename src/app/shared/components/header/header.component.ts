@@ -17,6 +17,12 @@ export class HeaderComponent implements OnInit {
   public isOpenMobile: boolean;
   public user: User;
 
+  //Log-in
+  isShop: boolean = false;
+  loggedId: number = Number(localStorage.getItem('user-id'))
+  loggedRole = localStorage.getItem('user-role');
+  shopId: number;
+
   @Output() rightSidebarEvent = new EventEmitter<boolean>();
 
   constructor(
@@ -42,7 +48,12 @@ export class HeaderComponent implements OnInit {
   }
 
 
-  ngOnInit() { }
+  ngOnInit() {
+    if (this.loggedRole != 'ROLE_ADMIN') {
+      this.isShop = true;
+      this.shopId = Number(localStorage.getItem('shop-id'))
+    }
+  }
 
   logOut() {
     this.firebaseService.logout();

@@ -18,7 +18,7 @@
 
                     <!--                    </div>-->
                     <div id="batchDelete" class="custom-datatable vendor-list">
-                        <div class="table-responsive">
+                        <div class="table-responsive" *ngIf="shippers.length > 0">
                             <!-- <form>
                                 <div class="mb-3 row">
                                     <label for="table-complete-search" class="col-xs-3 col-sm-auto col-form-label">Full text search:</label>
@@ -93,6 +93,13 @@
                                     <option [ngValue]="20">20 shipper / trang</option>
                                     <option [ngValue]="30">30 shipper / trang</option>
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <div *ngIf="shippers.length == 0" class="d-flex justify-content-center p-2">
+                                <h4 style="color: lightcoral;">Không có shipper <i class="fa fa-exclamation"
+                                        aria-hidden="true"></i></h4>
                             </div>
                         </div>
                     </div>

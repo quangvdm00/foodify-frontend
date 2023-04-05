@@ -87,13 +87,11 @@ export class ListAccountComponent {
 
   openModal(user: User, template: TemplateRef<any>) {
     this.userDel = user;
-    console.log(this.userDel.email)
     this.layer1 = this.modalService.show(template, { class: 'modal-sm' });
   }
 
   confirmDeleted(success: TemplateRef<any>) {
-    this.userService.deleteUserById(this.userDel.id).subscribe()
-    console.log(this.userDel.email)
+    this.userService.deleteUserById(this.userDel.id).subscribe();
     this.firebaseService.deleteUserByEmail(this.userDel.email).subscribe(() => {
       this.listAllUsers();
       this.layer1.hide();

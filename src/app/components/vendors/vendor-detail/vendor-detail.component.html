@@ -186,7 +186,8 @@
                           <label class="mb-0">Trạng thái</label>
                         </div>
                         <div class="col-xl-8 col-sm-7">
-                          <span [ngClass]="{badge: true,'badge-success': shop.isEnabled, 'badge-dark': !shop.isEnabled}">
+                          <span
+                            [ngClass]="{badge: true,'badge-success': shop.isEnabled, 'badge-dark': !shop.isEnabled}">
                             {{ shop.isEnabled ? 'Đang hoạt động' : 'Đang tạm ngưng' }}
                           </span>
                         </div>
@@ -200,8 +201,10 @@
                           <label class="mb-0">Loại shop</label>
                         </div>
                         <div class="col-xl-8 col-sm-7">
-                          <p *ngIf="!shop.isStudent" class="mb-0 font-weight-bold" style="color: #f08080">Cửa hàng thường</p>
-                          <p *ngIf="shop.isStudent" class="mb-0 font-weight-bold" style="color: green">Cửa hàng sinh viên</p>
+                          <p *ngIf="!shop.isStudent" class="mb-0 font-weight-bold" style="color: #f08080">Cửa hàng
+                            thường</p>
+                          <p *ngIf="shop.isStudent" class="mb-0 font-weight-bold" style="color: green">Cửa hàng sinh
+                            viên</p>
                         </div>
                       </div>
                     </div>
@@ -236,9 +239,8 @@
                                 <td>{{ product.name }}</td>
                                 <td>{{ product.cost - (product.cost * product.discountPercent) / 100 }}</td>
                                 <td>
-                                  <a [routerLink]="['/products', 'product-detail', product.id]"
-                                    ><i class="fa fa-eye f-12"></i
-                                  ></a>
+                                  <a [routerLink]="['/products', 'product-detail', product.id]"><i
+                                      class="fa fa-eye f-12"></i></a>
                                 </td>
                               </tr>
                             </tbody>
@@ -246,24 +248,12 @@
 
                           <!-- Pagination -->
                           <div class="d-flex justify-content-center p-2">
-                            <ngb-pagination
-                              [collectionSize]="theTotalElements"
-                              [(page)]="thePageNumber"
-                              [maxSize]="5"
-                              [pageSize]="thePageSize"
-                              [rotate]="true"
-                              [boundaryLinks]="true"
-                              (pageChange)="listProduct()"
-                            >
-                            </ngb-pagination
-                            >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <select
-                              class="form-select"
-                              style="width: auto; height: 36px"
-                              name="pageSize"
-                              (change)="listProduct()"
-                              [(ngModel)]="thePageSize"
-                            >
+                            <ngb-pagination [collectionSize]="theTotalElements" [(page)]="thePageNumber" [maxSize]="5"
+                              [pageSize]="thePageSize" [rotate]="true" [boundaryLinks]="true"
+                              (pageChange)="listProduct()">
+                            </ngb-pagination>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <select class="form-select" style="width: auto; height: 36px" name="pageSize"
+                              (change)="listProduct()" [(ngModel)]="thePageSize">
                               <option [value]="10" [selected]="true" [ngValue]="10">10 sản phẩm / trang</option>
                               <option [ngValue]="15">15 sản phẩm / trang</option>
                               <option [ngValue]="20">20 sản phẩm / trang</option>
@@ -278,9 +268,10 @@
             </li>
           </ul>
           <div [ngbNavOutlet]="nav" class="mt-2"></div>
-          <!-- <div class="pull-right">
-                      <button type="submit" class="btn btn-primary">Tạo tài khoản</button>
-                  </div> -->
+          <div class="pull-right">
+            <button type="submit" class="btn btn-primary" [routerLink]="['/vendors', 'edit', shop.id]">Chỉnh sửa
+              thông tin</button>
+          </div>
         </div>
       </div>
     </div>

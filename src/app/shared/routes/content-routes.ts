@@ -23,7 +23,7 @@ export const content: Routes = [
         path: 'sales',
         loadChildren: () => import('../../components/sales/sales.module').then(m => m.SalesModule),
         data: {
-            breadcrumb: "Sales"
+            breadcrumb: "Đơn hàng"
         }
     },
     {

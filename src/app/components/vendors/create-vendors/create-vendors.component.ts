@@ -12,12 +12,12 @@ import { FirebaseService } from 'src/app/shared/service/firebase.service';
 import { ShopService } from 'src/app/shared/service/shop.service';
 import { UserService } from 'src/app/shared/service/user.service';
 import { WardService } from 'src/app/shared/service/ward.service';
-import { Address } from 'src/app/shared/tables/Address';
-import { District } from 'src/app/shared/tables/District';
+import { Address } from 'src/app/shared/tables/address';
+import { District } from 'src/app/shared/tables/district';
 import { Shop } from 'src/app/shared/tables/shop';
-import { User } from 'src/app/shared/tables/User';
-import { Ward } from 'src/app/shared/tables/Ward';
-import { vendorsDB } from "../../../shared/tables/vendor-list";
+import { User } from 'src/app/shared/tables/user';
+import { Ward } from 'src/app/shared/tables/ward';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-create-vendors',
@@ -34,6 +34,8 @@ export class CreateVendorsComponent {
     // image
     avatar: string;
     shopBanner: string;
+    defaultUserImg = environment.userDefaultImg;
+    defaultShopImg = environment.shopDefaultImg;
 
 
     // file
@@ -78,15 +80,12 @@ export class CreateVendorsComponent {
     createUserForm() {
         this.addUserForm = this.formBuilder.group(
             {
-                // image: new FormControl("", [Validators.required]),
                 fullName: new FormControl("", [Validators.required, Validators.minLength(2)]),
                 email: new FormControl("", [Validators.required, Validators.email]),
                 dateOfBirth: new FormControl("", [Validators.required]),
                 phoneNumber: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Phone)]),
                 identifiedCode: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.IdentifiedCode)]),
                 address: new FormControl("", [Validators.required, Validators.minLength(8)]),
-                // district: new FormControl("", [Validators.required]),
-                // ward: new FormControl("", [Validators.required])
             }
         );
     }
@@ -96,33 +95,32 @@ export class CreateVendorsComponent {
             password: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Password)]),
             confirmPassword: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Password)]),
         },
-        {
-          validator: this.ConfirmedValidator("password", "confirmPassword"),
-        })
+            {
+                validator: this.ConfirmedValidator("password", "confirmPassword"),
+            })
     }
 
     // Validation for password and confirm password
-  ConfirmedValidator(controlName: string, matchingControlName: string) {
-    return (formGroup: FormGroup) => {
-      const control = formGroup.controls[controlName];
-      const matchingControl = formGroup.controls[matchingControlName];
-      if (matchingControl.errors && !matchingControl.errors.confirmedValidator) {
-        return;
-      }
-      if (control.value !== matchingControl.value) {
-        matchingControl.setErrors({ confirmedValidator: true });
-      } else {
-        matchingControl.setErrors(null);
-      }
-    };
-  }
+    ConfirmedValidator(controlName: string, matchingControlName: string) {
+        return (formGroup: FormGroup) => {
+            const control = formGroup.controls[controlName];
+            const matchingControl = formGroup.controls[matchingControlName];
+            if (matchingControl.errors && !matchingControl.errors.confirmedValidator) {
+                return;
+            }
+            if (control.value !== matchingControl.value) {
+                matchingControl.setErrors({ confirmedValidator: true });
+            } else {
+                matchingControl.setErrors(null);
+            }
+        };
+    }
 
     createShopForm() {
         this.shopForm = this.formBuilder.group(
             {
                 name: new FormControl("", [Validators.required, Validators.minLength(2)]),
                 description: new FormControl("", [Validators.required, Validators.minLength(8)]),
-                // banner: new FormControl("", [Validators.required]),
             }
         );
     }
@@ -130,8 +128,6 @@ export class CreateVendorsComponent {
     ngOnInit() {
         this.getAllDistrict();
     }
-
-    
 
     /**
      * create User from Form
@@ -158,33 +154,71 @@ export class CreateVendorsComponent {
             this.validDistrict = true;
             this.validWard = true;
         }
-        
+
 
         if (this.addUserForm.invalid || this.passwordForm.invalid || this.shopForm.invalid || this.district == 'none') {
             this.addUserForm.markAllAsTouched();
             this.passwordForm.markAllAsTouched();
             this.shopForm.markAllAsTouched();
-            console.log(this.addUserForm);
-            console.log(this.passwordForm);
-            console.log(this.shopForm);
             return;
         }
 
-        this.uploadUserImage(this.userImageFile).then((url) => {
+        newShop.name = this.shopName.value
+        newShop.description = this.shopDescription.value;
+        newShop.isStudent = this.isStudent;
+        newShop.isEnabled = true;
+        newShop.lat = '1';
+        newShop.lng = '1';
 
-            newUser.imageUrl = url
 
+        newAddress.address = this.userAddress.value;
+        newAddress.district = this.district;
+        if (this.district != "Huyện Hoàng Sa") newAddress.ward = this.ward;
 
-            newShop.name = this.shopName.value
-            newShop.description = this.shopDescription.value;
-            newShop.isStudent = this.isStudent;
-            newShop.isEnabled = true;
-            newShop.lat = '1';
-            newShop.lng = '1';
+        if (this.userImageChoosen && this.shopImageChoosen) {
+            this.uploadUserImage(this.userImageFile).then((url) => {
+                newUser.imageUrl = url
 
-            newAddress.address = this.userAddress.value;
-            newAddress.district = this.district;
-            if (this.district != "Huyện Hoàng Sa") newAddress.ward = this.ward;
+                this.userService.createNewUser(newUser).pipe(
+                    switchMap((user) => {
+                        this.uploadShopImage(this.shopImageFile).then((url) => {
+                            newShop.userId = user.id
+                            newShop.imageUrl = url;
+                            this.shopService.createShop(newShop).subscribe(() => {
+                                this.firebaseService.signUp(newUser.email, this.userPassword.value);
+                                this.userService.createAddressForUser(user.id, newAddress).subscribe();
+                                this.modalRef = this.modalService.show(template, { class: 'modal-sm' })
+                            });
+                        })
+                        return EMPTY; // Return an empty observable to prevent nested subscriptions
+                    })
+                ).subscribe(() => {
+
+                })
+            })
+        }
+        else if (this.userImageChoosen && !this.shopImageChoosen) {
+            this.uploadUserImage(this.userImageFile).then((url) => {
+                newUser.imageUrl = url
+
+                this.userService.createNewUser(newUser).pipe(
+                    switchMap((user) => {
+                        newShop.userId = user.id
+                        newShop.imageUrl = this.defaultShopImg;
+                        this.shopService.createShop(newShop).subscribe(() => {
+                            this.firebaseService.signUp(newUser.email, this.userPassword.value);
+                            this.userService.createAddressForUser(user.id, newAddress).subscribe();
+                            this.modalRef = this.modalService.show(template, { class: 'modal-sm' })
+                        });
+                        return EMPTY; // Return an empty observable to prevent nested subscriptions
+                    })
+                ).subscribe(() => {
+
+                })
+            })
+        }
+        else if (!this.userImageChoosen && this.shopImageChoosen) {
+            newUser.imageUrl = this.defaultUserImg;
 
             this.userService.createNewUser(newUser).pipe(
                 switchMap((user) => {
@@ -202,10 +236,25 @@ export class CreateVendorsComponent {
             ).subscribe(() => {
 
             })
-        })
+        }
+        else {
+            newUser.imageUrl = this.defaultUserImg;
 
-        
-        
+            this.userService.createNewUser(newUser).pipe(
+                switchMap((user) => {
+                    newShop.userId = user.id
+                    newShop.imageUrl = this.defaultShopImg;
+                    this.shopService.createShop(newShop).subscribe(() => {
+                        this.firebaseService.signUp(newUser.email, this.userPassword.value);
+                        this.userService.createAddressForUser(user.id, newAddress).subscribe();
+                        this.modalRef = this.modalService.show(template, { class: 'modal-sm' })
+                    });
+                    return EMPTY; // Return an empty observable to prevent nested subscriptions
+                })
+            ).subscribe(() => {
+
+            })
+        }
     }
 
     //Districts and Wards
@@ -338,7 +387,7 @@ export class CreateVendorsComponent {
     }
 
     //Getter
-    get image() { return this.addUserForm.get("image")}
+    get image() { return this.addUserForm.get("image") }
     get userFullName() { return this.addUserForm.get("fullName") }
     get userEmail() { return this.addUserForm.get("email") }
     get userDateOfBirth() { return this.addUserForm.get("dateOfBirth") }

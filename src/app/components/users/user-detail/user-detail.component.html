@@ -242,9 +242,10 @@
                         </li>
                     </ul>
                     <div [ngbNavOutlet]="nav" class="mt-2"></div>
-                    <!-- <div class="pull-right">
-                        <button type="submit" class="btn btn-primary">Tạo tài khoản</button>
-                    </div> -->
+                    <div class="pull-right">
+                        <button type="submit" class="btn btn-primary" [routerLink]="['/users','edit',user.id]">Chỉnh sửa
+                            thông tin</button>
+                    </div>
                 </div>
             </div>
         </div>

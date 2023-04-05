@@ -32,6 +32,10 @@ export class OrderService {
     return this.httpClient.get<Order>(`${this.getOrderUrl}/${userId}/orders/${orderId}`);
   }
 
+  updateOrderShipper(userId: number, orderId: number, shipperId: number) {
+    return this.httpClient.put<Order>(`${this.getOrderUrl}/${userId}/orders/${orderId}/shipper?shipperId=${shipperId}`, "");
+  }
+
   updateOrderStatus(userId: number, orderId: number, status: string): Observable<Order> {
     return this.httpClient.put<Order>(`${this.getOrderUrl}/${userId}/orders/${orderId}/status?status=${status}`, "");
   }
@@ -46,6 +50,10 @@ export class OrderService {
 
   countShopOrderByDistrict(shopId: number, districtName: string) {
     return this.httpClient.get<number>(this.orderUrl + `/shop/${shopId}/count?districtName=${encodeURI(districtName)}`)
+  }
+
+  findOrdersByTrackingNumber(trackingNumber: string, thePage: number, thePageSize: number, sortBy: string, sortDir: string) {
+    return this.httpClient.get<GetResponseOrders>(this.orderUrl + `/search?trackingNumber=${trackingNumber}&pageNo=${thePage}&pageSize=${thePageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
   }
 }
 

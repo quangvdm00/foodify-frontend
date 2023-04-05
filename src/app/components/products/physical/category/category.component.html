@@ -28,14 +28,15 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th class="d-flex justify-content-center align-item-center " scope="col"><span>Ảnh</span></th>
+                                        <th class="d-flex justify-content-center align-item-center " scope="col">Ảnh
+                                        </th>
                                         <th scope="col">Tên loại</th>
                                         <th scope="col"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor='let category of categories; let i = index'>
-                                        <th scope="row">{{ i + 1 }}</th>
+                                        <td scope="row">{{ i + 1 }}</td>
                                         <td class="d-flex justify-content-center align-item-center ">
                                             <img [src]="category.imageUrl" class="imgTable" style="width: 20px"
                                                 [routerLink]="['/products','category',category.id]">
@@ -44,7 +45,7 @@
                                         <td>
                                             <a style="cursor: pointer;"
                                                 [routerLink]="['/products','category',category.id]"><i
-                                                    style="color: black;" class='fa fa-eye f-12'></i></a>&nbsp;
+                                                    style="color: lightseagreen;" class='fa fa-eye f-12'></i></a>&nbsp;
                                             <a style="cursor: pointer;"
                                                 (click)="editCategory(productCategoryTemplate, category)"><i
                                                     class='fa fa-edit f-12'></i></a>&nbsp;

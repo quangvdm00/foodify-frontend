@@ -8,6 +8,8 @@ import { DecimalPipe } from "@angular/common";
 import { Order } from "src/app/shared/tables/order-list";
 import { OrderService } from "src/app/shared/service/order.service";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { Shipper } from "src/app/shared/tables/shipper";
+import { ShipperService } from "src/app/shared/service/shipper.service";
 
 @Component({
   selector: "app-orders",
@@ -39,13 +41,17 @@ export class OrdersComponent implements OnInit {
   order: Order;
   modalRef: BsModalRef;
 
-  // orderId: number
-  // orderStatus: string
   selectedStatus: string;
+  isHaveShipper: boolean = false;
+  shipper: Shipper = undefined;
+  shippers: Shipper[] = [];
+  searchName: string = '';
 
   orderStatuses = ["Chờ xác nhận", "Đã xác nhận", "Đang giao hàng", "Giao thành công", "Đã huỷ đơn"];
 
-  constructor(private orderService: OrderService, private modalService: BsModalService) { }
+  constructor(private orderService: OrderService,
+    private shipperService: ShipperService,
+    private modalService: BsModalService) { }
 
   ngOnInit() {
     if (this.loggedRole != 'ROLE_ADMIN') {
@@ -59,13 +65,27 @@ export class OrdersComponent implements OnInit {
     if (this.isShop) {
       this.orderService.getOrdersByShopId(this.shopId, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
         .subscribe(this.processResult());
+
+      this.shipperService.findFreeShopShipper(this.shopId).subscribe((shippers) => {
+        this.shippers = shippers;
+      })
     }
     else {
       this.orderService
         .getOrdersPagination(this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
         .subscribe(this.processResult());
     }
+  }
 
+  searchOrder() {
+    console.log(this.searchName)
+    if (this.searchName.trim() !== '') {
+      this.orderService.findOrdersByTrackingNumber(this.searchName, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
+        .subscribe(this.processResult());
+    }
+    else {
+      this.listOrder()
+    }
   }
 
   processResult() {
@@ -78,7 +98,12 @@ export class OrdersComponent implements OnInit {
   }
 
   // Change status order modal
-  openStatusModal(confirmBoxChangeStatus: TemplateRef<any>, userId: number, orderId: number, orderStatus: string) {
+  openStatusModal(confirmBoxChangeStatus: TemplateRef<any>, userId: number, orderId: number, shipper: Shipper) {
+    this.isHaveShipper = false;
+    if (shipper != null) {
+      this.isHaveShipper = true
+    }
+
     this.orderService.getOrderById(userId, orderId).subscribe(
       (order: Order) => {
         this.userId = userId;
@@ -94,12 +119,23 @@ export class OrdersComponent implements OnInit {
   }
 
   confirmBoxChangeStatus(successChangeStatus: TemplateRef<any>) {
+    if (!this.isHaveShipper) {
+      if (this.shipper == undefined) {
+
+      }
+      else {
+        console.log(this.shipper.id)
+        this.orderService.updateOrderShipper(this.userId, this.orderId, this.shipper.id).subscribe();
+      }
+    }
+
     this.orderService.updateOrderStatus(this.userId, this.orderId, this.selectedStatus).subscribe((res) => { });
     this.modalRef.hide();
     this.modalRef = this.modalService.show(successChangeStatus, { class: "modal-sm" });
   }
 
   decline() {
+    this.shipper = undefined;
     this.modalRef.hide();
   }
 

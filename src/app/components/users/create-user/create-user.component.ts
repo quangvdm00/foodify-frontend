@@ -1,10 +1,9 @@
-import { HttpClient } from "@angular/common/http";
 import { Component, OnInit, TemplateRef } from "@angular/core";
 import { AngularFireStorage } from "@angular/fire/compat/storage";
-import { FormGroup, FormBuilder, FormControl, Validators, UntypedFormGroup, FormArray } from "@angular/forms";
+import { FormGroup, FormBuilder, Validators, UntypedFormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { finalize, switchMap } from "rxjs";
+import { finalize } from "rxjs";
 import { Observable } from "rxjs-compat";
 import { AuthService } from "src/app/shared/service/auth.service";
 import { DistrictService } from "src/app/shared/service/district.service";

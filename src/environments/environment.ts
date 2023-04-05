@@ -16,7 +16,8 @@ export const environment = {
         measurementId: 'G-TV0D4CW51W'
     },
     adminImg: 'https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/Admin%2FAdmin-logo.png?alt=media&token=78243742-a2d4-4376-95bd-2b69ab0b69ac',
-    userDefaultImg: 'https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/Admin%2Fdefault-ava-01.png?alt=media&token=90202711-4b1a-4665-a941-a65bf6c2002e'
+    userDefaultImg: 'https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/Admin%2Fdefault-ava-01.png?alt=media&token=90202711-4b1a-4665-a941-a65bf6c2002e',
+    shopDefaultImg: 'https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/Admin%2Fdefault-shop-01.png?alt=media&token=2eb5629a-730b-4611-a564-05deb29c9217'
 };
 
 /*

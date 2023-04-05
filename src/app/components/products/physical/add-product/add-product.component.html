@@ -41,9 +41,13 @@
                                         <div class="col-xl-8 col-sm-7">
                                             <input class="form-control" id="validationCustom01" type="text"
                                                 [formControl]="productForm.controls['name']" required>
-                                            <div *ngIf="productForm.controls.name.touched && productForm.controls.name.errors?.required"
+                                            <!-- <div class="alert alert-danger mt-1" *ngIf="productForm.controls.name.touched && productForm.controls.name.errors?.required"
                                                 class="text text-danger">
                                                 Tên sản phẩm không được bỏ trống.
+                                            </div> -->
+                                            <div *ngIf="productName?.invalid && (productName?.dirty || productName?.touched)" class="alert alert-danger mt-1">
+                                                <div *ngIf="productName?.errors?.['required']">Tên sản phẩm không được bỏ trống.</div>
+                                                <div *ngIf="productName?.errors?.['minlength']">Tên sản phẩm phải có ít nhất 2 kí tự.</div>
                                             </div>
                                         </div>
                                     </div>
@@ -56,9 +60,13 @@
                                         <div class="col-xl-8 col-sm-7">
                                             <input class="form-control" id="validationCustom02" type="number"
                                                 [formControl]="productForm.controls['price']" required="">
-                                            <div *ngIf="productForm.controls.price.touched && productForm.controls.price.errors?.required"
+                                            <!-- <div *ngIf="productForm.controls.price.touched && productForm.controls.price.errors?.required"
                                                 class="text text-danger">
                                                 Giá sản phẩm không được bỏ trống.
+                                            </div> -->
+                                            <div *ngIf="productPrice?.invalid && (productPrice?.dirty || productPrice?.touched)" class="alert alert-danger mt-1">
+                                                <div *ngIf="productPrice?.errors?.['required']">Giá sản phẩm không được bỏ trống.</div>
+                                                <div *ngIf="productPrice?.errors?.['pattern']">Giá sản phẩm phải là ký tự số.</div>
                                             </div>
                                         </div>
                                     </div>
@@ -72,21 +80,24 @@
                                         <div class="col-xl-8 col-sm-7" formArrayName="categories">
                                             <div *ngFor="let item of categories.controls; let i = index">
                                                 <div formGroupName="{{i}}">
-                                                    <input class="form-control" id="validationCustom03"
-                                                        formControlName="categoryName" required="">
+                                                    <div class="d-flex mb-2 mt-2">
+                                                        <input class="form-control" id="validationCustom03"
+                                                            formControlName="categoryName">
+                                                        <button type="button" class="btn btn-light ml-2"
+                                                            (click)="deleteCategory(i)">
+                                                            Xoá
+                                                        </button>
+                                                    </div>
                                                     <div
                                                         *ngIf="categories.controls[i].get('categoryName').invalid &&
-                                                        (categories.controls[i].get('categoryName').dirty || categories.controls[i].get('categoryName').touched)">
+                                                        (categories.controls[i].get('categoryName').dirty || categories.controls[i].get('categoryName').touched)" class="alert alert-danger mt-1">
                                                         <div
-                                                            *ngIf="categories.controls[i].get('categoryName').errors.required">
-                                                            Category Name is required
+                                                            *ngIf="categories.controls[i].get('categoryName')?.errors?.['required']">
+                                                            Không được để trống loại sản phẩm
                                                         </div>
                                                     </div>
 
-                                                    <button type="button" class="btn btn-light"
-                                                        (click)="deleteCategory(i)">
-                                                        Xoá
-                                                    </button>
+                                                    
                                                 </div>
                                             </div>
 
@@ -115,21 +126,24 @@
                                         <div class="col-xl-8 col-sm-7" formArrayName="images">
                                             <div *ngFor="let item of images.controls; let i = index">
                                                 <div formGroupName="{{i}}">
-                                                    <input class="form-control" id="image" formControlName="image_File"
-                                                        type="file" autocomplete="off"
-                                                        (change)="onFileSelected($event, i)" />
+                                                    <div class="d-flex mb-2 mt-2">
+                                                        <input class="form-control" id="image" formControlName="image_File"
+                                                            type="file" autocomplete="off"
+                                                            (change)="onFileSelected($event, i)" />
+                                                        <button type="button" class="btn btn-light ml-2"
+                                                            (click)="deleteImage(i)">
+                                                            Xoá
+                                                        </button>
+                                                    </div>
                                                     <!-- <div
                                                         *ngIf="images.controls[i].get('images').invalid &&
-                                                        (images.controls[i].get('images').dirty || images.controls[i].get('images').touched)">
-                                                        <div *ngIf="images.controls[i].get('images').errors.required">
+                                                        (images.controls[i].get('images').dirty || images.controls[i].get('images').touched)" class="alert alert-danger mt-1">
+                                                        <div *ngIf="images.controls[i].get('images')?.errors?.['required']">
                                                             Ảnh không được bỏ trống
                                                         </div>
                                                     </div> -->
 
-                                                    <button type="button" class="btn btn-light"
-                                                        (click)="deleteImage(i)">
-                                                        Xoá
-                                                    </button>
+                                                    
                                                 </div>
                                             </div>
 
@@ -163,9 +177,13 @@
                                             <textarea class="form-control" id="validationCustom02" type="number"
                                                 [formControl]="productForm.controls['descriptions']"
                                                 required=""></textarea>
-                                            <div *ngIf="productForm.controls.descriptions.touched && productForm.controls.descriptions.errors?.required"
+                                            <!-- <div *ngIf="productForm.controls.descriptions.touched && productForm.controls.descriptions.errors?.required"
                                                 class="text text-danger">
                                                 Mô tả không được bỏ trống.
+                                            </div> -->
+                                            <div *ngIf="descriptions?.invalid && (descriptions?.dirty || descriptions?.touched)" class="alert alert-danger mt-1">
+                                                <div *ngIf="descriptions?.errors?.['required']">Mô tả sản phẩm không được bỏ trống.</div>
+                                                <div *ngIf="descriptions?.errors?.['minlength']">Mô tả sản phẩm phải có ít nhất 8 kí tự.</div>
                                             </div>
                                         </div>
                                     </div>
@@ -177,10 +195,13 @@
                                         </div>
                                         <div class="col-xl-8 col-sm-7">
                                             <input class="form-control" id="validationCustom03"
-                                                [formControl]="productForm.controls['shopId']" required="">
-                                            <div *ngIf="productForm.controls.shopId.touched && productForm.controls.shopId.errors?.required"
+                                                [formControl]="productForm.controls['shopId']" type="number">
+                                            <!-- <div *ngIf="productForm.controls.shopId.touched && productForm.controls.shopId.errors?.required"
                                                 class="text text-danger">
                                                 Id shop không được bỏ trống.
+                                            </div> -->
+                                            <div *ngIf="productShopId?.invalid && (productShopId?.dirty || productShopId?.touched)" class="alert alert-danger mt-1">
+                                                <div *ngIf="productShopId?.errors?.['required']">Id shop không được bỏ trống.</div>
                                             </div>
                                         </div>
                                     </div>

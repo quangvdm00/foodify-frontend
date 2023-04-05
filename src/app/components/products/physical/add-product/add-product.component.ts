@@ -48,10 +48,10 @@ export class AddProductComponent implements OnInit {
         private modalService: BsModalService,
         private storage: AngularFireStorage) {
         this.productForm = this.fb.group({
-            name: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-            price: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-            shopId: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-            descriptions: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
+            name: new FormControl("", [Validators.required, Validators.minLength(2)]),
+            price: new FormControl("", [Validators.required, Validators.pattern("^[0-9]*$")]),
+            shopId: new FormControl("", [Validators.required, Validators.pattern("^[0-9]*$")]),
+            descriptions: new FormControl("", [Validators.required, Validators.minLength(8)]),
             categories: new FormArray([]),
             images: new FormArray([])
         });
@@ -82,18 +82,18 @@ export class AddProductComponent implements OnInit {
             Promise.all(uploadPromises).then(() => {
                 const product = new Product();
 
-                product.name = this.productName;
-                product.description = this.descriptions;
+                product.name = this.productName.value;
+                product.description = this.descriptions.value;
                 product.isEnabled = true;
                 product.discountPercent = 0;
-                product.cost = this.productPrice;
+                product.cost = this.productPrice.value;
                 product.averageRating = 0;
                 product.reviewCount = 0;
                 if (this.isShop) {
                     product.shopId = this.shopId;
                 }
                 else {
-                    product.shopId = this.productShopId;
+                    product.shopId = this.productShopId.value;
                 }
                 product.categoryNames = categoryNames;
 
@@ -152,7 +152,7 @@ export class AddProductComponent implements OnInit {
     }
 
     //Getter
-    get productName() { return this.productForm.get('name').value; }
+    get productName() { return this.productForm.get('name')}
 
     get productCategory() {
         const numberStr: string = this.productForm.get('category').value;
@@ -160,9 +160,9 @@ export class AddProductComponent implements OnInit {
         return idArr;
     }
 
-    get productPrice() { return this.productForm.get('price').value; }
+    get productPrice() { return this.productForm.get('price') }
 
-    get productShopId() { return this.productForm.get('shopId').value; }
+    get productShopId() { return this.productForm.get('shopId') }
 
     get categories() {
         return this.productForm.get('categories') as FormArray;
@@ -172,13 +172,18 @@ export class AddProductComponent implements OnInit {
         return this.productForm.get('images') as FormArray;
     }
 
-    get descriptions() { return this.productForm.get('descriptions').value }
+    get descriptions() { return this.productForm.get('descriptions') }
 
 
     //Modal
     modalRef: BsModalRef;
 
     openModal(template: TemplateRef<any>) {
+        if (this.productForm.invalid) {
+          this.productForm.markAllAsTouched()
+          console.log(this.productForm);
+          return;
+        }
         this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
     }
 

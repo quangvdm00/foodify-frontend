@@ -1,11 +1,12 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StringLike } from '@firebase/util';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs';
 import { Observable } from 'rxjs-compat';
+import { Validation } from 'src/app/constants/Validation';
 import { AddressService } from 'src/app/shared/service/address.service';
 import { DistrictService } from 'src/app/shared/service/district.service';
 import { FirebaseService } from 'src/app/shared/service/firebase.service';
@@ -98,11 +99,11 @@ export class EditUserComponent implements OnInit {
   //Create Forms
   createEditUserForm() {
     this.editUserForm = this.formBuilder.group({
-      fullName: [''],
-      email: [''],
-      phoneNumber: [''],
-      dob: [''],
-      identifiedCode: [''],
+      fullName: new FormControl("", [Validators.required, Validators.minLength(2)]),
+      email: new FormControl("", [Validators.required, Validators.email]),
+      phoneNumber: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Phone)]),
+      dob: new FormControl("", [Validators.required]),
+      identifiedCode: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.IdentifiedCode)]),
     })
   }
 
@@ -117,14 +118,20 @@ export class EditUserComponent implements OnInit {
   //Functions
   editUser(template: TemplateRef<any>) {
     const editUser = new User();
-    editUser.fullName = this.userFullName;
-    editUser.email = this.userEmail;
-    editUser.phoneNumber = this.userPhoneNumber;
-    editUser.dateOfBirth = this.userDateOfBirth;
-    editUser.identifiedCode = this.userIdentifiedCode;
+    editUser.fullName = this.userFullName.value;
+    editUser.email = this.userEmail.value;
+    editUser.phoneNumber = this.userPhoneNumber.value;
+    editUser.dateOfBirth = this.userDateOfBirth.value;
+    editUser.identifiedCode = this.userIdentifiedCode.value;
     editUser.defaultAddress = this.user.defaultAddress;
     editUser.isLocked = this.isLocked;
     editUser.roleName = 'ROLE_USER';
+
+    if (this.editUserForm.invalid) {
+      this.editUserForm.markAllAsTouched();
+      console.log(this.editUserForm);
+      return;
+    }
 
     if (this.edited) {
       this.uploadUserImage(this.userImageFile).then((url) => {
@@ -324,11 +331,11 @@ export class EditUserComponent implements OnInit {
   }
 
   //getter
-  get userFullName() { return this.editUserForm.get('fullName').value }
-  get userEmail() { return this.editUserForm.get("email").value; }
-  get userDateOfBirth() { return this.editUserForm.get("dob").value; }
-  get userPhoneNumber() { return this.editUserForm.get("phoneNumber").value; }
-  get userIdentifiedCode() { return this.editUserForm.get("identifiedCode").value }
+  get userFullName() { return this.editUserForm.get('fullName') }
+  get userEmail() { return this.editUserForm.get("email") }
+  get userDateOfBirth() { return this.editUserForm.get("dob") }
+  get userPhoneNumber() { return this.editUserForm.get("phoneNumber") }
+  get userIdentifiedCode() { return this.editUserForm.get("identifiedCode") }
 
   get userAddress() { return this.newAddressForm.get('address').value; }
   get userDistrict() { return this.newAddressForm.get('district').value; }

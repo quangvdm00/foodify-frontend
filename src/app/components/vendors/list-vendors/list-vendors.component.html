@@ -11,26 +11,33 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Shop</th>
+                                <th scope="col">Ảnh cửa hàng</th>
+                                <th scope="col">Tên cửa hàng</th>
                                 <th scope="col">Mô tả</th>
-                                <th scope="col" sortable="name">Hoạt động</th>
-                                <th scope="col" sortable="name">Shop sinh viên</th>
+                                <th scope="col" sortable="name">Trạng thái</th>
+                                <th scope="col" sortable="name">Loại cửa hàng</th>
                                 <!-- <th scope="col" sortable="name">Id người dùng</th> -->
-                                <th scope="col" sortable="name">Actions</th>
+                                <th scope="col" sortable="name"></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let shop of shops, let idx = index">
-                                <td>{{ idx + 1}}</td>
-                                <td scope="row">
+                                <th>{{ idx + 1}}</th>
+                                <td  scope="row">
                                     <img [src]="shop.imageUrl" class="imgTable" style="width: 20px">
+                                </td>
+                                <td  scope="row">
                                     <span>{{shop.name}}</span>
                                 </td>
                                 <td>
                                     {{shop.description}}
                                 </td>
-                                <td>{{shop.isEnabled}}</td>
-                                <td>{{shop.isStudent}}</td>
+                                <td>
+                                    <span [ngClass]="{badge: true,'badge-success': shop.isEnabled, 'badge-dark': !shop.isEnabled}">
+                                      {{ shop.isEnabled ? 'Đang hoạt động' : 'Đang tạm ngưng' }}
+                                    </span>
+                                </td>
+                                <td>{{ shop.isStudent ? 'Cửa hàng sinh viên' : 'Cửa hàng thường' }}</td>
                                 <!-- <td>{{shop.userId}}</td> -->
                                 <td>
                                     <a style="cursor: pointer" title="Xem">
@@ -54,7 +61,7 @@
                     <!-- Pagination -->
                     <div class="d-flex justify-content-center p-2">
                         <ngb-pagination [(page)]="thePageNumber" [pageSize]="thePageSize"
-                            [collectionSize]="theTotalElements" [maxSize]="5" (pageChange)="listShops()">
+                            [collectionSize]="theTotalElements" [maxSize]="5" (pageChange)="listShops()" [boundaryLinks]="true">
                         </ngb-pagination>
                     </div>
                 </div>
@@ -75,7 +82,7 @@
 
 <ng-template #deleteSuccess>
     <div class="modal-body text-center">
-        <p>Xoá sản phẩm thành công</p>
+        <p>Xoá người bán thành công</p>
         <button type="button" class="btn btn-primary" (click)="continue()">Tiếp tục
         </button>
     </div>

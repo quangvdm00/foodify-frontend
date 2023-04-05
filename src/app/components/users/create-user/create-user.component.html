@@ -137,6 +137,8 @@
                                 <div *ngIf="userAddress?.errors?.['required']">
                                   Vui lòng không được bỏ trống địa chỉ.
                                 </div>
+                                <div *ngIf="userAddress?.errors?.['minlength']">Địa chỉ phải có ít nhất 8
+                                  kí tự</div>
                               </div>
                             </div>
 
@@ -187,11 +189,26 @@
                       <label for="validationCustom2"><span>*</span> Mật khẩu</label>
                     </div>
                     <div class="col-xl-8 col-md-7">
-                      <input formControlName="password" class="form-control" type="text" placeholder="Mật khẩu" />
+                      <!-- <input formControlName="password" class="form-control" type="password" placeholder="Mật khẩu" /> -->
+                      <div class="form-control input-password-holder">
+                        <input formControlName="password" class="input-password"
+                            type="{{ showPassword ? 'text' : 'password' }}"
+                            placeholder="Mật khẩu" />
+                        <span class="icon-holder-eye" (click)="showPassword = !showPassword">
+                            <i class="{{ showPassword ? 'fa fa-eye-slash' : 'fa fa-eye' }}"></i>
+                        </span>
+                      </div>
                       <div *ngIf="userPassword?.invalid && (userPassword?.dirty || userPassword?.touched)"
                         class="alert alert-danger mt-1">
                         <div *ngIf="userPassword?.errors?.['required']">Vui lòng không
                           được bỏ trống mật khẩu</div>
+                        <div *ngIf="userPassword?.errors?.['pattern']">
+                            Mật khẩu phải chứa ít nhất 8 ký tự, trong đó gồm một ký tự số, một
+                            chữ hoa, một chữ thường và một ký
+                            tự đặc biệt.
+                            <br />
+                            Mật khẩu không được chứa khoảng trắng.
+                        </div>
                       </div>
                     </div>
                   </div>

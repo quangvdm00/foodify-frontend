@@ -51,11 +51,11 @@ export class EditProductComponent {
 
   createEditForm() {
     this.editProductForm = this.fb.group({
-      name: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-      price: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-      shopId: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-      descriptions: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-      discountPercent: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
+      name: new FormControl("", [Validators.required, Validators.minLength(2)]),
+      price: new FormControl("", [Validators.required, Validators.pattern("^[0-9]*$")]),
+      shopId: new FormControl("", [Validators.required, Validators.pattern("^[0-9]*$")]),
+      descriptions: new FormControl("", [Validators.required, Validators.minLength(8)]),
+      discountPercent: new FormControl("", [Validators.required, Validators.pattern("^[0-9]*$")]),
       categories: new FormArray([])
     });
   }
@@ -97,14 +97,14 @@ export class EditProductComponent {
     console.log(categoryNames);
     const product = new Product();
     product.id = 1;
-    product.name = this.productName;
-    product.description = this.descriptions;
+    product.name = this.productName.value;
+    product.description = this.descriptions.value;
     product.isEnabled = this.isEnabled;
-    product.discountPercent = this.discountPercent;
-    product.cost = this.productPrice;
+    product.discountPercent = this.discountPercent.value;
+    product.cost = this.productPrice.value;
     product.averageRating = 0;
     product.reviewCount = 0;
-    product.shopId = this.productShopId;
+    product.shopId = this.productShopId.value;
     product.categoryNames = categoryNames;
     console.log(product);
     this.productService.updateProductById(this.editProductId, product).subscribe();
@@ -197,6 +197,11 @@ export class EditProductComponent {
   }
 
   openImgModal(id: number, imageTemplate: TemplateRef<any>) {
+    if (this.editProductForm.invalid) {
+      this.editProductForm.markAllAsTouched()
+      console.log(this.editProductForm);
+      return;
+    }
     this.editOrDeleteId = id;
     console.log(this.editOrDeleteId);
     this.layer1 = this.modalService.show(imageTemplate, { class: 'modal-sm' });
@@ -236,7 +241,7 @@ export class EditProductComponent {
   }
 
   //Getter
-  get productName() { return this.editProductForm.get('name').value; }
+  get productName() { return this.editProductForm.get('name') }
 
   get productCategory() {
     const numberStr: string = this.editProductForm.get('category').value;
@@ -244,15 +249,15 @@ export class EditProductComponent {
     return idArr;
   }
 
-  get productPrice() { return this.editProductForm.get('price').value; }
+  get productPrice() { return this.editProductForm.get('price') }
 
-  get productShopId() { return this.editProductForm.get('shopId').value; }
+  get productShopId() { return this.editProductForm.get('shopId') }
 
   get categories() {
     return this.editProductForm.get('categories') as FormArray;
   }
 
-  get descriptions() { return this.editProductForm.get('descriptions').value }
+  get descriptions() { return this.editProductForm.get('descriptions') }
 
-  get discountPercent() { return this.editProductForm.get('discountPercent').value }
+  get discountPercent() { return this.editProductForm.get('discountPercent') }
 }

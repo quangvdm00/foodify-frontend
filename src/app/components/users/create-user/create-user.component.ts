@@ -1,11 +1,12 @@
 import { Component, OnInit, TemplateRef } from "@angular/core";
 import { AngularFireStorage } from "@angular/fire/compat/storage";
-import { FormGroup, FormBuilder, Validators, UntypedFormGroup } from "@angular/forms";
+import { FormGroup, FormBuilder, Validators, UntypedFormGroup, FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { finalize } from "rxjs";
 import { Observable } from "rxjs-compat";
 import { AuthService } from "src/app/shared/service/auth.service";
+import { Validation } from "src/app/constants/Validation";
 import { DistrictService } from "src/app/shared/service/district.service";
 import { FirebaseService } from "src/app/shared/service/firebase.service";
 import { UserService } from "src/app/shared/service/user.service";
@@ -68,16 +69,16 @@ export class CreateUserComponent implements OnInit {
 
     ngOnInit() {
         this.addUserForm = this.formBuilder.group({
-            email: ['', Validators.required],
-            phoneNumber: ['', Validators.required],
-            fullName: ['', Validators.required],
-            dob: ['', Validators.required],
-            identifiedCode: ['', Validators.required],
-            address: ['', Validators.required],
-            district: ['', Validators.required],
-            ward: ['', Validators.required],
-            password: ['', Validators.required],
-            confirmedPassword: ['', Validators.required]
+            email: new FormControl("", [Validators.required, Validators.email]),
+            phoneNumber: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Phone)]),
+            fullName: new FormControl("", [Validators.required, Validators.minLength(2)]),
+            dob: new FormControl("", [Validators.required]),
+            identifiedCode: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.IdentifiedCode)]),
+            address: new FormControl("", [Validators.required, Validators.minLength(8)]),
+            district: new FormControl("", [Validators.required]),
+            ward: new FormControl("", [Validators.required]),
+            password: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Password)]),
+            // confirmedPassword: ['', Validators.required]
         });
 
         this.getAllDistrict();
@@ -87,18 +88,24 @@ export class CreateUserComponent implements OnInit {
         const newUser = new User();
         const newAddress = new Address();
 
-        newUser.fullName = this.userFullName;
-        newUser.dateOfBirth = this.userDateOfBirth;
-        newUser.email = this.userEmail;
-        newUser.phoneNumber = this.userPhoneNumber;
-        newUser.identifiedCode = this.userIdentifiedCode;
+        newUser.fullName = this.userFullName.value;
+        newUser.dateOfBirth = this.userDateOfBirth.value;
+        newUser.email = this.userEmail.value;
+        newUser.phoneNumber = this.userPhoneNumber.value;
+        newUser.identifiedCode = this.userIdentifiedCode.value;
         newUser.defaultAddress = 0;
         newUser.isLocked = false;
         newUser.roleName = "ROLE_USER";
 
-        newAddress.address = this.userAddress;
-        newAddress.district = this.userDistrict;
-        if (this.userDistrict != "Huyện Hoàng Sa") newAddress.ward = this.userWard;
+        newAddress.address = this.userAddress.value;
+        newAddress.district = this.userDistrict.value;
+        if (this.userDistrict.value != "Huyện Hoàng Sa") newAddress.ward = this.userWard.value;
+
+        if (this.addUserForm.invalid) {
+            this.addUserForm.markAllAsTouched();
+            console.log(this.addUserForm);
+            return;
+        }
 
         if (this.userImageChoosen) {
             this.uploadUserImage(this.userImageFile).then((url) => {
@@ -114,7 +121,7 @@ export class CreateUserComponent implements OnInit {
                                 console.log("Address existed! No problem!")
                             }
                         )
-                        this.firebaseService.signUp(newUser.email, this.userPassword);
+                        this.firebaseService.signUp(newUser.email, this.userPassword.value);
                         this.layer1 = this.modalService.show(success, { class: 'modal-sm' });
                     },
                     (error) => {
@@ -148,7 +155,7 @@ export class CreateUserComponent implements OnInit {
                             console.log("Address existed! No problem!")
                         }
                     )
-                    this.firebaseService.signUp(newUser.email, this.userPassword);
+                    this.firebaseService.signUp(newUser.email, this.userPassword.value);
                     this.layer1 = this.modalService.show(success, { class: 'modal-sm' });
                 },
                 (error) => {
@@ -228,7 +235,7 @@ export class CreateUserComponent implements OnInit {
         this.wards = [];
 
         this.districts.forEach((element: District) => {
-            if (this.userDistrict == element.name && this.userDistrict != 'Huyện Hoàng Sa') {
+            if (this.userDistrict.value == element.name && this.userDistrict.value != 'Huyện Hoàng Sa') {
                 this.isHaveDistrict = true;
                 this.wards = element.wards
             }
@@ -247,15 +254,15 @@ export class CreateUserComponent implements OnInit {
     }
 
     //Getter
-    get userFullName() { return this.addUserForm.get("fullName").value; }
-    get userEmail() { return this.addUserForm.get("email").value; }
-    get userDateOfBirth() { return this.addUserForm.get("dob").value; }
-    get userPhoneNumber() { return this.addUserForm.get("phoneNumber").value; }
-    get userIdentifiedCode() { return this.addUserForm.get("identifiedCode").value; }
-    get userAddress() { return this.addUserForm.get('address').value; }
-    get userDistrict() { return this.addUserForm.get('district').value; }
-    get userWard() { return this.addUserForm.get('ward').value; }
-    get userPassword() { return this.addUserForm.get('password').value }
+    get userFullName() { return this.addUserForm.get("fullName") }
+    get userEmail() { return this.addUserForm.get("email") }
+    get userDateOfBirth() { return this.addUserForm.get("dob") }
+    get userPhoneNumber() { return this.addUserForm.get("phoneNumber") }
+    get userIdentifiedCode() { return this.addUserForm.get("identifiedCode") }
+    get userAddress() { return this.addUserForm.get('address') }
+    get userDistrict() { return this.addUserForm.get('district') }
+    get userWard() { return this.addUserForm.get('ward') }
+    get userPassword() { return this.addUserForm.get('password') }
 
     // // Check password and confirm password is match
     // ConfirmedValidator(controlName: string, matchingControlName: string) {

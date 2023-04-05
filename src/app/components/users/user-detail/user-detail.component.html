@@ -31,11 +31,10 @@
                                         <div class="add-product-form">
                                             <div class="form-group row">
                                                 <div class="col-xl-3 col-sm-4">
-                                                    <label class="mb-0">Họ và tên</label>
+                                                    <label class="mb-0">Họ và tên:</label>
                                                 </div>
                                                 <div class="col-xl-8 col-sm-7">
-                                                    <p class="mb-0" style="color: #F08080">{{ user.fullName }}
-                                                    </p>
+                                                    <p class="mb-0 text-size text-dark">{{ user.fullName }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -44,11 +43,10 @@
                                         <div class="add-product-form">
                                             <div class="form-group row">
                                                 <div class="col-xl-3 col-sm-4">
-                                                    <label class="mb-0">Ngày sinh</label>
+                                                    <label class="mb-0">Ngày sinh:</label>
                                                 </div>
                                                 <div class="col-xl-8 col-sm-7">
-                                                    <p class="mb-0" style="color: #F08080">{{ user.dateOfBirth
-                                                        }}</p>
+                                                    <p class="mb-0 text-size text-dark">{{ user.dateOfBirth }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -57,11 +55,10 @@
                                         <div class="add-product-form">
                                             <div class="form-group row">
                                                 <div class="col-xl-3 col-sm-4">
-                                                    <label class="mb-0">CMND/CCCD</label>
+                                                    <label class="mb-0">CMND/CCCD:</label>
                                                 </div>
                                                 <div class="col-xl-8 col-sm-7">
-                                                    <p class="mb-0" style="color: #F08080">{{
-                                                        user.identifiedCode }}</p>
+                                                    <p class="mb-0 text-size text-dark">{{ user.identifiedCode }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -70,11 +67,10 @@
                                         <div class="add-product-form">
                                             <div class="form-group row">
                                                 <div class="col-xl-3 col-sm-4">
-                                                    <label class="mb-0">Email</label>
+                                                    <label class="mb-0">Email:</label>
                                                 </div>
                                                 <div class="col-xl-8 col-sm-7">
-                                                    <p class="mb-0" style="color: #F08080">{{ user.email }}
-                                                    </p>
+                                                    <p class="mb-0 text-size text-dark">{{ user.email }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -83,11 +79,10 @@
                                         <div class="add-product-form">
                                             <div class="form-group row">
                                                 <div class="col-xl-3 col-sm-4">
-                                                    <label class="mb-0">Số điện thoại</label>
+                                                    <label class="mb-0">Số điện thoại:</label>
                                                 </div>
                                                 <div class="col-xl-8 col-sm-7">
-                                                    <p class="mb-0" style="color: #F08080">{{ user.phoneNumber
-                                                        }}</p>
+                                                    <p class="mb-0 text-size text-dark">{{ user.phoneNumber }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -136,14 +131,16 @@
                                         <div class="add-product-form">
                                             <div class="form-group row">
                                                 <div class="col-xl-3 col-sm-4">
-                                                    <label class="mb-0">Trạng thái thái khoản</label>
+                                                    <label class="mb-0">Trạng thái thái khoản:</label>
                                                 </div>
                                                 <div class="col-xl-8 col-sm-7">
-                                                    <p *ngIf="user.isLocked" class="mb-0" style="color: #F08080">
+                                                    <!-- <p *ngIf="user.isLocked" class="mb-0 text-size" style="color: #F08080">
                                                         Bị cấm</p>
-                                                    <p *ngIf="!user.isLocked" class="mb-0" style="color: green">
-                                                        Hoạt
-                                                        động</p>
+                                                    <p *ngIf="!user.isLocked" class="mb-0 text-size" style="color: green">
+                                                        Hoạt động</p> -->
+                                                    <span *ngIf="user.isLocked" class="mb-0 text-size badge badge-primary">Bị cấm</span>
+                                                    <span *ngIf="!user.isLocked" class="mb-0 text-size badge badge-success">Hoạt động</span>
+                                                    
                                                 </div>
                                             </div>
                                         </div>

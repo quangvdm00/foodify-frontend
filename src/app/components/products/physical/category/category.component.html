@@ -28,7 +28,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">Ảnh</th>
+                                        <th class="d-flex justify-content-center align-item-center " scope="col"><span>Ảnh</span></th>
                                         <th scope="col">Tên loại</th>
                                         <th scope="col"></th>
                                     </tr>
@@ -36,7 +36,7 @@
                                 <tbody>
                                     <tr *ngFor='let category of categories; let i = index'>
                                         <th scope="row">{{ i + 1 }}</th>
-                                        <td>
+                                        <td class="d-flex justify-content-center align-item-center ">
                                             <img [src]="category.imageUrl" class="imgTable" style="width: 20px"
                                                 [routerLink]="['/products','category',category.id]">
                                         </td>

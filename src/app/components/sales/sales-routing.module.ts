@@ -12,8 +12,8 @@ const routes: Routes = [
         path: "orders",
         component: OrdersComponent,
         data: {
-          title: "Orders",
-          breadcrumb: "Orders",
+          title: "Đơn hàng",
+          breadcrumb: "Đơn hàng",
         },
       },
       {
@@ -28,8 +28,8 @@ const routes: Routes = [
         path: "transactions",
         component: TransactionsComponent,
         data: {
-          title: "Transactions",
-          breadcrumb: "Transactions",
+          title: "Giao dịch",
+          breadcrumb: "Giao dịch",
         },
       },
     ],

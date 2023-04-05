@@ -42,9 +42,8 @@ export class FirebaseService {
                     response.user.getIdToken()
                         .then(
                             (token: string) => {
-                                // this.token = token;
-                                // console.log('Token Firebase: ', { token });
                                 this.token = token;
+                                console.log(token);
                                 localStorage.setItem('jwt-token', token);
 
                                 this.userService.getUserByEmailOrPhoneNumber(email).subscribe((user) => {

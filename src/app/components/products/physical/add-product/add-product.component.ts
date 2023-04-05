@@ -62,6 +62,9 @@ export class AddProductComponent implements OnInit {
             this.isShop = true;
             this.shopId = Number(localStorage.getItem('shop-id'))
         }
+        this.productForm.patchValue({
+            shopId: this.shopId
+        })
     }
 
     onAddNewProduct(): Promise<void> {

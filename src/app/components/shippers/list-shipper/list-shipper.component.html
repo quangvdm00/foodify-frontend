@@ -3,10 +3,13 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="card">
-                <div class="card-header">
-                    <h5>Products Category</h5>
-                </div>
+                <!-- <div class="card-header">
+                </div> -->
                 <div class="card-body">
+                    <div class="btn-popup pull-left">
+                        <input [(ngModel)]="searchName" class="form-control" type="text" placeholder="Tìm kiếm"
+                            (change)="searchShipper ()" />
+                    </div>
                     <!--                    <div class="btn-popup pull-right">-->
                     <!--                        <button-->
                     <!--                                type="button" class="btn btn-primary" data-toggle="modal" data-original-title="test"-->
@@ -14,7 +17,7 @@
                     <!--                        </button>-->
 
                     <!--                    </div>-->
-                    <div id="batchDelete" class="category-table custom-datatable">
+                    <div id="batchDelete" class="custom-datatable vendor-list">
                         <div class="table-responsive">
                             <!-- <form>
                                 <div class="mb-3 row">
@@ -86,9 +89,9 @@
                                 </ngb-pagination>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <select class="form-select" style="width: auto" name="pageSize"
                                     (change)="listAllShipper()" [(ngModel)]="thePageSize">
-                                    <option [value]="10" [selected]="true" [ngValue]="10">10 items per page</option>
-                                    <option [ngValue]="20">20 items per page</option>
-                                    <option [ngValue]="30">30 items per page</option>
+                                    <option [value]="10" [selected]="true" [ngValue]="10">10 shipper / trang</option>
+                                    <option [ngValue]="20">20 shipper / trang</option>
+                                    <option [ngValue]="30">30 shipper / trang</option>
                                 </select>
                             </div>
                         </div>

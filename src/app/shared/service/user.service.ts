@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs-compat';
 import { environment } from 'src/environments/environment';
-import { Address } from '../tables/Address';
+import { Address } from '../tables/address';
 import { StringBoolObject } from '../tables/string-bool-object';
 import { User } from '../tables/user';
 
@@ -77,6 +77,11 @@ export class UserService {
   //Find All User By Email/PhoneNumber
   getAllUsersByEmailOrPhoneNumber(emailOrPhoneNumber: string, thePage: number, thePageSize: number, sortBy: string, sortDir: string) {
     return this.httpClient.get(this.baseUrl + `/email/search?emailOrPhoneNumber=${emailOrPhoneNumber}&pageNo=${thePage}&pageSize=${thePageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
+  }
+
+  //Count new User
+  countNewUser(day: number) {
+    return this.httpClient.get<number>(this.baseUrl + `/count?day=${day}`);
   }
 
 }

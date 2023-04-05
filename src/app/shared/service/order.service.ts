@@ -45,7 +45,7 @@ export class OrderService {
   }
 
   countShopOrderByDistrict(shopId: number, districtName: string) {
-    return this.httpClient.get<number>(this.orderUrl + `/shop/${shopId}/count?districtName=${districtName}`)
+    return this.httpClient.get<number>(this.orderUrl + `/shop/${shopId}/count?districtName=${encodeURI(districtName)}`)
   }
 }
 

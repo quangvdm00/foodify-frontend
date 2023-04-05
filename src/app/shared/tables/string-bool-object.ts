@@ -1,4 +1,4 @@
 export class StringBoolObject {
-    title: String;
+    title: string;
     isTrue: boolean;
 }

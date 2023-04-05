@@ -13,7 +13,10 @@ export class ProductListComponent implements OnInit {
     //Login Info
     loggedId: number = Number(localStorage.getItem('user-id'));
     loggedRole: string = localStorage.getItem('user-role');
+    isShop: boolean = false;
+    shopId: number;
 
+    searchName: string = '';
     products = [];
     deleteProductId: number;
     usingTimes: number;
@@ -29,6 +32,10 @@ export class ProductListComponent implements OnInit {
     }
 
     ngOnInit() {
+        if (this.loggedRole != 'ROLE_ADMIN') {
+            this.isShop = true;
+            this.shopId = Number(localStorage.getItem('shop-id'))
+        }
         this.listProduct();
     }
 
@@ -37,7 +44,23 @@ export class ProductListComponent implements OnInit {
             this.productService.getProductsPagination(this.thePageNumber - 1, this.thePageSize).subscribe(this.processResult());
         }
         else {
-            this.productService.getProductsByShopId(Number(localStorage.getItem('shop-id')), this.thePageNumber - 1, this.thePageSize).subscribe(this.processResult());
+            this.productService.getProductsByShopId(Number(this.shopId), this.thePageNumber - 1, this.thePageSize).subscribe(this.processResult());
+        }
+    }
+
+    searchProduct() {
+        if (this.searchName.trim() !== '') {
+            if (this.loggedRole === 'ROLE_ADMIN') {
+                this.productService.searchProductsByName(this.searchName, this.thePageNumber - 1, this.thePageSize)
+                    .subscribe(this.processResult());
+            }
+            else {
+                this.productService.searchShopProductsByName(this.shopId, this.searchName, this.thePageNumber - 1, this.thePageSize)
+                    .subscribe(this.processResult());
+            }
+        }
+        else {
+            this.listProduct();
         }
     }
 

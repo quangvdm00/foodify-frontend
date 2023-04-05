@@ -29,7 +29,14 @@ export class ShipperService {
     return this.httpClient.get<Shipper>(this.baseUrl + `/${shipperId}`)
   }
 
+  findShipperByName(name: string, thePage: number, thePageSize: number) {
+    return this.httpClient.get<GetResponseShippers>(this.baseUrl + `/search?shipperName=${name}&pageNo=${thePage}&pageSize=${thePageSize}`);
+  }
 
+  findShopShipperByName(shopId: number, name: string, thePage: number, thePageSize: number) {
+    return this.httpClient.get<GetResponseShippers>(this.baseUrl +
+      `/shop/${shopId}/search?shipperName=${name}&pageNo=${thePage}&pageSize=${thePageSize}`);
+  }
 
   updateShiperActive(shipperId: number, updateActive: Shipper, isActive: boolean): Observable<Shipper> {
     return this.httpClient.put<Shipper>(`${this.baseUrl}/${shipperId}/active?isActive=${isActive}`, updateActive)

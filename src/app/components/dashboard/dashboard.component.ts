@@ -7,6 +7,8 @@ import { Product } from 'src/app/shared/tables/product';
 import { Order } from 'src/app/shared/tables/order-list';
 import { OrderService } from 'src/app/shared/service/order.service';
 import { resolve } from 'path';
+import { forkJoin } from 'rxjs';
+import { UserService } from 'src/app/shared/service/user.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -36,12 +38,32 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     sortDir = "desc";
     theTotalElements = 0;
 
+    //District value
+    thanhKheValue: number;
+    sonTraValue: number;
+    camLeValue: number;
+    lienChieuValue: number;
+    haiChauValue: number;
+    hoaVangValue: number;
+    nguHanhSonValue: number;
+    hoangSaValue: number;
+
+    //Products
+    products: Product[] = [];
+
+    //Admin
+    totalUser: number = 0;
+    day: number = 30;
+
+    public doughnutData = [];
+    public pieData;
+
     constructor(
+        private userService: UserService,
         private shopService: ShopService,
         private productService: ProductService,
         private orderService: OrderService,
     ) {
-        Object.assign(this, { doughnutData, pieData });
     }
 
 
@@ -57,7 +79,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
             shopIdPromise.then((shopId) => {
                 this.shopId = shopId;
-                console.log(shopId);
 
                 this.productService.getProductsByShopIdNoPageable(this.shopId).subscribe((products) => {
                     let i = 0;
@@ -72,18 +93,52 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                     this.totalAverageRating = this.totalAverageRating / i;
                 })
 
+                this.productService.getProductsByShopIdAndSort(this.shopId, 0, 5, 'sold', 'desc').subscribe((data) => {
+                    this.products = data.products;
+                    this.doughtnutData(data.products);
+                })
+
                 this.orderService.getOrdersByShopId(this.shopId, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
                     .subscribe(this.processResult());
                 this.shopService.getShopRevenue(this.shopId, 30).subscribe((res) => {
                     this.totalRevenue = res;
                 });
+
+                this.valueOfShopDistrict();
+
+
+
             })
         }
         else {
             //ADMIN DO HERE
+
+            this.userService.countNewUser(this.day).subscribe((res) => {
+                this.totalUser = res;
+            })
+            this.productService.getProductsNoPagination().subscribe((products) => {
+                let i = 0;
+                products.forEach(product => {
+                    this.totalReviewCount = this.totalReviewCount + product.reviewCount;
+                    this.totalProducts = this.totalProducts + product.sold;
+                    if (product.averageRating != 0) {
+                        this.totalAverageRating = this.totalAverageRating + product.averageRating;
+                        i++;
+                    }
+                });
+                this.totalAverageRating = this.totalAverageRating / i;
+            })
+
+            this.productService.getProductsPaginationAndSort(0, 5, 'sold', 'desc').subscribe((data) => {
+                this.products = data.products;
+                this.doughtnutData(data.products)
+            })
+
             this.orderService
                 .getOrdersPagination(this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
                 .subscribe(this.processResult());
+
+            this.valueOfAdminDistrict();
         }
     }
 
@@ -96,8 +151,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         };
     }
 
-    public doughnutData = doughnutData;
-    public pieData = pieData;
+
 
 
 
@@ -163,5 +217,165 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
     }
 
+    valueOfAdminDistrict() {
+        const requests = [
+            this.orderService.countOrderByDistrict('Thanh Khê'),
+            this.orderService.countOrderByDistrict('Sơn Trà'),
+            this.orderService.countOrderByDistrict('Cẩm Lệ'),
+            this.orderService.countOrderByDistrict('Liên Chiểu'),
+            this.orderService.countOrderByDistrict('Hải Châu'),
+            this.orderService.countOrderByDistrict('Hoà Vang'),
+            this.orderService.countOrderByDistrict('Ngũ Hành Sơn'),
+            this.orderService.countOrderByDistrict('Hoàng Sa')
+        ];
 
+        forkJoin(requests).subscribe(
+            (results: number[]) => {
+                this.thanhKheValue = results[0];
+                this.sonTraValue = results[1];
+                this.camLeValue = results[2];
+                this.lienChieuValue = results[3];
+                this.haiChauValue = results[4];
+                this.hoaVangValue = results[5];
+                this.nguHanhSonValue = results[6];
+                this.hoangSaValue = results[7];
+
+                this.pieData = [
+                    {
+                        value: this.thanhKheValue,
+                        name: "Quận Thanh Khê"
+
+                    },
+                    {
+                        value: this.sonTraValue,
+                        name: "Quận Sơn Trà"
+                    },
+                    {
+                        value: this.camLeValue,
+                        name: "Quận Cẩm Lệ"
+                    },
+                    {
+                        value: this.lienChieuValue,
+                        name: "Quận Liên Chiểu"
+                    },
+                    {
+                        value: this.haiChauValue,
+                        name: "Quận Hải Châu"
+                    },
+                    {
+                        value: this.hoaVangValue,
+                        name: "Huyện Hoà Vang"
+                    },
+                    {
+                        value: this.nguHanhSonValue,
+                        name: "Quận Ngũ Hành Sơn"
+                    },
+                    {
+                        value: this.hoangSaValue,
+                        name: "Huyện Hoàng Sa"
+                    }
+                ]
+            },
+            (error) => {
+                console.error('Error:', error);
+            }
+        );
+    }
+
+    valueOfShopDistrict() {
+        const requests = [
+            this.orderService.countShopOrderByDistrict(this.shopId, 'Thanh Khê'),
+            this.orderService.countShopOrderByDistrict(this.shopId, 'Sơn Trà'),
+            this.orderService.countShopOrderByDistrict(this.shopId, 'Cẩm Lệ'),
+            this.orderService.countShopOrderByDistrict(this.shopId, 'Liên Chiểu'),
+            this.orderService.countShopOrderByDistrict(this.shopId, 'Hải Châu'),
+            this.orderService.countShopOrderByDistrict(this.shopId, 'Hoà Vang'),
+            this.orderService.countShopOrderByDistrict(this.shopId, 'Ngũ Hành Sơn'),
+            this.orderService.countShopOrderByDistrict(this.shopId, 'Hoàng Sa')
+        ];
+
+        forkJoin(requests).subscribe(
+            (results: number[]) => {
+                this.thanhKheValue = results[0];
+                this.sonTraValue = results[1];
+                this.camLeValue = results[2];
+                this.lienChieuValue = results[3];
+                this.haiChauValue = results[4];
+                this.hoaVangValue = results[5];
+                this.nguHanhSonValue = results[6];
+                this.hoangSaValue = results[7];
+
+                this.pieData = [
+                    {
+                        value: this.thanhKheValue,
+                        name: "Quận Thanh Khê"
+
+                    },
+                    {
+                        value: this.sonTraValue,
+                        name: "Quận Sơn Trà"
+                    },
+                    {
+                        value: this.camLeValue,
+                        name: "Quận Cẩm Lệ"
+                    },
+                    {
+                        value: this.lienChieuValue,
+                        name: "Quận Liên Chiểu"
+                    },
+                    {
+                        value: this.haiChauValue,
+                        name: "Quận Hải Châu"
+                    },
+                    {
+                        value: this.hoaVangValue,
+                        name: "Huyện Hoà Vang"
+                    },
+                    {
+                        value: this.nguHanhSonValue,
+                        name: "Quận Ngũ Hành Sơn"
+                    },
+                    {
+                        value: this.hoangSaValue,
+                        name: "Huyện Hoàng Sa"
+                    }
+                ]
+            },
+            (error) => {
+                console.error('Error:', error);
+            }
+        );
+    }
+
+    doughtnutData(products: Product[]) {
+        // products.forEach((product) => {
+        //     this.doughnutData.push({ value: product.sold, name: product.name });
+        // })
+
+        this.doughnutData = [
+            {
+                value: products[0].sold,
+                name: products[0].name
+
+            },
+            {
+                value: products[1].sold,
+                name: products[1].name
+            },
+            {
+                value: products[2].sold,
+                name: products[2].name
+            },
+            {
+                value: products[3].sold,
+                name: products[3].name
+            },
+            {
+                value: products[4].sold,
+                name: products[4].name
+            }
+        ];
+
+        // console.log(this.doughnutData)
+    }
 }

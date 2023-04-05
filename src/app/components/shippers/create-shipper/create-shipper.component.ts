@@ -80,6 +80,9 @@ export class CreateShipperComponent implements OnInit {
     if (this.loggedRole != 'ROLE_ADMIN') {
       this.isShop = true;
       this.shopId = Number(localStorage.getItem('shop-id'))
+      this.accountForm.patchValue({
+        shopId: this.shopId
+      })
     }
   }
 

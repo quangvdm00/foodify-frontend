@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { FirebaseService } from 'src/app/shared/service/firebase.service';
 import { UserService } from 'src/app/shared/service/user.service';
-import { User } from 'src/app/shared/tables/User';
+import { User } from 'src/app/shared/tables/user';
 
 @Component({
   selector: 'app-list-account',
@@ -49,7 +49,6 @@ export class ListAccountComponent {
   }
 
   searchUser() {
-    console.log(this.searchName);
     if (this.searchName.trim() !== '') {
       if (this.role != 'ALL') {
         this.userService.getAllUsersByRoleAndEmailOrPhoneNumber(this.searchName, this.role, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir).subscribe(this.processResult());

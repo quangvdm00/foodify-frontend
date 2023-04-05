@@ -16,6 +16,8 @@ export class ListShipperComponent {
   loggedRole = localStorage.getItem('user-role');
   shopId: number;
 
+  searchName: string = '';
+
   shippers: Shipper[] = [];
 
   //Pagination Properties
@@ -48,6 +50,21 @@ export class ListShipperComponent {
     }
     else {
       return this.shipperService.getShipperPagination(this.thePageNumber - 1, this.thePageSize).subscribe(this.processResult())
+    }
+  }
+
+  searchShipper() {
+    if (this.searchName.trim() !== '') {
+      if (this.loggedRole == 'ROLE_ADMIN') {
+        this.shipperService.findShipperByName(this.searchName, this.thePageNumber - 1, this.thePageSize).subscribe(this.processResult());
+      }
+      else {
+        this.shipperService.findShopShipperByName(this.shopId, this.searchName, this.thePageNumber - 1, this.thePageSize)
+          .subscribe(this.processResult());
+      }
+    }
+    else {
+      this.listAllShipper();
     }
   }
 

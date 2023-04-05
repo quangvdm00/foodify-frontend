@@ -258,7 +258,8 @@
                                         </div>
                                     </div> -->
                   <div class="pull-right">
-                    <button type="submit" class="btn btn-primary" (click)="createUser(createSuccess)">Tạo tài
+                    <button type="submit" class="btn btn-primary" (click)="createUser(createSuccess, createFailure)">Tạo
+                      tài
                       khoản</button>
                   </div>
                 </form>
@@ -437,6 +438,14 @@
 <ng-template #createSuccess>
   <div class="modal-body text-center">
     <p>Tạo người dùng thành công</p>
+    <button type="button" class="btn btn-primary" (click)="closeLayer1()">Tiếp tục
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #createFailure>
+  <div class="modal-body text-center">
+    <p>{{ failureContent }} đã tồn tại. Vui lòng chọn {{ failureContent.toLowerCase() }} khác.</p>
     <button type="button" class="btn btn-primary" (click)="closeLayer1()">Tiếp tục
     </button>
   </div>

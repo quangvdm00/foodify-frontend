@@ -6,15 +6,15 @@ import { Router } from "@angular/router";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { finalize, switchMap } from "rxjs";
 import { Observable } from "rxjs-compat";
-import { AddressService } from "src/app/shared/service/address.service";
+import { AuthService } from "src/app/shared/service/auth.service";
 import { DistrictService } from "src/app/shared/service/district.service";
 import { FirebaseService } from "src/app/shared/service/firebase.service";
 import { UserService } from "src/app/shared/service/user.service";
-import { WardService } from "src/app/shared/service/ward.service";
-import { Address } from "src/app/shared/tables/Address";
+import { Address } from "src/app/shared/tables/address";
 import { District } from "src/app/shared/tables/district";
-import { User } from "src/app/shared/tables/User";
+import { User } from "src/app/shared/tables/user";
 import { Ward } from "src/app/shared/tables/ward";
+import { environment } from "src/environments/environment";
 
 @Component({
     selector: "app-create-user",
@@ -28,6 +28,7 @@ export class CreateUserComponent implements OnInit {
 
     // form
     addUserForm: FormGroup;
+    userDefaultImg = environment.userDefaultImg
 
     // image
     avatar: string;
@@ -47,6 +48,7 @@ export class CreateUserComponent implements OnInit {
 
     //Validate
     isHaveDistrict: boolean = false;
+    failureContent: string = '';
 
     constructor(
         private formBuilder: FormBuilder,
@@ -55,7 +57,8 @@ export class CreateUserComponent implements OnInit {
         private districtService: DistrictService,
         private storage: AngularFireStorage,
         private modalService: BsModalService,
-        private firebaseService: FirebaseService
+        private firebaseService: FirebaseService,
+        private authService: AuthService
     ) {
         this.createPermissionForm();
     }
@@ -81,7 +84,7 @@ export class CreateUserComponent implements OnInit {
         this.getAllDistrict();
     }
 
-    createUser(success: TemplateRef<any>) {
+    createUser(success: TemplateRef<any>, failure: TemplateRef<any>) {
         const newUser = new User();
         const newAddress = new Address();
 
@@ -98,9 +101,44 @@ export class CreateUserComponent implements OnInit {
         newAddress.district = this.userDistrict;
         if (this.userDistrict != "Huyện Hoàng Sa") newAddress.ward = this.userWard;
 
-        this.uploadUserImage(this.userImageFile).then((url) => {
-            newUser.imageUrl = url;
+        if (this.userImageChoosen) {
+            this.uploadUserImage(this.userImageFile).then((url) => {
+                newUser.imageUrl = url;
 
+                this.userService.createNewUser(newUser).subscribe(
+                    (user) => {
+                        newUser.id = user.id;
+                        this.newId = user.id;
+                        this.userService.createAddressForUser(user.id, newAddress).subscribe(
+                            () => { },
+                            (error) => {
+                                console.log("Address existed! No problem!")
+                            }
+                        )
+                        this.firebaseService.signUp(newUser.email, this.userPassword);
+                        this.layer1 = this.modalService.show(success, { class: 'modal-sm' });
+                    },
+                    (error) => {
+                        this.authService.checkEmailOrPhoneNumberExist(newUser).subscribe((response) => {
+                            if (response.title == 'emailExist') {
+                                this.failureContent = 'Email'
+                                this.layer1 = this.modalService.show(failure, { class: 'modal-sm' });
+                            }
+                            else if (response.title == 'phoneNumExist') {
+                                this.failureContent = 'Số điện thoại'
+                                this.layer1 = this.modalService.show(failure, { class: 'modal-sm' });
+                            }
+                            else {
+                                this.failureContent = 'Số CCCD/CMND'
+                                this.layer1 = this.modalService.show(failure, { class: 'modal-sm' });
+                            }
+                        });
+                    }
+                )
+            })
+        }
+        else {
+            newUser.imageUrl = this.userDefaultImg;
             this.userService.createNewUser(newUser).subscribe(
                 (user) => {
                     newUser.id = user.id;
@@ -113,9 +151,26 @@ export class CreateUserComponent implements OnInit {
                     )
                     this.firebaseService.signUp(newUser.email, this.userPassword);
                     this.layer1 = this.modalService.show(success, { class: 'modal-sm' });
+                },
+                (error) => {
+                    this.authService.checkEmailOrPhoneNumberExist(newUser).subscribe((response) => {
+                        if (response.title == 'emailExist') {
+                            this.failureContent = 'Email'
+                            this.layer1 = this.modalService.show(failure, { class: 'modal-sm' });
+                        }
+                        else if (response.title == 'phoneNumExist') {
+                            this.failureContent = 'Số điện thoại'
+                            this.layer1 = this.modalService.show(failure, { class: 'modal-sm' });
+                        }
+                        else {
+                            this.failureContent = 'Số CCCD/CMND'
+                            this.layer1 = this.modalService.show(failure, { class: 'modal-sm' });
+                        }
+                    });
                 }
             )
-        })
+        }
+
     }
 
     //Image Selected

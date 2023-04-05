@@ -15,7 +15,7 @@ export class ListAddressComponent {
 
   //Pagination Properties
   thePageNumber = 1;
-  thePageSize = 5;
+  thePageSize = 10;
   theTotalElements = 0;
 
   constructor(private addressService: AddressService,

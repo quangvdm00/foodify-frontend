@@ -21,8 +21,16 @@ export class ProductService {
     }
 
     getProductsPagination(thePage: number, thePageSize: number): Observable<GetResponseProducts> {
-        console.log(`getting jwt-token from Storage`, localStorage.getItem('jwt-token'));
         return this.httpClient.get<GetResponseProducts>(this.baseUrl + `?pageNo=${thePage}&pageSize=${thePageSize}`);
+    }
+
+    getProductsPaginationAndSort(thePage: number, thePageSize: number, sortBy: string, sortDir: string): Observable<GetResponseProducts> {
+        console.log(this.baseUrl + `?pageNo=${thePage}&pageSize=${thePageSize}&sortBy=${sortBy}&sortDir=${sortDir}`)
+        return this.httpClient.get<GetResponseProducts>(this.baseUrl + `?pageNo=${thePage}&pageSize=${thePageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
+    }
+
+    getProductsNoPagination() {
+        return this.httpClient.get<Product[]>(environment.foodOrderingBaseApiUrl + `/v1/products`)
     }
 
     getProductById(productId: number): Observable<Product> {
@@ -31,6 +39,10 @@ export class ProductService {
 
     getProductsByShopId(shopId: number, thePage: number, thePageSize: number): Observable<GetResponseProducts> {
         return this.httpClient.get<GetResponseProducts>(this.baseUrl + `/shops/${shopId}?pageNo=${thePage}&pageSize=${thePageSize}`)
+    }
+
+    getProductsByShopIdAndSort(shopId: number, thePage: number, thePageSize: number, sortBy: string, sortDir: string): Observable<GetResponseProducts> {
+        return this.httpClient.get<GetResponseProducts>(this.baseUrl + `/shops/${shopId}?pageNo=${thePage}&pageSize=${thePageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
     }
 
     getProductsByShopIdNoPageable(shopId: number) {
@@ -53,6 +65,14 @@ export class ProductService {
 
     deleteProduct(productId: number) {
         return this.httpClient.delete(this.baseUrl + `/${productId}`);
+    }
+
+    searchProductsByName(name: string, thePage: number, thePageSize: number) {
+        return this.httpClient.get<GetResponseProducts>(this.baseUrl + `/search?pageNo=${thePage}&pageSize=${thePageSize}&productName=${name}`)
+    }
+
+    searchShopProductsByName(shopId: number, name: string, thePage: number, thePageSize: number) {
+        return this.httpClient.get<GetResponseProducts>(this.baseUrl + `/shop/${shopId}/search?pageNo=${thePage}&pageSize=${thePageSize}&productName=${name}`);
     }
 }
 

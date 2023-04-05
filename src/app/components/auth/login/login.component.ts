@@ -23,16 +23,16 @@ export class LoginComponent implements OnInit {
 
     owlcarousel = [
         {
-            title: "Welcome to Multikart",
-            desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy.",
+            title: "Chào mừng đến với Foodify",
+            desc: "Foodify - Một trong những ứng dụng đặt đồ ăn tốt nhất hiện nay, được phát triển bởi Pyramide team",
         },
         {
-            title: "Welcome to Multikart",
-            desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy.",
+            title: "Foodify - xu hướng mới",
+            desc: "Với mục đích tạo ra những sản phẩm tốt nhất cho người dùng, chúng mình đã quyết định sử dụng các công nghệ mới nhất vào Foodify",
         },
         {
-            title: "Welcome to Multikart",
-            desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy.",
+            title: "Về Pyramide Team",
+            desc: "Pyramide team là một nhóm sinh viên trường Đại học FPT, team nghiên cứu và phát triển sản phẩm theo công nghệ Angular và Spring Boot",
         }
     ]
     owlcarouselOptions = {
@@ -64,8 +64,6 @@ export class LoginComponent implements OnInit {
     }
 
     onSignUp() {
-        console.log(this.getSignUpEmail);
-        console.log(this.getSignUpPassword);
         this.firebaseAuthService.signUp(this.getSignUpEmail, this.getSignUpPassword);
     }
 

@@ -96,7 +96,14 @@
             <div class="d-flex justify-content-center p-2">
               <ngb-pagination [collectionSize]="theTotalElements" [(page)]="thePageNumber" [pageSize]="thePageSize"
                 [rotate]="true" [maxSize]="5" [boundaryLinks]="true" (pageChange)="listOrder()">
-              </ngb-pagination>
+              </ngb-pagination>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+              <select [(ngModel)]="thePageSize" class="form-select" style="width: auto" name="pageSize"
+                (change)="ngOnInit()">
+                <option [value]="5" [selected]="true" [ngValue]="10">10 đơn hàng / trang</option>
+                <option [ngValue]="20">20 đơn hàng / trang</option>
+                <option [ngValue]="30">30 đơn hàng / trang</option>
+              </select>
             </div>
           </div>
         </div>

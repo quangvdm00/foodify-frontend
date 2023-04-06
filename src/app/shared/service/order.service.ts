@@ -28,6 +28,12 @@ export class OrderService {
     return this.httpClient.get<GetResponseOrders>(environment.foodOrderingBaseApiUrl + `/shops/${shopId}/orders?pageNo=${thePage}&pageSize=${thePageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
   }
 
+  ////
+
+  getOrdersByUserId(userId: number, thePage: number, thePageSize: number, sortBy: string, sortDir: string) {
+    return this.httpClient.get<GetResponseOrders>(this.getOrderUrl + `/${userId}/orders?pageNo=${thePage}&pageSize=${thePageSize}&sortBy=${sortBy}&sortDir=${sortDir}`)
+  }
+
   getOrderById(userId: number, orderId: number): Observable<Order> {
     return this.httpClient.get<Order>(`${this.getOrderUrl}/${userId}/orders/${orderId}`);
   }

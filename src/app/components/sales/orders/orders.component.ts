@@ -1,4 +1,4 @@
-import { Component, OnInit, QueryList, TemplateRef, ViewChildren } from "@angular/core";
+import { Component, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from "@angular/core";
 import { NgbModal, ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
 import { SortEvent } from "src/app/shared/directives/shorting.directive";
 import { NgbdSortableHeader } from "src/app/shared/directives/NgbdSortableHeader";
@@ -39,13 +39,18 @@ export class OrdersComponent implements OnInit {
   theTotalElements = 0;
 
   order: Order;
-  modalRef: BsModalRef;
+  layer1: BsModalRef;
+  layer2: BsModalRef;
 
   selectedStatus: string;
   isHaveShipper: boolean = false;
   shipper: Shipper = undefined;
   shippers: Shipper[] = [];
   searchName: string = '';
+
+  //Event
+  refreshInterval = 10000;
+  totalOrders = 0;
 
   orderStatuses = ["Chờ xác nhận", "Đã xác nhận", "Đang giao hàng", "Giao thành công", "Đã huỷ đơn"];
 
@@ -75,10 +80,33 @@ export class OrdersComponent implements OnInit {
         .getOrdersPagination(this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
         .subscribe(this.processResult());
     }
+
+    setTimeout(() => {
+      this.refreshOrder();
+    }, this.refreshInterval);
+  }
+
+  refreshOrder() {
+    if (this.isShop) {
+      this.orderService.getOrdersByShopId(this.shopId, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
+        .subscribe(this.refreshResult());
+
+      this.shipperService.findFreeShopShipper(this.shopId).subscribe((shippers) => {
+        this.shippers = shippers;
+      })
+    }
+    else {
+      this.orderService
+        .getOrdersPagination(this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
+        .subscribe(this.refreshResult());
+    }
+
+    setTimeout(() => {
+      this.refreshOrder();
+    }, this.refreshInterval);
   }
 
   searchOrder() {
-    console.log(this.searchName)
     if (this.searchName.trim() !== '') {
       this.orderService.findOrdersByTrackingNumber(this.searchName, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
         .subscribe(this.processResult());
@@ -94,6 +122,19 @@ export class OrdersComponent implements OnInit {
       this.thePageNumber = data.page.pageNo + 1;
       this.thePageSize = data.page.pageSize;
       this.theTotalElements = data.page.totalElements;
+      this.totalOrders = data.page.totalElements;
+    };
+  }
+
+  refreshResult() {
+    return (data: any) => {
+      this.orders = data.orders;
+      this.thePageNumber = data.page.pageNo + 1;
+      this.thePageSize = data.page.pageSize;
+      this.theTotalElements = data.page.totalElements;
+      if (this.totalOrders != this.theTotalElements) {
+        this.totalOrders = this.theTotalElements;
+      }
     };
   }
 
@@ -110,7 +151,7 @@ export class OrdersComponent implements OnInit {
         this.orderId = orderId;
         this.selectedStatus = order.status;
         console.log(this.selectedStatus);
-        this.modalRef = this.modalService.show(confirmBoxChangeStatus, { class: "modal-sm" });
+        this.layer1 = this.modalService.show(confirmBoxChangeStatus, { class: "modal-sm" });
       },
       (error) => {
         console.error(error); // handle error
@@ -130,18 +171,18 @@ export class OrdersComponent implements OnInit {
     }
 
     this.orderService.updateOrderStatus(this.userId, this.orderId, this.selectedStatus).subscribe((res) => { });
-    this.modalRef.hide();
-    this.modalRef = this.modalService.show(successChangeStatus, { class: "modal-sm" });
+    this.layer1.hide();
+    this.layer1 = this.modalService.show(successChangeStatus, { class: "modal-sm" });
   }
 
   decline() {
     this.shipper = undefined;
-    this.modalRef.hide();
+    this.layer1.hide();
   }
 
   successChangeStatus() {
     this.listOrder();
-    this.modalRef.hide();
+    this.layer1.hide();
   }
 
 
@@ -152,19 +193,24 @@ export class OrdersComponent implements OnInit {
     console.log('userId: ' + this.userId);
     console.log('orderId: ' + this.orderId);
 
-    this.modalRef = this.modalService.show(confirmBoxDelete, { class: "modal-sm" });
+    this.layer1 = this.modalService.show(confirmBoxDelete, { class: "modal-sm" });
   }
 
   confirmBoxDelete(userId: number, orderId: number, successDelete: TemplateRef<any>) {
     this.orderService.deleteOrderById(this.userId, this.orderId).subscribe(() => {
       this.listOrder()
     })
-    this.modalRef.hide()
-    this.modalRef = this.modalService.show(successDelete, { class: "modal-sm" });
+    this.layer1.hide()
+    this.layer1 = this.modalService.show(successDelete, { class: "modal-sm" });
   }
 
   successDelete() {
     this.listOrder();
-    this.modalRef.hide();
+    this.layer1.hide();
+  }
+
+  ngOnDestroy() {
+    // Xóa timeout khi component bị destroy
+    clearTimeout(this.refreshInterval);
   }
 }

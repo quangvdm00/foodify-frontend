@@ -145,10 +145,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     processResult() {
         return (data: any) => {
             this.orders = data.orders;
-            console.log(this.orders)
-            this.orders.forEach(element => {
-                console.log(element.shipper.user.fullName)
-            });
             this.thePageNumber = data.page.pageNo + 1;
             this.thePageSize = data.page.pageSize;
             this.theTotalElements = data.page.totalElements;

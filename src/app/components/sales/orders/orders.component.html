@@ -8,11 +8,10 @@
         </div> -->
         <div class="card-body">
           <div class="custom-datatable">
-            <form>
-              <div class="mb-3">
-                <input type="text" class="filter-ngx form-control" placeholder="Search..." autocomplete="off" />
-              </div>
-            </form>
+            <div class="mb-3">
+              <input type="text" [(ngModel)]="searchName" (change)="searchOrder()" class="filter-ngx form-control"
+                placeholder="Tìm kiếm ..." autocomplete="off" />
+            </div>
             <table class="table table-striped">
               <thead>
                 <tr>
@@ -77,11 +76,15 @@
                   <td scope="row">
                     <a [routerLink]="['/sales', 'detail-order', 'user', order.user.id, 'order', order.id]"
                       style="cursor: pointer;">
-                      <i class="fa fa-eye f-12"></i>
+                      <i style="color: lightseagreen;" class="fa fa-eye f-12"></i>
                     </a>&nbsp;
-                    <a (click)="openStatusModal(change_status, order.user.id, order.id, order.status)"
+                    <a *ngIf="order.status != 'COMPLETED'"
+                      (click)="openStatusModal(change_status, order.user.id, order.id, order?.shipper)"
                       style="cursor: pointer;">
                       <i class="fa fa-edit f-12"></i>
+                    </a>
+                    <a *ngIf="order.status == 'COMPLETED'" style="cursor: not-allowed;">
+                      <i style="color: lightcoral;" class="fa fa-edit f-12"></i>
                     </a>&nbsp;
                     <a (click)="openDeleteModal(delete_order, order.user.id, order.id)" style="cursor: pointer;">
                       <i class="fa fa-trash-o"></i>
@@ -93,7 +96,14 @@
             <div class="d-flex justify-content-center p-2">
               <ngb-pagination [collectionSize]="theTotalElements" [(page)]="thePageNumber" [pageSize]="thePageSize"
                 [rotate]="true" [maxSize]="5" [boundaryLinks]="true" (pageChange)="listOrder()">
-              </ngb-pagination>
+              </ngb-pagination>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+              <select [(ngModel)]="thePageSize" class="form-select" style="width: auto" name="pageSize"
+                (change)="ngOnInit()">
+                <option [value]="5" [selected]="true" [ngValue]="10">10 đơn hàng / trang</option>
+                <option [ngValue]="20">20 đơn hàng / trang</option>
+                <option [ngValue]="30">30 đơn hàng / trang</option>
+              </select>
             </div>
           </div>
         </div>
@@ -108,7 +118,15 @@
 <!-- Change status -->
 <ng-template #change_status>
   <div class="modal-change-status">
-    <div class="modal-confirm-text">Chuyển trạng thái đơn hàng</div>
+    <div class="modal-confirm-text">Cập nhật đơn hàng</div>
+
+    <div class="modal-select-option" *ngIf="!isHaveShipper">
+      <select [(ngModel)]="shipper">
+        <option [selected]="true" [ngValue]="undefined">Chọn shipper</option>
+        <option *ngFor="let shipper of shippers" [ngValue]="shipper">{{ shipper.user.fullName }}</option>
+      </select>
+    </div>
+
     <div class="modal-select-option">
       <select [(ngModel)]="selectedStatus">
         <option value="AWAITING">Chờ xác nhận</option>

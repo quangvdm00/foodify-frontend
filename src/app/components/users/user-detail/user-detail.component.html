@@ -138,9 +138,11 @@
                                                         Bị cấm</p>
                                                     <p *ngIf="!user.isLocked" class="mb-0 text-size" style="color: green">
                                                         Hoạt động</p> -->
-                                                    <span *ngIf="user.isLocked" class="mb-0 text-size badge badge-primary">Bị cấm</span>
-                                                    <span *ngIf="!user.isLocked" class="mb-0 text-size badge badge-success">Hoạt động</span>
-                                                    
+                                                    <span *ngIf="user.isLocked"
+                                                        class="mb-0 text-size badge badge-primary">Bị cấm</span>
+                                                    <span *ngIf="!user.isLocked"
+                                                        class="mb-0 text-size badge badge-success">Hoạt động</span>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -187,60 +189,96 @@
                         <!------- ORDERS ------->
                         <li [ngbNavItem]="3">
                             <a ngbNavLink>Đơn hàng</a>
-                            <!-- <ng-template ngbNavContent>
-                                <div class="row product-adding">
-
-
-                                    <div *ngIf="products" class="table-responsive">
+                            <ng-template ngbNavContent>
+                                <div class="card-body">
+                                    <div class="custom-datatable">
                                         <table class="table table-striped">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col">#</th>
-                                                    <th scope="col">Ảnh</th>
-                                                    <th scope="col">Tên sản phẩm</th>
-                                                    <th scope="col">Giá</th>
-                                                    <th scope="col"></th>
+                                                    <th scope="col">Mã đơn hàng</th>
+                                                    <th scope="col">Thời gian đặt hàng</th>
+                                                    <th scope="col">Tên shipper</th>
+                                                    <th scope="col">Địa chỉ</th>
+                                                    <th scope="col">Phương thức thanh toán</th>
+                                                    <th scope="col">Trạng thái đơn hàng</th>
+                                                    <th scope="col">Số tiền cần thanh toán</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr *ngFor="let product of products; let i = index">
-                                                    <th scope="row">{{ i + 1 }}</th>
+                                                <tr *ngFor="let order of orders">
+                                                    <th scope="row">{{ order.orderTrackingNumber }}</th>
+                                                    <td>{{ order.orderTime }}</td>
+                                                    <td *ngIf="order?.shipper?.user?.fullName != null">{{
+                                                        order?.shipper?.user?.fullName }}</td>
+                                                    <td *ngIf="order?.shipper?.user?.fullName == null">Đang chờ...</td>
+                                                    <td>{{ order.address }}</td>
                                                     <td>
-                                                        <img [src]="[product.images[0].imageUrl]" class="imgTable"
-                                                            style="width: 20px">
-                                                    </td>
-                                                    <td>{{ product.name }}</td>
-                                                    <td>{{ product.cost - product.cost * product.discountPercent /
-                                                        100 }}
+                                                        <span [ngClass]="{
+                                                  badge: true,
+                                                  'badge-info': order.paymentMethod === 'ZALO PAY',
+                                                  'badge-success': order.paymentMethod === 'CASH'
+                                                }">
+                                                            {{ order.paymentMethod === "CASH"
+                                                            ? "Tiền mặt"
+                                                            : order.paymentMethod === "ZALO PAY"
+                                                            ? "Zalo Pay"
+                                                            : ""
+                                                            }}
+                                                        </span>
                                                     </td>
                                                     <td>
-                                                        <a [routerLink]="['/products','product-detail', product.id]"><i
-                                                                class='fa fa-eye f-12'></i></a>
+                                                        <span [ngClass]="{
+                                                  badge: true,
+                                                  'badge-dark': order.status === 'AWAITING',
+                                                  'badge-warning': order.status === 'CONFIRMED',
+                                                  'badge-info': order.status === 'SHIPPING',
+                                                  'badge-success': order.status === 'COMPLETED',
+                                                  'badge-primary': order.status === 'CANCELED'
+                                                }">
+                                                            {{
+                                                            order.status === "AWAITING"
+                                                            ? "Chờ xác nhận"
+                                                            : order.status === "CONFIRMED"
+                                                            ? "Đã xác nhận"
+                                                            : order.status === "SHIPPING"
+                                                            ? "Đang giao hàng"
+                                                            : order.status === "COMPLETED"
+                                                            ? "Giao thành công"
+                                                            : order.status === "CANCELED"
+                                                            ? "Đã huỷ đơn"
+                                                            : ""
+                                                            }}
+                                                        </span>
+                                                    </td>
+                                                    <td style="font-size: 16px;">{{ order.total | currency : "VND" }}
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <div class="d-flex justify-content-between p-2">
+                                        <div class="d-flex justify-content-center p-2">
                                             <ngb-pagination [collectionSize]="theTotalElements" [(page)]="thePageNumber"
-                                                [maxSize]="5" [pageSize]="thePageSize" [rotate]="true"
-                                                [boundaryLinks]="true" (pageChange)="listProduct()">
-                                            </ngb-pagination>
-                                            <select class="form-select" style="width: auto" name="pageSize"
-                                                (change)="listProduct()" [(ngModel)]="thePageSize">
-                                                <option [value]="10" [selected]="true" [ngValue]="10">10 items per
-                                                    page</option>
-                                                <option [ngValue]="15">15 items per page</option>
-                                                <option [ngValue]="20">20 items per page</option>
+                                                [pageSize]="thePageSize" [rotate]="true" [maxSize]="5"
+                                                [boundaryLinks]="true" (pageChange)="ngOnInit()">
+                                            </ngb-pagination>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                            <select [(ngModel)]="thePageSize" class="form-select"
+                                                style="width: auto; height: 38px;" name="pageSize"
+                                                (change)="ngOnInit()">
+                                                <option [value]="5" [selected]="true" [ngValue]="5">5 đơn hàng / trang
+                                                </option>
+                                                <option [ngValue]="10">10 đơn hàng / trang</option>
+                                                <option [ngValue]="15">15 đơn hàng / trang</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-                            </ng-template> -->
+                            </ng-template>
                         </li>
                     </ul>
                     <div [ngbNavOutlet]="nav" class="mt-2"></div>
                     <div class="pull-right">
-                        <button type="submit" class="btn btn-primary" [routerLink]="['/users','edit',user.id]">Chỉnh sửa
+                        <button type="submit" class="btn btn-primary" [routerLink]="['/users','edit', user?.id]">Chỉnh
+                            sửa
                             thông tin</button>
                     </div>
                 </div>

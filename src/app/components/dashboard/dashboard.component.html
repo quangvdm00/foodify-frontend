@@ -16,6 +16,7 @@
                         <div *ngIf="isShop" class="media-body col-8"><span class="m-0">Thu nhập 30 ngày qua</span>
                             <h3 class="mb-0">
                                 <span class="counter" [CountTo]="totalRevenue" [from]="0" [duration]="2">{{ totalRevenue
+                                    | currency : "VND"
                                     }}</span><small>
                                     vnđ</small>
                             </h3>
@@ -162,7 +163,7 @@
                                     <td>
                                         <a [routerLink]="['/sales', 'detail-order', 'user', order.user.id, 'order', order.id]"
                                             style="cursor: pointer;">
-                                            <i class="fa fa-eye f-12"></i>
+                                            <i style="color: lightseagreen;" class="fa fa-eye f-12"></i>
                                         </a>&nbsp;
                                     </td>
                                 </tr>

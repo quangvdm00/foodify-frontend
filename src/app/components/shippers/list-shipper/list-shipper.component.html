@@ -61,7 +61,8 @@
                                         </td>
                                         <td>
                                             <a [routerLink]="['/shippers', 'details', shipper.id]"
-                                                style="cursor: pointer;"><i class="fa fa-eye f-12"></i></a>&nbsp;
+                                                style="cursor: pointer;"><i style="color: lightseagreen;"
+                                                    class="fa fa-eye f-12"></i></a>&nbsp;
                                             <a [routerLink]="['/shippers', 'edit', shipper.id]"
                                                 style="cursor: pointer;"><i class='fa fa-edit f-12'></i></a>&nbsp;
                                             <a (click)="openModal(confirm_Delete, shipper.id)"

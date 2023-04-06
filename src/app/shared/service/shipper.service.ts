@@ -38,6 +38,10 @@ export class ShipperService {
       `/shop/${shopId}/search?shipperName=${name}&pageNo=${thePage}&pageSize=${thePageSize}`);
   }
 
+  findFreeShopShipper(shopId: number) {
+    return this.httpClient.get<Shipper[]>(this.baseUrl + `/shop/${shopId}/search/free`);
+  }
+
   updateShiperActive(shipperId: number, updateActive: Shipper, isActive: boolean): Observable<Shipper> {
     return this.httpClient.put<Shipper>(`${this.baseUrl}/${shipperId}/active?isActive=${isActive}`, updateActive)
   }

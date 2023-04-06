@@ -97,7 +97,7 @@
                 <td>{{ orderDetail?.product?.name }}</td>
                 <td>{{ orderDetail?.quantity }}</td>
                 <td>{{ orderDetail?.product?.discountPercent }}%</td>
-                <td>{{ orderDetail?.subtotal }}</td>
+                <td>{{ orderDetail?.subtotal | currency : "VND" }}</td>
               </tr>
             </tbody>
           </table>

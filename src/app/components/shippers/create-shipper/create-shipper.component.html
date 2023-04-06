@@ -400,14 +400,14 @@
 
 <ng-template #chooseUserImage>
     <div class="modal-body text-center">
-        <p>Vui lòng chọn 1 ảnh</p>
+        <h5 class="text-dark font-weight-bold mb-4">Vui lòng chọn 1 ảnh</h5>
         <input type="file" name="avatar" accept="image/*" (change)="onFileChange($event)" />
     </div>
 </ng-template>
 
 <ng-template #createFailure>
     <div class="modal-body text-center">
-        <p>{{ failureContent }} đã tồn tại. Vui lòng chọn {{ failureContent.toLowerCase() }} khác.</p>
+        <h5 class="text-dark font-weight-bold mb-4">{{ failureContent }} đã tồn tại. Vui lòng chọn {{ failureContent.toLowerCase() }} khác.</h5>
         <button type="button" class="btn btn-primary" (click)="closeLayer1()">Tiếp tục
         </button>
     </div>

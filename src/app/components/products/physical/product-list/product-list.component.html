@@ -118,9 +118,11 @@
 <!-- Confirm Delete -->
 <ng-template #confirm_Delete>
   <div class="modal-body text-center">
-    <p>Bạn chắc chắc xoá sản phẩm này chứ ?</p>
-    <button type="button" class="btn btn-default" (click)="confirm(deleteProductId, success)">Có</button>
-    <button type="button" class="btn btn-primary" (click)="decline()">Không</button>
+    <h5 class="text-dark font-weight-bold mb-4">Bạn chắc chắc xoá sản phẩm này chứ ?</h5>
+    <div class="modal-btn-option">
+      <button type="button" class="btn btn-default width-btn" (click)="confirm(deleteProductId, success)">Có</button>
+      <button type="button" class="btn btn-primary width-btn" (click)="decline()">Không</button>
+    </div>
   </div>
 </ng-template>
 

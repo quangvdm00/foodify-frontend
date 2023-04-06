@@ -6,35 +6,50 @@
                     <ks-carousel [items]="imagesRect">
                     </ks-carousel>
                 </section> -->
-                <img src="{{ product?.images[0].imageUrl }}" alt="" class="img-fluid image_zoom_1">
+                <img src="{{ product?.images[0].imageUrl }}" alt="" class="img-fluid image_zoom_1 rounded border border-secondary">
             </div>
             <div class="col-xl-8">
                 <div class="product-page-details product-right mb-0">
-                    <h2>{{ product?.name }}</h2>
+                    <h1 class="product-name font-weight-bold mt-0">{{ product?.name }}</h1>
                     <!-- <ngb-rating class="ratings-sec" [(rate)]="currentRate">
                         <ng-template let-fill="fill" let-index="index">
                             <span class="star" [class.filled]="fill === 100" [class.bad]="index < 3"><i
                                     class='fa fa-star'></i> </span>
                         </ng-template>
                     </ngb-rating> -->
-                    <hr>
-                    <h6 class="product-title">Shop: {{ product?.shop.name }}</h6>
-                    <p class="mb-0">{{ product?.description }}</p>
-                    <div>
-                        <h3> {{ product?.cost- (product?.cost * product?.discountPercent)/100}} <del
-                                *ngIf="product?.discountPercent > 0">{{ product?.cost }}</del></h3>
+
+                    <div class="mt-3 mb-4 d-flex">
+                        <div class="pr-3">Giảm giá: <span class="font-weight-bold text-danger">{{ product?.discountPercent}}%</span></div>
+                        <div class="px-3 border-right border-left text-success" *ngIf="product?.isEnabled == true">Đang được bán</div>
+                        <div class="px-3 border-right border-left text-danger" *ngIf="product?.isEnabled == false">Không được bán</div>
+                        <div class="pl-3">Đánh giá: <span class="font-weight-bold" >{{ product?.reviewCount }}</span></div>
                     </div>
-                    <!-- <ul class="color-variant">
-                        <li class="bg-light0"></li>
-                        <li class="bg-light1"></li>
-                        <li class="bg-light2"></li>
-                    </ul> -->
-                    <hr>
-                    <h6 class="product-title size-text">Thể loại
-                        <!-- <span class="pull-right">
-                            <a data-toggle="modal" (click)="open(content)" class="font-primary">size chart</a>
-                        </span> -->
-                    </h6>
+                    <div class="my-4">
+                        <h3 class="font-weight-bold mb-0" style="color: lightcoral"> 
+                            <del *ngIf="product?.discountPercent > 0">{{ product?.cost | currency : "VND"}}</del>
+                            {{ product?.cost- (product?.cost * product?.discountPercent)/100 | currency : "VND"}} 
+                        </h3>
+                    </div>
+
+                    <div class="my-4 font-weight-bold text-size">
+                        Đã bán: <span class="font-weight-normal">{{product.sold}} sản phẩm</span>
+                    </div>
+
+                    <div class="my-4 font-weight-bold text-size">
+                        Mô tả sản phẩm: 
+                        <span class="font-weight-normal">{{ product?.description }}</span>
+                    </div>
+
+                    <div class="my-4 d-flex justify-content-start align-items-center">
+                        <h6 class="product-title text-size mb-0 ">Thể loại: </h6>
+                        <span *ngFor="let category of product?.categories" class="badge badge-info font-category mx-2">
+                            {{ category?.name }}
+                        </span>
+                    </div>
+                    
+                    <div class="product-title text-size my-4">Shop: <span class="font-weight-normal">{{ product?.shop.name }}</span></div>
+                    
+                    
                     <!-- <ng-template #content let-modal>
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Sheer Straight Kurta</h5>
@@ -47,12 +62,7 @@
                             <img src="assets/images/size-chart.jpg" alt="" class="img-fluid blur-up lazyloaded">
                         </div>
                     </ng-template> -->
-                    <div>
-                        <ul *ngFor="let category of product?.categories">
-                            <!-- <li class="active"><a href="javascript:void(0)">s</a></li> -->
-                            <li><a href="javascript:void(0)">{{ category?.name }}</a></li>
-                        </ul>
-                    </div>
+                    
                     <!-- <div class="add-product-form">
                         <h6 class="product-title">quantity</h6>
                         <div class="qty-box1">
@@ -63,14 +73,7 @@
                             </div>
                         </div>
                     </div> -->
-                    <hr>
-                    <h6 class="product-title">Thông tin khác</h6>
-                    <div>
-                        <p>Giảm giá : {{ product?.discountPercent}}%</p>
-                        <p *ngIf="product?.isEnabled == true">Đang được bán</p>
-                        <p *ngIf="product?.isEnabled == false">Không được bán</p>
-                        <p>Đã đánh giá : {{ product?.reviewCount }}</p>
-                    </div>
+                    
                     <div class="m-t-15">
                         <button class="btn btn-primary m-r-10" type="button"
                             [routerLink]="['/products', 'edit-product', product?.id]">Chỉnh sửa</button>

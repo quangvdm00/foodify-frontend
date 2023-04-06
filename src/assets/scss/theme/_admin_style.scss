@@ -1059,17 +1059,22 @@ ng2-smart-table {
           font-weight: 700;
           text-transform: uppercase;
           writing-mode: vertical-rl;
-          transform: rotate(-180deg);
+          transform: rotate(0deg);
+          border-radius: 12px;
           top: 7px;
-          right: 7px;
+          right: 9px;
           letter-spacing: 0.1em;
           z-index: 1;
+          padding: 10px 5px;
+          background-color: #fff;
+          color: rgb(255, 0, 0);
+          box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
         }
       }
     }
     .product-detail, .product-info {
       .rating {
-        margin-top: 15px;
+        // margin-top: 15px;
         i {
           padding-right: 5px;
           color: #ffa200;
@@ -1354,7 +1359,7 @@ hr {
 }
 .account-setting {
   h5 {
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
   }
 }
 .tab2-card {
@@ -1550,7 +1555,7 @@ footer{
       }
       + .attribute-blocks {
         h5 {
-          margin-top: 30px;
+          // margin-top: 30px;
         }
       }
       h6 {
@@ -5808,7 +5813,7 @@ $i:1;
   }
   .account-setting {
     h5 {
-      margin-bottom: 15px;
+      // margin-bottom: 15px;
     }
   }
   .deactivate-account {

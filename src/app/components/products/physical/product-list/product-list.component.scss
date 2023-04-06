@@ -44,3 +44,45 @@
     bottom: 30px;
     right: 50px;
 }
+
+.card-position {
+    position: relative;
+    top: 16px;
+    left: 16px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+
+    .discount-product {
+        position: absolute;
+        z-index: 5;
+        top: 16px;
+        left: 12px;
+
+        .discount-box {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .discount-cover {
+                width: 60px;
+                height: 60px;
+            }
+    
+            .discount-text {
+                position: absolute;
+                top: 18px;
+                right: 9px;
+                color: #fff;
+                font-weight: bold;
+                font-size: 18px;
+            }
+
+            .discount-text-desc {
+                right: 13px;
+            }
+        }
+    }
+}
+

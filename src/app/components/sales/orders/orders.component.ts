@@ -52,7 +52,7 @@ export class OrdersComponent implements OnInit {
   refreshInterval = 10000;
   totalOrders = 0;
 
-  orderStatuses = ["Chờ xác nhận", "Đã xác nhận", "Đang giao hàng", "Giao thành công", "Đã huỷ đơn"];
+  orderStatuses = ["Chờ xác nhận", "Đã xác nhận", "Đang giao hàng", "Giao thành công", "Đã huỷ đơn", "Không nhận hàng"];
 
   constructor(private orderService: OrderService,
     private shipperService: ShipperService,

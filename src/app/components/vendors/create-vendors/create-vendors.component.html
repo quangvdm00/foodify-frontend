@@ -374,3 +374,10 @@
     </button>
   </div>
 </ng-template>
+
+<ng-template #error_modal>
+  <div class="modal-body text-center">
+    <p>{{ errorItem }} đã tồn tại. Vui lòng chọn một {{ errorItem.toLowerCase() }} khác.</p>
+    <button type="button" class="btn btn-primary" (click)="closeLayer2()">Tiếp tục</button>
+  </div>
+</ng-template>

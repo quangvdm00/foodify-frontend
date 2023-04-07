@@ -16,7 +16,7 @@
                     <div class="add-product">
                       <div class="row">
                         <div class="col-xl-9 xl-50 col-sm-6 col-9">
-                          <img src="{{ shop.user.imageUrl }}" alt="" class="img-fluid image_zoom_1" />
+                          <img src="{{ shop?.user?.imageUrl }}" alt="" class="img-fluid image_zoom_1" />
                         </div>
                         <div class="col-xl-3 xl-50 col-sm-6 col-3"></div>
                       </div>
@@ -30,7 +30,7 @@
                           <label class="mb-0">Họ và tên:</label>
                         </div>
                         <div class="col-xl-8 col-sm-7">
-                          <p class="mb-0 text-size text-dark">{{ shop.user.fullName }}</p>
+                          <p class="mb-0 text-size text-dark">{{ shop?.user?.fullName }}</p>
                         </div>
                       </div>
                     </div>
@@ -42,7 +42,7 @@
                           <label class="mb-0">Ngày sinh:</label>
                         </div>
                         <div class="col-xl-8 col-sm-7">
-                          <p class="mb-0 text-size text-dark">{{ shop.user.dateOfBirth }}</p>
+                          <p class="mb-0 text-size text-dark">{{ shop?.user?.dateOfBirth }}</p>
                         </div>
                       </div>
                     </div>
@@ -54,7 +54,7 @@
                           <label class="mb-0">CMND/CCCD:</label>
                         </div>
                         <div class="col-xl-8 col-sm-7">
-                          <p class="mb-0 text-size text-dark">{{ shop.user.identifiedCode }}</p>
+                          <p class="mb-0 text-size text-dark">{{ shop?.user?.identifiedCode }}</p>
                         </div>
                       </div>
                     </div>
@@ -66,7 +66,7 @@
                           <label class="mb-0">Email:</label>
                         </div>
                         <div class="col-xl-8 col-sm-7">
-                          <p class="mb-0 text-size text-dark">{{ shop.user.email }}</p>
+                          <p class="mb-0 text-size text-dark">{{ shop?.user?.email }}</p>
                         </div>
                       </div>
                     </div>
@@ -78,7 +78,7 @@
                           <label class="mb-0">Số điện thoại:</label>
                         </div>
                         <div class="col-xl-8 col-sm-7">
-                          <p class="mb-0 text-size text-dark">{{ shop.user.phoneNumber }}</p>
+                          <p class="mb-0 text-size text-dark">{{ shop?.user?.phoneNumber }}</p>
                         </div>
                       </div>
                     </div>
@@ -90,7 +90,7 @@
                           <label class="mb-0">Địa chỉ:</label>
                         </div>
                         <div class="col-xl-8 col-sm-7">
-                          <p class="mb-0 text-size text-dark">{{ shop.user.addresses[0].address }}</p>
+                          <p class="mb-0 text-size text-dark">{{ shop?.user?.addresses[0].address }}</p>
                         </div>
                       </div>
                     </div>
@@ -101,18 +101,18 @@
                           <label class="mb-0">Quận:</label>
                         </div>
                         <div class="col-xl-8 col-sm-7">
-                          <p class="mb-0 text-size text-dark">{{ shop.user.addresses[0].district }}</p>
+                          <p class="mb-0 text-size text-dark">{{ shop?.user?.addresses[0].district }}</p>
                         </div>
                       </div>
                     </div>
 
-                    <div *ngIf="shop.user.addresses[0].district != 'Huyện Hoàng Sa'" class="add-product-form">
+                    <div *ngIf="shop?.user?.addresses[0].district != 'Huyện Hoàng Sa'" class="add-product-form">
                       <div class="form-group row">
                         <div class="col-xl-3 col-sm-4">
                           <label class="mb-0">Phường:</label>
                         </div>
                         <div class="col-xl-8 col-sm-7">
-                          <p class="mb-0 text-size text-dark">{{ shop.user.addresses[0].ward }}</p>
+                          <p class="mb-0 text-size text-dark">{{ shop?.user?.addresses[0].ward }}</p>
                         </div>
                       </div>
                     </div>
@@ -125,8 +125,9 @@
                         <div class="col-xl-8 col-sm-7">
                           <!-- <p *ngIf="shop.user.isLocked" class="mb-0" style="color: #f08080">Bị cấm</p>
                           <p *ngIf="!shop.user.isLocked" class="mb-0" style="color: green">Hoạt động</p> -->
-                          <span *ngIf="shop.user.isLocked" class="mb-0 text-size badge badge-primary">Bị cấm</span>
-                          <span *ngIf="!shop.user.isLocked" class="mb-0 text-size badge badge-success">Hoạt động</span>
+                          <span *ngIf="shop?.user?.isLocked" class="mb-0 text-size badge badge-primary">Bị cấm</span>
+                          <span *ngIf="!shop?.user?.isLocked" class="mb-0 text-size badge badge-success">Hoạt
+                            động</span>
                         </div>
                       </div>
                     </div>
@@ -243,7 +244,7 @@
                                 <td>{{ product.name }}</td>
                                 <td>{{ product.cost - (product.cost * product.discountPercent) / 100 }}</td>
                                 <td>
-                                  <a [routerLink]="['/products', 'product-detail', product.id]"><i
+                                  <a [routerLink]="['/products', 'product-detail', product?.id]"><i
                                       class="fa fa-eye f-12"></i></a>
                                 </td>
                               </tr>
@@ -273,7 +274,7 @@
           </ul>
           <div [ngbNavOutlet]="nav" class="mt-2"></div>
           <div class="pull-right">
-            <button type="submit" class="btn btn-primary" [routerLink]="['/vendors', 'edit', shop.id]">Chỉnh sửa
+            <button type="submit" class="btn btn-primary" [routerLink]="['/vendors', 'edit', shop?.id]">Chỉnh sửa
               thông tin</button>
           </div>
         </div>

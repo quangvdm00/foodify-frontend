@@ -1,17 +1,16 @@
-import { DatePipe } from '@angular/common';
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { FormBuilder, FormControl, FormGroup, MinLengthValidator, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { EMPTY, finalize, mergeMap, switchMap, tap } from 'rxjs';
+import { EMPTY, finalize, switchMap } from 'rxjs';
 import { Observable } from 'rxjs-compat';
 import { Validation } from 'src/app/constants/Validation';
+import { AuthService } from 'src/app/shared/service/auth.service';
 import { DistrictService } from 'src/app/shared/service/district.service';
 import { FirebaseService } from 'src/app/shared/service/firebase.service';
 import { ShopService } from 'src/app/shared/service/shop.service';
 import { UserService } from 'src/app/shared/service/user.service';
-import { WardService } from 'src/app/shared/service/ward.service';
 import { Address } from 'src/app/shared/tables/address';
 import { District } from 'src/app/shared/tables/district';
 import { Shop } from 'src/app/shared/tables/shop';
@@ -61,11 +60,16 @@ export class CreateVendorsComponent {
     shopImageChoosen: boolean = false;
     isStudent: boolean = true;
 
+    errorItem = '';
+    layer1: BsModalRef;
+    layer2: BsModalRef;
+    @ViewChild('error_modal') errorModal: TemplateRef<any>;
+
     constructor(
         private formBuilder: FormBuilder,
         private userService: UserService,
         private districtService: DistrictService,
-        private wardService: WardService,
+        private authService: AuthService,
         private storage: AngularFireStorage,
         private shopService: ShopService,
         private modalService: BsModalService,
@@ -132,7 +136,7 @@ export class CreateVendorsComponent {
     /**
      * create User from Form
      */
-    createUser(template: TemplateRef<any>) {
+    createUser(template: TemplateRef<any>): Promise<void> {
         const newUser = new User();
         const newAddress = new Address();
         const newShop = new Shop();
@@ -160,7 +164,7 @@ export class CreateVendorsComponent {
             this.addUserForm.markAllAsTouched();
             this.passwordForm.markAllAsTouched();
             this.shopForm.markAllAsTouched();
-            return;
+            return Promise.reject();
         }
 
         newShop.name = this.shopName.value
@@ -175,86 +179,128 @@ export class CreateVendorsComponent {
         newAddress.district = this.district;
         if (this.district != "Huyện Hoàng Sa") newAddress.ward = this.ward;
 
-        if (this.userImageChoosen && this.shopImageChoosen) {
-            this.uploadUserImage(this.userImageFile).then((url) => {
-                newUser.imageUrl = url
+        this.authService.checkEmailOrPhoneNumberExist(newUser).subscribe((error) => {
+            if (error.title == 'emailExist') {
+                this.errorItem = 'Email';
+                this.layer2 = this.modalService.show(this.errorModal, { class: 'modal-sm' });
+                return Promise.reject();
+            }
+            else if (error.title == 'phoneNumExist') {
+                this.errorItem = 'Số điện thoại';
+                this.layer2 = this.modalService.show(this.errorModal, { class: 'modal-sm' });
+                return Promise.reject();
+            }
+            else {
+                if (this.userImageChoosen && this.shopImageChoosen) {
+                    this.uploadUserImage(this.userImageFile).then((url) => {
+                        newUser.imageUrl = url
 
-                this.userService.createNewUser(newUser).pipe(
-                    switchMap((user) => {
-                        this.uploadShopImage(this.shopImageFile).then((url) => {
-                            newShop.userId = user.id
-                            newShop.imageUrl = url;
-                            this.shopService.createShop(newShop).subscribe(() => {
-                                this.firebaseService.signUp(newUser.email, this.userPassword.value);
-                                this.userService.createAddressForUser(user.id, newAddress).subscribe();
-                                this.modalRef = this.modalService.show(template, { class: 'modal-sm' })
-                            });
+                        this.userService.createNewUser(newUser).pipe(
+                            switchMap((user) => {
+                                this.uploadShopImage(this.shopImageFile).then((url) => {
+                                    newShop.userId = user.id
+                                    newShop.imageUrl = url;
+                                    this.userService.createAddressForUser(user.id, newAddress).subscribe({
+                                        next: () => {
+                                            this.firebaseService.signUp(newUser.email, this.userPassword.value);
+                                            this.shopService.createShop(newShop).subscribe(() => {
+                                                this.layer1 = this.modalService.show(template, { class: 'modal-sm' })
+                                            })
+                                        }
+                                    });
+                                })
+                                return EMPTY; // Return an empty observable to prevent nested subscriptions
+                            })
+                        ).subscribe({
+                            next: () => { },
+                            error: () => {
+                                this.errorItem = 'CCCD/CMND';
+                                this.layer2 = this.modalService.show(this.errorModal, { class: 'modal-sm' });
+                            }
                         })
-                        return EMPTY; // Return an empty observable to prevent nested subscriptions
                     })
-                ).subscribe(() => {
+                }
+                else if (this.userImageChoosen && !this.shopImageChoosen) {
+                    this.uploadUserImage(this.userImageFile).then((url) => {
+                        newUser.imageUrl = url
 
-                })
-            })
-        }
-        else if (this.userImageChoosen && !this.shopImageChoosen) {
-            this.uploadUserImage(this.userImageFile).then((url) => {
-                newUser.imageUrl = url
-
-                this.userService.createNewUser(newUser).pipe(
-                    switchMap((user) => {
-                        newShop.userId = user.id
-                        newShop.imageUrl = this.defaultShopImg;
-                        this.shopService.createShop(newShop).subscribe(() => {
-                            this.firebaseService.signUp(newUser.email, this.userPassword.value);
-                            this.userService.createAddressForUser(user.id, newAddress).subscribe();
-                            this.modalRef = this.modalService.show(template, { class: 'modal-sm' })
-                        });
-                        return EMPTY; // Return an empty observable to prevent nested subscriptions
+                        this.userService.createNewUser(newUser).pipe(
+                            switchMap((user) => {
+                                newShop.userId = user.id
+                                newShop.imageUrl = this.defaultShopImg;
+                                this.userService.createAddressForUser(user.id, newAddress).subscribe({
+                                    next: () => {
+                                        this.firebaseService.signUp(newUser.email, this.userPassword.value);
+                                        this.shopService.createShop(newShop).subscribe(() => {
+                                            this.layer1 = this.modalService.show(template, { class: 'modal-sm' })
+                                        })
+                                    }
+                                });
+                                return EMPTY; // Return an empty observable to prevent nested subscriptions
+                            })
+                        ).subscribe({
+                            next: () => { },
+                            error: () => {
+                                this.errorItem = 'CCCD/CMND';
+                                this.layer2 = this.modalService.show(this.errorModal, { class: 'modal-sm' });
+                            }
+                        })
                     })
-                ).subscribe(() => {
+                }
+                else if (!this.userImageChoosen && this.shopImageChoosen) {
+                    newUser.imageUrl = this.defaultUserImg;
 
-                })
-            })
-        }
-        else if (!this.userImageChoosen && this.shopImageChoosen) {
-            newUser.imageUrl = this.defaultUserImg;
-
-            this.userService.createNewUser(newUser).pipe(
-                switchMap((user) => {
-                    this.uploadShopImage(this.shopImageFile).then((url) => {
-                        newShop.userId = user.id
-                        newShop.imageUrl = url;
-                        this.shopService.createShop(newShop).subscribe(() => {
-                            this.firebaseService.signUp(newUser.email, this.userPassword.value);
-                            this.userService.createAddressForUser(user.id, newAddress).subscribe();
-                            this.modalRef = this.modalService.show(template, { class: 'modal-sm' })
-                        });
+                    this.userService.createNewUser(newUser).pipe(
+                        switchMap((user) => {
+                            this.uploadShopImage(this.shopImageFile).then((url) => {
+                                newShop.userId = user.id
+                                newShop.imageUrl = url;
+                                this.userService.createAddressForUser(user.id, newAddress).subscribe({
+                                    next: () => {
+                                        this.firebaseService.signUp(newUser.email, this.userPassword.value);
+                                        this.shopService.createShop(newShop).subscribe(() => {
+                                            this.layer1 = this.modalService.show(template, { class: 'modal-sm' })
+                                        })
+                                    }
+                                });
+                            })
+                            return EMPTY; // Return an empty observable to prevent nested subscriptions
+                        })
+                    ).subscribe({
+                        next: () => { },
+                        error: () => {
+                            this.errorItem = 'CCCD/CMND';
+                            this.layer2 = this.modalService.show(this.errorModal, { class: 'modal-sm' });
+                        }
                     })
-                    return EMPTY; // Return an empty observable to prevent nested subscriptions
-                })
-            ).subscribe(() => {
+                }
+                else {
+                    newUser.imageUrl = this.defaultUserImg;
 
-            })
-        }
-        else {
-            newUser.imageUrl = this.defaultUserImg;
-
-            this.userService.createNewUser(newUser).pipe(
-                switchMap((user) => {
-                    newShop.userId = user.id
-                    newShop.imageUrl = this.defaultShopImg;
-                    this.shopService.createShop(newShop).subscribe(() => {
-                        this.firebaseService.signUp(newUser.email, this.userPassword.value);
-                        this.userService.createAddressForUser(user.id, newAddress).subscribe();
-                        this.modalRef = this.modalService.show(template, { class: 'modal-sm' })
-                    });
-                    return EMPTY; // Return an empty observable to prevent nested subscriptions
-                })
-            ).subscribe(() => {
-
-            })
-        }
+                    this.userService.createNewUser(newUser).pipe(
+                        switchMap((user) => {
+                            newShop.userId = user.id
+                            newShop.imageUrl = this.defaultShopImg;
+                            this.userService.createAddressForUser(user.id, newAddress).subscribe({
+                                next: () => {
+                                    this.firebaseService.signUp(newUser.email, this.userPassword.value);
+                                    this.shopService.createShop(newShop).subscribe(() => {
+                                        this.layer1 = this.modalService.show(template, { class: 'modal-sm' })
+                                    })
+                                }
+                            });
+                            return EMPTY; // Return an empty observable to prevent nested subscriptions
+                        })
+                    ).subscribe({
+                        next: () => { },
+                        error: () => {
+                            this.errorItem = 'CCCD/CMND';
+                            this.layer2 = this.modalService.show(this.errorModal, { class: 'modal-sm' });
+                        }
+                    })
+                }
+            }
+        })
     }
 
     //Districts and Wards
@@ -300,7 +346,7 @@ export class CreateVendorsComponent {
                 localStorage.setItem("image", this.avatar);
             }
         }
-        this.modalRef.hide();
+        this.layer1.hide();
     }
 
     //Shop Image Selected
@@ -308,7 +354,6 @@ export class CreateVendorsComponent {
         this.shopImageChoosen = true;
         this.shopImageFile = event.target.files[0];
 
-        console.log(this.shopImageFile)
         const reader = new FileReader();
         if (event.target.files && event.target.files.length) {
             const [file] = event.target.files;
@@ -319,7 +364,7 @@ export class CreateVendorsComponent {
                 localStorage.setItem("image", this.shopBanner);
             }
         }
-        this.modalRef.hide();
+        this.layer1.hide();
     }
 
     uploadUserImage(fileUpload: File): Promise<string> {
@@ -374,16 +419,17 @@ export class CreateVendorsComponent {
         })
     }
 
-
-    modalRef: BsModalRef;
-
     chooseImg(template: TemplateRef<any>) {
-        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+        this.layer1 = this.modalService.show(template, { class: 'modal-sm' });
     }
 
     continue() {
-        this.modalRef.hide();
+        this.layer1.hide();
         this.router.navigate(['/vendors/list']);
+    }
+
+    closeLayer2() {
+        this.layer2.hide();
     }
 
     //Getter
@@ -404,89 +450,4 @@ export class CreateVendorsComponent {
     get banner() { return this.shopForm.get("banner") }
     get shopName() { return this.shopForm.get("name") }
     get shopDescription() { return this.shopForm.get("description") }
-
-    // // Set avatar image
-    // onFileChange(event) {
-    //     const reader = new FileReader();
-    //     if (event.target.files && event.target.files.length) {
-    //         const [file] = event.target.files;
-    //         reader.readAsDataURL(file);
-
-    //         reader.onload = () => {
-    //             this.avatar = reader.result as string;
-    //             localStorage.setItem("image", this.avatar);
-    //         };
-    //     }
-    //     this.imageFile = event.target.files[0];
-    // }
-
-    // // Upload the image to firebase
-    // uploadImage(): Promise<void> {
-    //     return new Promise<void>((resolve) => {
-    //         let n = Date.now();
-    //         const filePath = `UserImages/${n}`;
-
-    //         const fileRef = this.storage.ref(filePath);
-    //         const task = this.storage.upload(`UserImages/${n}`, this.imageFile);
-    //         task
-    //             .snapshotChanges()
-    //             .pipe(
-    //                 finalize(() => {
-    //                     this.downloadURL = fileRef.getDownloadURL();
-    //                     this.downloadURL.subscribe((url) => {
-    //                         if (url) {
-    //                             //return url here
-    //                             this.imageLink = url;
-    //                         }
-    //                         resolve();
-    //                     });
-    //                 })
-    //             )
-    //             .subscribe((url) => {
-    //                 // if (url) {
-    //                 //     // console.log(url);
-    //                 // }
-    //             });
-    //     });
-    // }
-
-    // // Check password and confirm password is match
-    // ConfirmedValidator(controlName: string, matchingControlName: string) {
-    //     return (formGroup: FormGroup) => {
-    //         const control = formGroup.controls[controlName];
-    //         const matchingControl = formGroup.controls[matchingControlName];
-    //         if (matchingControl.errors && !matchingControl.errors.confirmedValidator) {
-    //             return;
-    //         }
-    //         if (control.value !== matchingControl.value) {
-    //             matchingControl.setErrors({ confirmedValidator: true });
-    //         } else {
-    //             matchingControl.setErrors(null);
-    //         }
-    //     };
-    // }
-
-    // // Call API of wards
-    // onDistrictChange(index: string) {
-    //     const districtId = this.addressDto.controls[index].get("district").value;
-    //     const wardControl = this.addressDto.controls[index].get("ward");
-
-    //     // If districtId == "2" (Hoang Sa) -> No Validate "Ward"
-    //     if (districtId === "2") {
-    //         wardControl.clearValidators();
-    //         wardControl.updateValueAndValidity();
-    //         wardControl?.disable();
-    //         this.wards = [];
-    //     } else {
-    //         wardControl.setValidators([Validators.required]);
-    //         wardControl.updateValueAndValidity();
-    //         wardControl?.enable();
-    //     }
-
-    //     // Get API wards of each district
-    //     this.wardService.getWardList(districtId).subscribe((data) => {
-    //         this.addressDto.controls[index].get("ward").setValue("");
-    //         this.wards = districtId === "2" ? [] : data;
-    //     });
-    // }
 }

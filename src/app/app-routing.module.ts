@@ -4,6 +4,7 @@ import { content } from './shared/routes/content-routes';
 import { ContentLayoutComponent } from './shared/layout/content-layout/content-layout.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { SignupComponent } from './components/auth/signup/signup.component';
+import { ForbiddenComponent } from './components/auth/forbidden/forbidden.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: 'auth/signup',
     component: SignupComponent
+  },
+  {
+    path: 'auth/forbidden',
+    component: ForbiddenComponent
   }
 ];
 

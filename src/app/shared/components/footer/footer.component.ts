@@ -22,7 +22,7 @@ export class FooterComponent implements OnInit {
   theTotalElements = 0;
 
   //Order
-  refreshInterval = 7500;
+  refreshInterval = 5000;
 
   //Modal
   mainLayer: BsModalRef;

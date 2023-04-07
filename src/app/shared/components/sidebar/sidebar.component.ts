@@ -1,7 +1,7 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { NavService, Menu } from '../../service/nav.service';
-import { User } from '../../tables/User';
+import { User } from '../../tables/user';
 import { UserService } from '../../service/user.service';
 
 @Component({

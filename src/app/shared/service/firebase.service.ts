@@ -38,7 +38,7 @@ export class FirebaseService {
         this.firebaseAuth.signInWithEmailAndPassword(email, password)
             .then(
                 response => {
-                    console.log(response);
+                    // console.log(response);
                     response.user.getIdToken()
                         .then(
                             (token: string) => {
@@ -52,14 +52,26 @@ export class FirebaseService {
                                         localStorage.setItem('email', user.email);
                                         localStorage.setItem('user-id', user.id.toString());
                                         this.router.navigate(['/dashboard/default']);
+
                                     }
                                     else if (user.role.roleName == 'ROLE_SHOP') {
                                         localStorage.setItem('user-role', user.role.roleName);
                                         localStorage.setItem('user-email', user.email);
                                         localStorage.setItem('user-id', user.id.toString());
                                         this.shopService.getShopByUserId(user.id).subscribe((shop) => {
-                                            localStorage.setItem('shop-id', shop.id.toString());
-                                            this.router.navigate(['/dashboard/default']);
+                                            if (shop.isEnabled) {
+                                                localStorage.setItem('shop-id', shop.id.toString());
+                                                this.router.navigate(['/dashboard/default']);
+                                            }
+                                            else {
+                                                this.firebaseAuth.signOut().then(
+                                                    res => {
+                                                        this.token = null;
+                                                        localStorage.clear();
+                                                        this.router.navigate(['/auth', 'forbidden']);
+                                                    }
+                                                );
+                                            }
                                         })
                                     }
                                     else {
@@ -68,6 +80,7 @@ export class FirebaseService {
                                                 this.token = null;
                                                 localStorage.clear();
                                                 this.router.navigate(['/auth', 'forbidden']);
+
                                             }
                                         );
                                     }
@@ -76,8 +89,11 @@ export class FirebaseService {
                         );
                 }
             ).catch(
-                error => console.log("Login error: " + error)
+                error => {
+                    console.log("Login error: " + error)
+                }
             );
+        return null;
     }
 
     getToken() {
@@ -112,7 +128,7 @@ export class FirebaseService {
         );
         this.token = null;
         localStorage.clear();
-        this.router.navigate(['/auth/login']);
+        window.location.href = '/auth/login'
     }
 }
 

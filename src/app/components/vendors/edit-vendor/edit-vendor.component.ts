@@ -2,22 +2,18 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TreeMapModule } from '@swimlane/ngx-charts';
-import { rejects } from 'assert';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { resolve } from 'path';
-import { element } from 'protractor';
 import { EMPTY, finalize, switchMap } from 'rxjs';
 import { Observable } from 'rxjs-compat';
 import { DistrictService } from 'src/app/shared/service/district.service';
+import { GoogleService } from 'src/app/shared/service/google.service';
 import { ShopService } from 'src/app/shared/service/shop.service';
 import { UserService } from 'src/app/shared/service/user.service';
-import { WardService } from 'src/app/shared/service/ward.service';
-import { Address } from 'src/app/shared/tables/Address';
-import { District } from 'src/app/shared/tables/District';
+import { Address } from 'src/app/shared/tables/address';
+import { District } from 'src/app/shared/tables/district';
 import { Shop } from 'src/app/shared/tables/shop';
-import { User } from 'src/app/shared/tables/User';
-import { Ward } from 'src/app/shared/tables/Ward';
+import { User } from 'src/app/shared/tables/user';
+import { Ward } from 'src/app/shared/tables/ward';
 
 @Component({
   selector: 'app-edit-vendor',
@@ -64,6 +60,13 @@ export class EditVendorComponent implements OnInit {
   edited: boolean = false;
   shopEdited: boolean = false;
 
+  //location
+  oldAddress: string;
+  oldDistrict: string;
+  oldWard: string;
+  oldLat: string;
+  oldLng: string;
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -71,6 +74,7 @@ export class EditVendorComponent implements OnInit {
     private userService: UserService,
     private shopService: ShopService,
     private districtService: DistrictService,
+    private googleService: GoogleService,
     private storage: AngularFireStorage,
     private route: ActivatedRoute,
     private modalService: BsModalService
@@ -81,7 +85,6 @@ export class EditVendorComponent implements OnInit {
 
   ngOnInit() {
     const shopId = +this.route.snapshot.paramMap.get('id')!;
-    console.log(shopId)
     this.getAllDistrict().then(() => {
       this.shopService.getShopById(shopId).subscribe((data => this.fillFormToUpdate(data)))
     }).catch(error => console.log(error));
@@ -125,13 +128,17 @@ export class EditVendorComponent implements OnInit {
     this.district = response.user.addresses[0].district;
     this.ward = response.user.addresses[0].ward;
 
-    console.log(this.userId + " " + this.shopId + " " + this.addressId)
+    //old location
+    this.oldLat = response.lat;
+    this.oldLng = response.lng;
+    this.oldAddress = response.user.addresses[0].address;
+    this.oldDistrict = response.user.addresses[0].district;
+    this.oldWard = response.user.addresses[0].ward;
 
     this.districts.forEach((element: District) => {
       if (response.user.addresses[0].district == element.name && response.user.addresses[0].district != "Huyện Hoàng Sa") {
         this.isHaveDistrict = true;
         this.wards = element.wards
-        console.log(this.wards)
       }
     })
 
@@ -176,7 +183,7 @@ export class EditVendorComponent implements OnInit {
     editUser.isLocked = false;
     editUser.roleName = 'ROLE_SHOP';
 
-    editAddress.id = this.addressId
+    editAddress.id = this.addressId;
     editAddress.address = this.userAddress.value;
     editAddress.district = this.district;
     if (this.district != "Huyện Hoàng Sa") editAddress.ward = this.ward;
@@ -186,38 +193,68 @@ export class EditVendorComponent implements OnInit {
     editShop.isStudent = this.isStudent;
     editShop.isEnabled = this.isEnabled;
 
+
     if (this.editUserForm.invalid || this.editShopForm.invalid) {
       this.editUserForm.markAllAsTouched();
       this.editShopForm.markAllAsTouched();
-      console.log(this.editUserForm);
-      console.log(this.editShopForm);
       return;
     }
 
-    if (this.edited == true && this.shopEdited == true) {
-      this.uploadUserImage(this.userImageFile).then((url) => {
-        editUser.imageUrl = url
-        this.userService.updateUser(this.userId, editUser).pipe(
-          switchMap((user) => {
-            this.uploadShopImage(this.shopImageFile).then((url) => {
-              editShop.imageUrl = url;
-              this.shopService.updateShop(this.shopId, editShop).subscribe();
-              this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
-                () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
-                (error) => {
-                  console.log("Address existed ! No problem");
-                  this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
-                });
-            })
-            return EMPTY;
-          })
-        ).subscribe(() => {
+    if (this.oldAddress == editAddress.address && this.oldDistrict == editAddress.district && this.oldWard == editAddress.ward) {
+      editShop.lat = this.oldLat;
+      editShop.lng = this.oldLng;
 
-        });
-      })
-    } else if (this.edited && !this.shopEdited) {
-      this.uploadUserImage(this.userImageFile).then((url) => {
-        editUser.imageUrl = url;
+      if (this.edited == true && this.shopEdited == true) {
+        this.uploadUserImage(this.userImageFile).then((url) => {
+          editUser.imageUrl = url
+          this.userService.updateUser(this.userId, editUser).pipe(
+            switchMap((user) => {
+              this.uploadShopImage(this.shopImageFile).then((url) => {
+                editShop.imageUrl = url;
+                this.shopService.updateShop(this.shopId, editShop).subscribe();
+                this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
+                  () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
+                  (error) => {
+                    console.log("Address existed ! No problem");
+                    this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+                  });
+              })
+              return EMPTY;
+            })
+          ).subscribe(() => {
+
+          });
+        })
+      } else if (this.edited && !this.shopEdited) {
+        this.uploadUserImage(this.userImageFile).then((url) => {
+          editUser.imageUrl = url;
+          editShop.imageUrl = this.shopImg;
+          this.userService.updateUser(this.userId, editUser).subscribe();
+          this.shopService.updateShop(this.shopId, editShop).subscribe();
+          this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
+            () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
+            (error) => {
+              console.log("Address existed ! No problem");
+              this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+            }
+          )
+        })
+      } else if (!this.edited && this.shopEdited) {
+        this.uploadShopImage(this.shopImageFile).then((url) => {
+          editUser.imageUrl = this.userImg;
+          editShop.imageUrl = url;
+          this.userService.updateUser(this.userId, editUser).subscribe();
+          this.shopService.updateShop(this.shopId, editShop).subscribe();
+          this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
+            () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
+            (error) => {
+              console.log("Address existed ! No problem");
+              this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+            }
+          )
+        })
+      } else {
+        editUser.imageUrl = this.userImg;
         editShop.imageUrl = this.shopImg;
         this.userService.updateUser(this.userId, editUser).subscribe();
         this.shopService.updateShop(this.shopId, editShop).subscribe();
@@ -228,35 +265,78 @@ export class EditVendorComponent implements OnInit {
             this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
           }
         )
-      })
-    } else if (!this.edited && this.shopEdited) {
-      this.uploadShopImage(this.shopImageFile).then((url) => {
-        editUser.imageUrl = this.userImg;
-        editShop.imageUrl = url;
-        this.userService.updateUser(this.userId, editUser).subscribe();
-        this.shopService.updateShop(this.shopId, editShop).subscribe();
-        this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
-          () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
-          (error) => {
-            console.log("Address existed ! No problem");
-            this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
-          }
-        )
-      })
-    } else {
-      editUser.imageUrl = this.userImg;
-      editShop.imageUrl = this.shopImg;
-      this.userService.updateUser(this.userId, editUser).subscribe();
-      this.shopService.updateShop(this.shopId, editShop).subscribe();
-      this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
-        () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
-        (error) => {
-          console.log("Address existed ! No problem");
-          this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
-        }
-      )
+      }
     }
+    else {
+      const newAddress = `${editAddress.address}, ${editAddress.ward}, ${editAddress.district}, Đà Nẵng`;
+      this.googleService.getLocation(newAddress).subscribe((location) => {
+        editShop.lat = location.lat;
+        editShop.lng = location.lng;
 
+        if (this.edited == true && this.shopEdited == true) {
+          this.uploadUserImage(this.userImageFile).then((url) => {
+            editUser.imageUrl = url
+            this.userService.updateUser(this.userId, editUser).pipe(
+              switchMap((user) => {
+                this.uploadShopImage(this.shopImageFile).then((url) => {
+                  editShop.imageUrl = url;
+                  this.shopService.updateShop(this.shopId, editShop).subscribe();
+                  this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
+                    () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
+                    (error) => {
+                      console.log("Address existed ! No problem");
+                      this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+                    });
+                })
+                return EMPTY;
+              })
+            ).subscribe(() => {
+
+            });
+          })
+        } else if (this.edited && !this.shopEdited) {
+          this.uploadUserImage(this.userImageFile).then((url) => {
+            editUser.imageUrl = url;
+            editShop.imageUrl = this.shopImg;
+            this.userService.updateUser(this.userId, editUser).subscribe();
+            this.shopService.updateShop(this.shopId, editShop).subscribe();
+            this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
+              () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
+              (error) => {
+                console.log("Address existed ! No problem");
+                this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+              }
+            )
+          })
+        } else if (!this.edited && this.shopEdited) {
+          this.uploadShopImage(this.shopImageFile).then((url) => {
+            editUser.imageUrl = this.userImg;
+            editShop.imageUrl = url;
+            this.userService.updateUser(this.userId, editUser).subscribe();
+            this.shopService.updateShop(this.shopId, editShop).subscribe();
+            this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
+              () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
+              (error) => {
+                console.log("Address existed ! No problem");
+                this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+              }
+            )
+          })
+        } else {
+          editUser.imageUrl = this.userImg;
+          editShop.imageUrl = this.shopImg;
+          this.userService.updateUser(this.userId, editUser).subscribe();
+          this.shopService.updateShop(this.shopId, editShop).subscribe();
+          this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
+            () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
+            (error) => {
+              console.log("Address existed ! No problem");
+              this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+            }
+          )
+        }
+      })
+    }
 
   }
 
@@ -293,7 +373,6 @@ export class EditVendorComponent implements OnInit {
   onShopFileSelected(event) {
     this.shopEdited = true;
     this.shopImageFile = event.target.files[0];
-    console.log(this.shopImageFile)
     const reader = new FileReader();
     if (event.target.files && event.target.files.length) {
       const [file] = event.target.files;
@@ -390,12 +469,12 @@ export class EditVendorComponent implements OnInit {
   }
 
   //Getter
-  get userFullName() { return this.editUserForm.get("fullName")}
+  get userFullName() { return this.editUserForm.get("fullName") }
   get userEmail() { return this.editUserForm.get("email") }
   get userDateOfBirth() { return this.editUserForm.get("dateOfBirth") }
   get userPhoneNumber() { return this.editUserForm.get("phoneNumber") }
   get userIdentifiedCode() { return this.editUserForm.get("identifiedCode") }
-  get userAddress() { return this.editUserForm.get("address")}
+  get userAddress() { return this.editUserForm.get("address") }
   // get userDistrict() { return this.editUserForm.get("district").value; }
   // get userWard() { return this.editUserForm.get("ward").value; }
   get userPassword() { return this.editUserForm.get("password").value; }
@@ -404,91 +483,4 @@ export class EditVendorComponent implements OnInit {
   //Shop
   get shopName() { return this.editShopForm.get("name") }
   get shopDescription() { return this.editShopForm.get("description") }
-
-  // // Set avatar image
-  // onFileChange(event) {
-  //     const reader = new FileReader();
-  //     if (event.target.files && event.target.files.length) {
-  //         const [file] = event.target.files;
-  //         reader.readAsDataURL(file);
-
-  //         reader.onload = () => {
-  //             this.avatar = reader.result as string;
-  //             localStorage.setItem("image", this.avatar);
-  //         };
-  //     }
-  //     this.imageFile = event.target.files[0];
-  // }
-
-  // // Upload the image to firebase
-  // uploadImage(): Promise<void> {
-  //     return new Promise<void>((resolve) => {
-  //         let n = Date.now();
-  //         const filePath = `UserImages/${n}`;
-
-  //         const fileRef = this.storage.ref(filePath);
-  //         const task = this.storage.upload(`UserImages/${n}`, this.imageFile);
-  //         task
-  //             .snapshotChanges()
-  //             .pipe(
-  //                 finalize(() => {
-  //                     this.downloadURL = fileRef.getDownloadURL();
-  //                     this.downloadURL.subscribe((url) => {
-  //                         if (url) {
-  //                             //return url here
-  //                             this.imageLink = url;
-  //                         }
-  //                         resolve();
-  //                     });
-  //                 })
-  //             )
-  //             .subscribe((url) => {
-  //                 // if (url) {
-  //                 //     // console.log(url);
-  //                 // }
-  //             });
-  //     });
-  // }
-
-  // // Check password and confirm password is match
-  // ConfirmedValidator(controlName: string, matchingControlName: string) {
-  //     return (formGroup: FormGroup) => {
-  //         const control = formGroup.controls[controlName];
-  //         const matchingControl = formGroup.controls[matchingControlName];
-  //         if (matchingControl.errors && !matchingControl.errors.confirmedValidator) {
-  //             return;
-  //         }
-  //         if (control.value !== matchingControl.value) {
-  //             matchingControl.setErrors({ confirmedValidator: true });
-  //         } else {
-  //             matchingControl.setErrors(null);
-  //         }
-  //     };
-  // }
-
-  // // Call API of wards
-  // onDistrictChange(index: string) {
-  //     const districtId = this.addressDto.controls[index].get("district").value;
-  //     const wardControl = this.addressDto.controls[index].get("ward");
-
-  //     // If districtId == "2" (Hoang Sa) -> No Validate "Ward"
-  //     if (districtId === "2") {
-  //         wardControl.clearValidators();
-  //         wardControl.updateValueAndValidity();
-  //         wardControl?.disable();
-  //         this.wards = [];
-  //     } else {
-  //         wardControl.setValidators([Validators.required]);
-  //         wardControl.updateValueAndValidity();
-  //         wardControl?.enable();
-  //     }
-
-  //     // Get API wards of each district
-  //     this.wardService.getWardList(districtId).subscribe((data) => {
-  //         this.addressDto.controls[index].get("ward").setValue("");
-  //         this.wards = districtId === "2" ? [] : data;
-  //     });
-  // }
-
 }
-

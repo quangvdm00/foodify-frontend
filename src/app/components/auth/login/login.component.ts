@@ -14,6 +14,9 @@ export class LoginComponent implements OnInit {
     public registerForm: UntypedFormGroup;
     public active = 1;
 
+    // Password
+    showPassword = false;
+
     constructor(private formBuilder: UntypedFormBuilder,
         private firebaseAuthService: FirebaseService,
         private router: Router) {

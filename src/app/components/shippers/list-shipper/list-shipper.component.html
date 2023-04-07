@@ -47,17 +47,21 @@
                                         </td>
                                         <td>{{ shipper.user.fullName }}</td>
                                         <td>{{ shipper.shop.name }}</td>
-                                        <td *ngIf="shipper.isActive == true">
+                                        <td class="d-flex flex-column" *ngIf="shipper.isActive == true">
                                             <i style="color: green;" class="fa fa-power-off" aria-hidden="true"></i>
+                                            <p class="font-weight-bold" style="color: green;">Đang hoạt động</p>
                                         </td>
-                                        <td *ngIf="shipper.isActive == false">
+                                        <td class="d-flex flex-column" *ngIf="shipper.isActive == false">
                                             <i style="color: #FF6347;" class="fa fa-power-off" aria-hidden="true"></i>
+                                            <p class="font-weight-bold" style="color: #FF6347;">Không hoạt động</p>
                                         </td>
                                         <td *ngIf="shipper.isShipping== true">
                                             <i style="color: green;" class="fa fa-motorcycle" aria-hidden="true"></i>
+                                            <p class="font-weight-bold" style="color: green;">Đang giao hàng</p>
                                         </td>
                                         <td *ngIf="shipper.isShipping== false">
                                             <i style="color: #FF6347;" class="fa fa-motorcycle" aria-hidden="true"></i>
+                                            <p class="font-weight-bold" style="color: #FF6347;">Không giao hàng</p>
                                         </td>
                                         <td>
                                             <a [routerLink]="['/shippers', 'details', shipper.id]"

@@ -72,6 +72,11 @@ export class ResetPasswordComponent {
 
   //Change password
   changePassword(success: TemplateRef<any>) {
+    if (this.resetPasswordForm.invalid) {
+      this.resetPasswordForm.markAllAsTouched();
+      return;
+    }
+
     this.firebaseService.confirmPasswordReset(this.oobCode, this.password.value);
     this.layer1 = this.modalService.show(success, { class: 'modal-sm' })
   }

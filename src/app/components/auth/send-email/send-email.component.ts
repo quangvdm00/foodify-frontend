@@ -1,18 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from "@angular/core";
+import { FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { FirebaseService } from "../../../shared/service/firebase.service";
-import { Router } from '@angular/router';
-import { Validation } from 'src/app/constants/Validation';
+import { Router } from "@angular/router";
+import { Validation } from "src/app/constants/Validation";
 
 @Component({
-  selector: 'app-send-email',
-  templateUrl: './send-email.component.html',
-  styleUrls: ['./send-email.component.scss']
+  selector: "app-send-email",
+  templateUrl: "./send-email.component.html",
+  styleUrls: ["./send-email.component.scss"],
 })
 export class SendEmailComponent {
-  public sendEmailForm: FormGroup
+  public sendEmailForm: FormGroup;
   public active = 1;
-
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -45,10 +44,14 @@ export class SendEmailComponent {
   ngOnInit() {
     this.sendEmailForm = this.formBuilder.group({
       email: new FormControl("", [Validators.required, Validators.email]),
-    })
+    });
   }
 
   sendPasswordResetMail() {
+    if (this.sendEmailForm.invalid) {
+      this.sendEmailForm.markAllAsTouched();
+      return;
+    }
     this.firebaseService.resetPassword(this.email.value);
   }
 

@@ -1,16 +1,32 @@
 .backgound-food {
-    background-image: url('../../../../assets/images/background-login.jpg');
-    width: 100vw;
-    height: 100vh;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    z-index: -99;
+  background-image: url("../../../../assets/images/background-login.jpg");
+  width: 100vw;
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -99;
+
+  .email-img-box {
+
+    .email-img {
+        max-width: 351px;
+        padding-bottom: 20px;
+
+        
+    }
+  }
+
+  .fa-envelope-o {
+    font-size: 38px;
+    margin-right: 12px;
+    color: #8b8b8b;
+  }
 }
 
 .btn-back {
-    border-radius: 25px;
-    margin-top: 20px;
-    font-weight: 400;
-    padding: 11px 45px;
+  border-radius: 25px;
+  margin-top: 20px;
+  font-weight: 400;
+  padding: 11px 45px;
 }

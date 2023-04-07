@@ -85,7 +85,7 @@
 
 <ng-template #deleteModal>
     <div class="modal-body text-center">
-        <p>Bạn chắc chắn muốn xoá người bán này chứ ?</p>
+        <h5 class="text-dark font-weight-bold mb-4">Bạn chắc chắn muốn xoá người bán này chứ ?</h5>
         <button type="button" class="btn btn-primary" (click)="confirm(deleteSuccess)">Tiếp tục
         </button>&nbsp;
         <button type="button" class="btn btn-secondary" (click)="decline()">Quay lại
@@ -95,7 +95,7 @@
 
 <ng-template #deleteSuccess>
     <div class="modal-body text-center">
-        <p>Xoá người bán thành công</p>
+        <h5 class="text-dark font-weight-bold mb-4">Xoá người bán thành công</h5>
         <button type="button" class="btn btn-primary" (click)="continue()">Tiếp tục
         </button>
     </div>

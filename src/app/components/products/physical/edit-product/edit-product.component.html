@@ -241,7 +241,7 @@
                                 <div class="row products-admin ratio_asos">
                                     <div class="col-xl-3 col-sm-6" *ngFor="let image of product.images">
                                         <div class="card">
-                                            <div class="card-body product-box">
+                                            <div class="card-body product-box shadow-box">
                                                 <div class="img-wrapper">
                                                     <div class="front">
                                                         <a href="javascript:void(0)">
@@ -289,7 +289,7 @@
 <!-- Modal -->
 <ng-template #add_product>
     <div class="modal-body text-center">
-        <p>Bạn chắc chắc muốn chỉnh sửa sản phẩm này chứ ?</p>
+        <h5 class="text-dark font-weight-bold mb-4">Bạn chắc chắc muốn chỉnh sửa sản phẩm này chứ ?</h5>
         <button type="button" class="btn btn-secondary" (click)="confirm(success)">Đồng ý
         </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button type="button" class="btn btn-primary" (click)="closeLayer1()">Không
@@ -314,7 +314,7 @@
 
 <ng-template #success>
     <div class="modal-body text-center">
-        <p>Chỉnh sửa sản phẩm thành công</p>
+        <h5 class="text-dark font-weight-bold mb-4">Chỉnh sửa sản phẩm thành công</h5>
         <button type="button" class="btn btn-default" (click)="list()">Danh sách
         </button>
         <button type=" button" class="btn btn-primary" (click)="closeLayer1()">Tiếp
@@ -325,8 +325,8 @@
 
 <ng-template #addImg>
     <div class="modal-body text-center">
-        <p>Thêm ảnh</p>
-        <input class="input-image" type="file" accept="image/*" (change)="onFileSelected($event)" />
+        <h5 class="text-dark font-weight-bold mb-4">Thêm ảnh</h5>
+        <input class="input-image mb-4" type="file" accept="image/*" (change)="onFileSelected($event)" />
         <button type="button" class="btn btn-primary" (click)="uploadNewImage(imageSuccess)">Tiếp tục
         </button>
     </div>
@@ -334,8 +334,8 @@
 
 <ng-template #updateImg>
     <div class="modal-body text-center">
-        <p>Chỉnh sửa ảnh</p>
-        <input class="input-image" type="file" accept="image/*" (change)="onFileSelected($event)" />
+        <h5 class="text-dark font-weight-bold mb-4">Chỉnh sửa ảnh</h5>
+        <input class="input-image mb-4" type="file" accept="image/*" (change)="onFileSelected($event)" />
         <button type="button" class="btn btn-primary" (click)="updateImage(imageSuccess)">Tiếp tục
         </button>
     </div>
@@ -343,7 +343,7 @@
 
 <ng-template #deleteImg>
     <div class="modal-body text-center">
-        <p>Bạn chắc chắc muốn xoá ảnh này chứ ?</p>
+        <h5 class="text-dark font-weight-bold mb-4">Bạn chắc chắc muốn xoá ảnh này chứ ?</h5>
         <button type="button" class="btn btn-primary" (click)="deleteImage(imageSuccess)">Tiếp tục
         </button>&nbsp;&nbsp;&nbsp;
         <button type=" button" class="btn btn-primary">Quay lại
@@ -353,7 +353,7 @@
 
 <ng-template #imageSuccess>
     <div class="modal-body text-center">
-        <p>{{ imageContent }} thành công</p>
+        <h5 class="text-dark font-weight-bold mb-4">{{ imageContent }} thành công</h5>
         <button type=" button" class="btn btn-primary" (click)="closeLayer1AndReload()">Tiếp
             tục
         </button>

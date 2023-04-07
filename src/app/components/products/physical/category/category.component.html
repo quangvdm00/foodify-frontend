@@ -104,8 +104,8 @@
 
 <ng-template #deleteCategory>
     <div class="modal-body text-center">
-        <p>Bạn muốn xoá thể loại này chứ ?<br>
-            Tất cả những sản phẩm liên quan sẽ bị xoá ?</p>
+        <h5 class="text-dark font-weight-bold mb-4">Bạn muốn xoá thể loại này chứ ?<br>
+            Tất cả những sản phẩm liên quan sẽ bị xoá ?</h5>
         <button type="button" class="btn btn-secondary" (click)="confirm(categoryId, deleteSuccess)">
             Đồng ý
         </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -116,7 +116,7 @@
 
 <ng-template #updateSuccess>
     <div class="modal-body text-center">
-        <p>Cập nhật thành công</p>
+        <h5 class="text-dark font-weight-bold mb-4">Cập nhật thành công</h5>
         <button type="button" class="btn btn-primary" (click)="success()">Tiếp tục
         </button>
     </div>
@@ -124,7 +124,7 @@
 
 <ng-template #deleteSuccess>
     <div class="modal-body text-center">
-        <p>Cập nhật thành công</p>
+        <h5 class="text-dark font-weight-bold mb-4">Cập nhật thành công</h5>
         <button type="button" class="btn btn-primary" (click)="success()">Tiếp tục
         </button>
     </div>

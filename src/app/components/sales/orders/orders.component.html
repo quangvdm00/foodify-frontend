@@ -55,7 +55,8 @@
                         'badge-warning': order.status === 'CONFIRMED',
                         'badge-info': order.status === 'SHIPPING',
                         'badge-success': order.status === 'COMPLETED',
-                        'badge-primary': order.status === 'CANCELED'
+                        'badge-primary': order.status === 'CANCELED' || order.status === 'REJECT_DELIVERY'
+                      
                       }">
                       {{
                       order.status === "AWAITING"
@@ -68,6 +69,8 @@
                       ? "Giao thành công"
                       : order.status === "CANCELED"
                       ? "Đã huỷ đơn"
+                      : order.status === "REJECT_DELIVERY"
+                      ? "Không nhận hàng"
                       : ""
                       }}
                     </span>
@@ -118,7 +121,7 @@
 <!-- Change status -->
 <ng-template #change_status>
   <div class="modal-change-status">
-    <div class="modal-confirm-text">Cập nhật đơn hàng</div>
+    <h5 class="modal-confirm-text">Cập nhật đơn hàng</h5>
 
     <div class="modal-select-option" *ngIf="!isHaveShipper">
       <select [(ngModel)]="shipper">
@@ -134,6 +137,7 @@
         <option value="SHIPPING">Đang giao hàng</option>
         <option value="COMPLETED">Giao thành công</option>
         <option value="CANCELED">Đã huỷ đơn</option>
+        <option value="REJECT_DELIVERY">Không nhận hàng</option>
       </select>
     </div>
     <div class="modal-btn-option">
@@ -147,7 +151,7 @@
 <!--Change status success -->
 <ng-template #change_status_success>
   <div class="modal-body text-center">
-    <p class="modal-confirm-text">Chỉnh sửa đơn hàng thành công</p>
+    <h5 class="modal-confirm-text">Chỉnh sửa đơn hàng thành công</h5>
     <button type="button" class="btn btn-primary" (click)="successChangeStatus()">Tiếp tục</button>
   </div>
 </ng-template>
@@ -157,7 +161,7 @@
 <!-- Confirm delete -->
 <ng-template #delete_order>
   <div class=" modal-confirm-delete">
-    <div class="modal-confirm-text">Bạn chắc chắc xoá đơn hàng này chứ ?</div>
+    <h5 class="modal-confirm-text">Bạn chắc chắc xoá đơn hàng này chứ ?</h5>
     <div class="modal-btn-option">
       <button type="button" class="btn btn-default width-btn"
         (click)="confirmBoxDelete(userId, orderId, delete_order_success)">Xoá</button>
@@ -169,7 +173,7 @@
 <!--Delete success -->
 <ng-template #delete_order_success>
   <div class="modal-body text-center">
-    <p class="modal-confirm-text">Xoá đơn hàng thành công</p>
+    <h5 class="modal-confirm-text">Xoá đơn hàng thành công</h5>
     <button type="button" class="btn btn-primary" (click)="successDelete()">Tiếp tục</button>
   </div>
 </ng-template>

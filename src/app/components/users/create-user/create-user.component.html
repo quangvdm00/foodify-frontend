@@ -454,7 +454,7 @@
 
 <ng-template #createSuccess>
   <div class="modal-body text-center">
-    <p>Tạo người dùng thành công</p>
+    <h5 class="text-dark font-weight-bold mb-4">Tạo người dùng thành công</h5>
     <button type="button" class="btn btn-primary" (click)="closeLayer1()">Tiếp tục
     </button>
   </div>
@@ -462,7 +462,7 @@
 
 <ng-template #createFailure>
   <div class="modal-body text-center">
-    <p>{{ failureContent }} đã tồn tại. Vui lòng chọn {{ failureContent.toLowerCase() }} khác.</p>
+    <h5 class="text-dark font-weight-bold mb-4">{{ failureContent }} đã tồn tại. Vui lòng chọn {{ failureContent.toLowerCase() }} khác.</h5>
     <button type="button" class="btn btn-primary" (click)="closeLayer1()">Tiếp tục
     </button>
   </div>

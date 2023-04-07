@@ -81,7 +81,7 @@
 
 <ng-template #confirmDelete>
     <div class="modal-body text-center">
-        <p>Bạn chắc chắn muốn xoá người dùng này ?</p>
+        <h5 class="text-dark font-weight-bold mb-4">Bạn chắc chắn muốn xoá người dùng này ?</h5>
         <button type="button" class="btn btn-primary" (click)="confirmDeleted(deleteSuccess)">Tiếp
             tục</button>&nbsp;&nbsp;
         <button type="button" class="btn btn-secondary" (click)="closeLayer1()">Quay lại</button>
@@ -90,7 +90,7 @@
 
 <ng-template #deleteSuccess>
     <div class="modal-body text-center">
-        <p>Xoá người dùng thành công</p>
+        <h5 class="text-dark font-weight-bold mb-4">Xoá người dùng thành công</h5>
         <button type="button" class="btn btn-primary" (click)="closeLayer1()">Tiếp tục</button>
     </div>
 </ng-template>

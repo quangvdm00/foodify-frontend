@@ -184,7 +184,11 @@
                                                     <td>
                                                         <a *ngIf="address.id == user.defaultAddress"><i
                                                                 style="color: dodgerblue;" class="fa fa-home"
-                                                                aria-hidden="true"></i></a>&nbsp;
+                                                                aria-hidden="true"></i></a>
+                                                        <a *ngIf="address.id != user.defaultAddress"><i
+                                                                style="color: gray; cursor: pointer;" class="fa fa-home"
+                                                                aria-hidden="true"
+                                                                (click)="openChangeModal(address.id)"></i></a>&nbsp;
                                                         <a style="cursor: pointer;"
                                                             (click)="openEditAddress(address.id, editAddressTemplate)"><i
                                                                 class='fa fa-edit f-12'></i></a>&nbsp;
@@ -286,7 +290,7 @@
             </div>
         </form>
 
-        
+
         <div>
             <div class="form-group">
                 <label class="mb-1 text-dark font-weight-bold">Quận : </label>
@@ -357,5 +361,22 @@
     <div class="modal-body text-center">
         <h5 class="text-dark font-weight-bold mb-4">Xoá địa chỉ thành công</h5>
         <button type="button" class="btn btn-primary" (click)="continue()">Tiếp tục</button>
+    </div>
+</ng-template>
+
+<ng-template #confirmDefault>
+    <div class="modal-body text-center">
+        <h5 class="text-dark font-weight-bold mb-4">Bạn chắc chắn muốn cập nhật địa chỉ này thành mặc định ?</h5>
+        <button type="button" class="btn btn-primary" (click)="changeDefaultAddress()">Tiếp
+            tục</button>&nbsp;&nbsp;
+        <button type="button" class="btn btn-secondary" (click)="continue()">Quay lại</button>
+    </div>
+</ng-template>
+
+<ng-template #changeDefaultSuccess>
+    <div class="modal-body text-center">
+        <h5 class="text-dark font-weight-bold mb-4">Thay đổi địa chỉ mặc định thành công ?</h5>
+        <button type="button" class="btn btn-primary" (click)="closeLayer1()">Tiếp
+            tục</button>&nbsp;&nbsp;
     </div>
 </ng-template>

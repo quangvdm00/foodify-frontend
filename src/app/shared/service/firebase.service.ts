@@ -116,6 +116,16 @@ export class FirebaseService {
         this.firebaseAuth.sendPasswordResetEmail(email);
     }
 
+    confirmPasswordReset(oobCode: string, password: string) {
+        this.firebaseAuth.confirmPasswordReset(oobCode, password)
+            .then(() => {
+
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
     deleteUserByEmail(email: string): Observable<StringBoolObject> {
         return this.httpClient.delete<StringBoolObject>(this.baseUrl + `/${email}`);
     }

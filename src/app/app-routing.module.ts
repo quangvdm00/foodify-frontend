@@ -5,6 +5,7 @@ import { ContentLayoutComponent } from './shared/layout/content-layout/content-l
 import { LoginComponent } from './components/auth/login/login.component';
 import { SignupComponent } from './components/auth/signup/signup.component';
 import { ForbiddenComponent } from './components/auth/forbidden/forbidden.component';
+import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,10 @@ const routes: Routes = [
   {
     path: 'auth/forbidden',
     component: ForbiddenComponent
+  },
+  {
+    path: 'auth/reset-password',
+    component: ResetPasswordComponent
   }
 ];
 

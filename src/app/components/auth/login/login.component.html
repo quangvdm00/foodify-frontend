@@ -144,16 +144,18 @@
                                                 novalidate="">
                                                 <div class="form-group">
                                                     <input required="" name="login[username]" type="email"
-                                                        class="form-control" placeholder="Email"
-                                                        formControlName="email" id="exampleInputEmail1">
+                                                        class="form-control" placeholder="Email" formControlName="email"
+                                                        id="exampleInputEmail1">
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="form-control input-password-holder">
                                                         <input formControlName="password" class="input-password"
                                                             type="{{ showPassword ? 'text' : 'password' }}" #pwc
                                                             placeholder="Xác nhận mật khẩu" />
-                                                        <span class="icon-holder-eye" (click)="showPassword = !showPassword">
-                                                            <i class="{{ showPassword ? 'fa fa-eye-slash' : 'fa fa-eye' }}"></i>
+                                                        <span class="icon-holder-eye"
+                                                            (click)="showPassword = !showPassword">
+                                                            <i
+                                                                class="{{ showPassword ? 'fa fa-eye-slash' : 'fa fa-eye' }}"></i>
                                                         </span>
                                                     </div>
                                                     <!-- <input required="" name="login[password]" type="password"
@@ -167,22 +169,25 @@
                                                     </div> -->
                                                     <div class="d-flex mt-3">
                                                         <!-- <a routerLink="/reset-password" routerLinkActive="active" class="">Quên mật khẩu</a> -->
-                                                        <a routerLink="/send-email" routerLinkActive="active" class="">Quên mật khẩu ?</a>
+                                                        <a routerLink="/send-email" routerLinkActive="active"
+                                                            class="">Quên mật khẩu ?</a>
                                                     </div>
                                                 </div>
                                                 <div class="form-button">
-                                                    <button class="btn btn-primary" type="submit" (click)="onSignIn()">Đăng nhập</button>
+                                                    <button class="btn btn-primary" type="submit"
+                                                        (click)="onSignIn()">Đăng nhập</button>
                                                 </div>
                                                 <div class="d-flex justify-content-start align-items-center mt-3">
-                                                    <p class="mb-0 text-secondary">Trở thành người bán hàng của Foodify?</p>
+                                                    <p class="mb-0 text-secondary">Trở thành người bán hàng của Foodify?
+                                                    </p>
                                                     <a class="ml-2" [routerLink]="['/auth', 'signup']">Đăng ký ngay</a>
                                                 </div>
-                                                
+
                                             </form>
                                         </div>
                                     </ng-template>
                                 </li>
-                                
+
                             </ul>
                             <div [ngbNavOutlet]="nav" class="mt-2"></div>
                         </div>

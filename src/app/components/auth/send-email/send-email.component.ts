@@ -15,9 +15,11 @@ export class SendEmailComponent {
 
   constructor(
     private formBuilder: UntypedFormBuilder,
-    private firebaseAuthService: FirebaseService,
+    private firebaseService: FirebaseService,
     private router: Router
-  ) {}
+  ) {
+
+  }
 
   owlcarousel = [
     {
@@ -45,11 +47,12 @@ export class SendEmailComponent {
     });
   }
 
-  sendMail() {
+  sendPasswordResetMail() {
     if (this.sendEmailForm.invalid) {
       this.sendEmailForm.markAllAsTouched();
       return;
     }
+    this.firebaseService.resetPassword(this.email.value);
   }
 
   get email() {

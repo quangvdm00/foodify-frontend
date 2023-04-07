@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { FirebaseService } from "../../../shared/service/firebase.service";
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Validation } from 'src/app/constants/Validation';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: "app-reset-password",
@@ -14,14 +15,21 @@ export class ResetPasswordComponent {
   public active = 1;
 
   // Password
+  oobCode: string = '';
   showPassword = false;
+
+  //Modal
+  layer1: BsModalRef;
+
 
   constructor(
     private formBuilder: UntypedFormBuilder,
-    private firebaseAuthService: FirebaseService,
+    private activatedRoute: ActivatedRoute,
+    private firebaseService: FirebaseService,
+    private modalService: BsModalService,
     private router: Router
   ) {
-    
+
   }
 
   owlcarousel = [
@@ -45,13 +53,38 @@ export class ResetPasswordComponent {
   };
 
   ngOnInit() {
-    this.resetPasswordForm = this.formBuilder.group({
-      password: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Password)]),
-      confirmPassword: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Password)]),
-    },
-    {
-      validator: this.ConfirmedValidator("password", "confirmPassword"),
-    })
+    //Get Token from link
+    this.oobCode = this.activatedRoute.snapshot.queryParamMap.get('oobCode');
+
+    if (this.oobCode) {
+      this.resetPasswordForm = this.formBuilder.group({
+        password: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Password)]),
+        confirmPassword: new FormControl("", [Validators.required, Validators.pattern(Validation.Regex.Password)]),
+      },
+        {
+          validator: this.ConfirmedValidator("password", "confirmPassword"),
+        })
+    }
+    else {
+      this.router.navigate(['/auth/forbidden']);
+    }
+  }
+
+  //Change password
+  changePassword(success: TemplateRef<any>) {
+    if (this.resetPasswordForm.invalid) {
+      this.resetPasswordForm.markAllAsTouched();
+      return;
+    }
+    console.log(this.oobCode + " " + this.password.value)
+
+    this.firebaseService.confirmPasswordReset(this.oobCode, this.password.value);
+    this.layer1 = this.modalService.show(success, { class: 'modal-sm' })
+  }
+
+  backToLogin() {
+    this.layer1.hide();
+    this.router.navigate(['/auth/login']);
   }
 
   // Validation for password and confirm password
@@ -70,13 +103,6 @@ export class ResetPasswordComponent {
     };
   }
 
-  changePassword() {
-    if (this.resetPasswordForm.invalid) {
-      this.resetPasswordForm.markAllAsTouched();
-      return;
-    }
-  }
-  
   get password() {
     return this.resetPasswordForm.get("password");
   }
@@ -84,7 +110,7 @@ export class ResetPasswordComponent {
   get confirmPassword() {
     return this.resetPasswordForm.get("confirmPassword");
   }
-  
+
   // onSignUp() {
   //   this.firebaseAuthService.signUp(this.getSignUpEmail, this.getSignUpPassword);
   // }

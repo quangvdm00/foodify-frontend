@@ -58,7 +58,12 @@ export class ListUserComponent implements OnInit {
   }
 
   searchUser() {
-    console.log(this.searchName)
+    if (this.searchName.trim() !== '') {
+      this.userService.getAllUsersByRoleAndEmailOrPhoneNumber(this.searchName, this.role, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir).subscribe(this.processResult());
+    }
+    else {
+      this.listAllUsers()
+    }
   }
 
   onSort(sortItem: string) {

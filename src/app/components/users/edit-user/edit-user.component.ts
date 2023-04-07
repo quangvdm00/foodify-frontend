@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { AddressService } from 'src/app/shared/service/address.service';
 import { DistrictService } from 'src/app/shared/service/district.service';
 import { FirebaseService } from 'src/app/shared/service/firebase.service';
 import { UserService } from 'src/app/shared/service/user.service';
-import { Address } from 'src/app/shared/tables/Address';
+import { Address } from 'src/app/shared/tables/address';
 import { District } from 'src/app/shared/tables/district';
 import { User } from 'src/app/shared/tables/user';
 import { Ward } from 'src/app/shared/tables/ward';
@@ -51,6 +51,10 @@ export class EditUserComponent implements OnInit {
 
   //Validate
   isHaveDistrict: boolean = false;
+
+  //ViewChild
+  @ViewChild('confirmDefault') confirmDefault: TemplateRef<any>;
+  @ViewChild('changeDefaultSuccess') changeDefaultSuccess: TemplateRef<any>;
 
   constructor(
     private addressService: AddressService,
@@ -278,6 +282,20 @@ export class EditUserComponent implements OnInit {
     )
   }
 
+  openChangeModal(id: number) {
+    this.editingAddressId = id;
+    this.layer1 = this.modalService.show(this.confirmDefault, { class: 'modal-sm' })
+  }
+
+  changeDefaultAddress() {
+    this.layer1.hide()
+    this.userService.updateUserDefaultAddress(this.user.id, this.editingAddressId).subscribe({
+      next: () => {
+        this.layer1 = this.modalService.show(this.changeDefaultSuccess, { class: 'modal-sm' })
+      }
+    })
+  }
+
   patchAddressById(id: number) {
     this.addressService.getAddressById(id).subscribe((address) => {
       this.district = address.district;
@@ -326,7 +344,6 @@ export class EditUserComponent implements OnInit {
 
   //Firebase modal
   openResetPassword(email: string) {
-    console.log(email);
     this.firebaseService.resetPassword(email);
   }
 

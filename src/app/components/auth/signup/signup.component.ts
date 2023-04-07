@@ -63,7 +63,6 @@ export class SignupComponent {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private districtService: DistrictService,
-    private wardService: WardService,
     private storage: AngularFireStorage,
     private shopService: ShopService,
     private modalService: BsModalService,
@@ -189,7 +188,7 @@ export class SignupComponent {
               return EMPTY; // Return an empty observable to prevent nested subscriptions
             })
           )
-          .subscribe(() => {});
+          .subscribe(() => { });
       });
     } else if (this.userImageChoosen && !this.shopImageChoosen) {
       this.uploadUserImage(this.userImageFile).then((url) => {
@@ -209,7 +208,7 @@ export class SignupComponent {
               return EMPTY; // Return an empty observable to prevent nested subscriptions
             })
           )
-          .subscribe(() => {});
+          .subscribe(() => { });
       });
     } else if (!this.userImageChoosen && this.shopImageChoosen) {
       newUser.imageUrl = this.defaultUserImg;
@@ -230,7 +229,7 @@ export class SignupComponent {
             return EMPTY; // Return an empty observable to prevent nested subscriptions
           })
         )
-        .subscribe(() => {});
+        .subscribe(() => { });
     } else {
       newUser.imageUrl = this.defaultUserImg;
 
@@ -248,7 +247,7 @@ export class SignupComponent {
             return EMPTY; // Return an empty observable to prevent nested subscriptions
           })
         )
-        .subscribe(() => {});
+        .subscribe(() => { });
     }
   }
 
@@ -335,7 +334,7 @@ export class SignupComponent {
             });
           })
         )
-        .subscribe((url) => {});
+        .subscribe((url) => { });
     });
   }
 
@@ -358,7 +357,7 @@ export class SignupComponent {
             });
           })
         )
-        .subscribe((url) => {});
+        .subscribe((url) => { });
     });
   }
 

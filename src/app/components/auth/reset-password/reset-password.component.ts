@@ -69,6 +69,13 @@ export class ResetPasswordComponent {
       }
     };
   }
+
+  changePassword() {
+    if (this.resetPasswordForm.invalid) {
+      this.resetPasswordForm.markAllAsTouched();
+      return;
+    }
+  }
   
   get password() {
     return this.resetPasswordForm.get("password");

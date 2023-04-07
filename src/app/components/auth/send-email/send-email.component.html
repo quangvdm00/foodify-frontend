@@ -258,7 +258,7 @@
                           <div *ngIf="email?.errors?.email">Email không hợp lệ, vui lòng nhập lại</div>
                         </div>
                         <div class="form-button d-flex justify-content-around">
-                          <button class="btn btn-primary" type="submit">Tiếp tục</button>
+                          <button class="btn btn-primary" type="submit" (click)="sendMail()" >Tiếp tục</button>
                           <button type="button" class="btn btn-danger btn-back" [routerLink]="['/auth', 'login']">Quay lại</button>
                         </div>
                       </form>

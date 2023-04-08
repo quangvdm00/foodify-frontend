@@ -7,14 +7,14 @@
     background-size: cover;
     z-index: -99;
 
-    // .login-img-box {
-    //   width: 100%;
-    //   padding-bottom: 20px;
+    .login-img-box {
+      width: 100%;
+      padding-bottom: 20px;
 
-    //   .login-img {
-
-    //   }
-    // }
+      .login-img {
+        max-width: 442px;
+      }
+    }
 
     .input-password-holder {
         display: flex;

@@ -4,6 +4,7 @@ import { ListVendorsComponent } from './list-vendors/list-vendors.component';
 import { CreateVendorsComponent } from './create-vendors/create-vendors.component';
 import { EditVendorComponent } from './edit-vendor/edit-vendor.component';
 import { VendorDetailComponent } from './vendor-detail/vendor-detail.component';
+import { AdminGuard } from 'src/app/shared/guard/admin-guard.service';
 
 
 const routes: Routes = [
@@ -12,6 +13,7 @@ const routes: Routes = [
     children: [
       {
         path: 'list',
+        canActivate: [AdminGuard],
         component: ListVendorsComponent,
         data: {
           title: "Danh sách shop",
@@ -20,6 +22,7 @@ const routes: Routes = [
       },
       {
         path: 'create',
+        canActivate: [AdminGuard],
         component: CreateVendorsComponent,
         data: {
           title: "Tạo người bán hàng",

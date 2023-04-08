@@ -16,7 +16,7 @@ import { Observable } from 'rxjs';
 export class FirebaseService {
     private baseUrl = `${environment.foodOrderingBaseApiUrl}/firebase`
 
-    isLoggedIn = false;
+    loggedIn: boolean = false;
     token: string;
 
     constructor(
@@ -48,9 +48,11 @@ export class FirebaseService {
 
                                 this.userService.getUserByEmailOrPhoneNumber(email).subscribe((user) => {
                                     if (user.role.roleName == 'ROLE_ADMIN') {
+                                        this.loggedIn = true;
                                         localStorage.setItem('user-role', user.role.roleName);
                                         localStorage.setItem('email', user.email);
                                         localStorage.setItem('user-id', user.id.toString());
+                                        localStorage.setItem('is-logged', JSON.stringify(this.loggedIn));
                                         this.router.navigate(['/dashboard/default']);
 
                                     }
@@ -60,12 +62,15 @@ export class FirebaseService {
                                         localStorage.setItem('user-id', user.id.toString());
                                         this.shopService.getShopByUserId(user.id).subscribe((shop) => {
                                             if (shop.isEnabled) {
+                                                this.loggedIn = true;
+                                                localStorage.setItem('is-logged', JSON.stringify(this.loggedIn))
                                                 localStorage.setItem('shop-id', shop.id.toString());
                                                 this.router.navigate(['/dashboard/default']);
                                             }
                                             else {
                                                 this.firebaseAuth.signOut().then(
                                                     res => {
+                                                        this.loggedIn = false;
                                                         this.token = null;
                                                         localStorage.clear();
                                                         this.router.navigate(['/auth', 'forbidden']);
@@ -77,6 +82,7 @@ export class FirebaseService {
                                     else {
                                         this.firebaseAuth.signOut().then(
                                             res => {
+                                                this.loggedIn = false;
                                                 this.token = null;
                                                 localStorage.clear();
                                                 this.router.navigate(['/auth', 'forbidden']);
@@ -96,20 +102,36 @@ export class FirebaseService {
         return null;
     }
 
-    getToken() {
-        this.firebaseAuth.currentUser.then(
-            res => res.getIdToken().then(
-                (token: string) => {
-                    this.token = token;
-                    console.log(token);
-                }
-            )
-        );
-        console.log('Token: ', this.token);
-    }
+    // getToken() {
+    //     this.firebaseAuth.currentUser.then(
+    //         res => res.getIdToken().then(
+    //             (token: string) => {
+    //                 this.token = token;
+    //                 console.log(token);
+    //             }
+    //         )
+    //     );
+    //     console.log('Token: ', this.token);
+    // }
 
     isAuthenticated() {
         return this.token != null;
+    }
+
+    isLoggedIn(): boolean {
+        const isLog = localStorage.getItem('is-logged');
+        if (isLog != null) {
+            this.loggedIn = JSON.parse(isLog);
+            return this.loggedIn;
+        }
+    }
+
+    isAdmin() {
+        const role = localStorage.getItem('user-role');
+        if (role == 'ROLE_ADMIN') {
+            return true;
+        }
+        return false;
     }
 
     resetPassword(email: string) {

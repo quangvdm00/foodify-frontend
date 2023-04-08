@@ -5,6 +5,8 @@ import { environment } from 'src/environments/environment';
 import { SignUpUser } from '../tables/sign-up-user';
 import { User } from '../tables/user';
 import { StringBoolObject } from '../tables/string-bool-object';
+import { Address } from '../tables/address';
+import { Shop } from '../tables/shop';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +18,19 @@ export class AuthService {
 
   }
 
-  createNewSignUpUser(signUpUser: SignUpUser) {
-    this.httpClient.post<SignUpUser>(this.baseUrl + `/signup`, signUpUser);
+  //Sign-up new User
+  SignUpUser(user: User): Observable<User> {
+    return this.httpClient.post<User>(this.baseUrl + '/register', user);
+  }
+
+  //Sign-up address for user
+  SignUpUserAddress(userId: number, address: Address) {
+    return this.httpClient.post<StringBoolObject>(this.baseUrl + `/${userId}/addresses`, address)
+  }
+
+  //Sign-up new shop
+  SignUpShop(shop: Shop) {
+    return this.httpClient.post(this.baseUrl + "/register-shop", shop)
   }
 
   checkEmailOrPhoneNumberExist(userDto: User) {

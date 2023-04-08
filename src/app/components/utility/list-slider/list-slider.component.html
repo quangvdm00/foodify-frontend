@@ -1,0 +1,46 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <!-- <form class="btn-popup pull-left">
+                <input class="form-control" type="text" placeholder="Tìm kiếm" />
+            </form> -->
+            <div class="card" *ngFor="let slider of sliders">
+                <img class="card-body" src="{{slider.imageUrl}}" />
+                <div class="pull-left">
+                    <button type="submit" class="btn btn-primary" (click)="openAddModal()">Thêm</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-primary" (click)="openDeleteModal(slider.id)">Xoá</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #chooseNewImage>
+    <div class="modal-body text-center">
+        <p>Vui lòng chọn 1 ảnh</p>
+        <input class="input-image" type="file" accept="image/*" (change)="onFileSelected($event)" />
+        <hr>
+        <button type="button" class="btn btn-secondary" (click)="uploadImage()">Tiếp
+            tục</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button type="button" class="btn btn-primary" (click)="closeLayer1()">Huỷ bỏ</button>
+    </div>
+</ng-template>
+
+<ng-template #deleteImage>
+    <div class="modal-body text-center">
+        <p>Bạn chắc chắn muốn xoá slider này ?</p>
+        <button type="button" class="btn btn-secondary" (click)="deleteChooseImage()">Tiếp
+            tục</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button type="button" class="btn btn-primary" (click)="closeLayer1()">Huỷ bỏ</button>
+    </div>
+</ng-template>
+
+<ng-template #uploadSuccess>
+    <div class="modal-body text-center">
+        <p>{{ sliderAction }} slider thành công</p>
+        <button type="button" class="btn btn-primary" (click)=" closeLayer1()">Tiếp
+            tục</button>
+    </div>
+</ng-template>

@@ -223,8 +223,15 @@
                 <div class="container-fluid">
                   <div class="card">
                     <div class="card-body">
+                      <div class="table-responsive">
+                        <div *ngIf="products.length == 0" class="d-flex justify-content-center p-2">
+                          <h4 style="color: lightcoral;">Không có sản phẩm <i class="fa fa-exclamation"
+                              aria-hidden="true"></i></h4>
+                        </div>
+                      </div>
+
                       <div class="row product-adding">
-                        <div *ngIf="products" class="table-responsive">
+                        <div *ngIf="products.length > 0" class="table-responsive">
                           <table class="table table-striped">
                             <thead>
                               <tr>

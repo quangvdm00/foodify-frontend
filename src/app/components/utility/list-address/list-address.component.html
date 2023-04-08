@@ -11,7 +11,7 @@
                             (change)="searchAddress()" />
                     </div>
 
-                    <div id="batchDelete" class="custom-datatable">
+                    <div id="batchDelete" class="custom-datatable" *ngIf="addresses.length > 0">
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead>
@@ -40,6 +40,25 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <div class="d-flex justify-content-center p-2">
+                                <ngb-pagination [collectionSize]="theTotalElements" [(page)]="thePageNumber"
+                                    [pageSize]="thePageSize" [maxSize]="4" [rotate]="true" [boundaryLinks]="true"
+                                    (pageChange)="listAllAddress()">
+                                </ngb-pagination>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <select class="form-select" style="width: auto" name="pageSize"
+                                    (change)="listAllAddress()" [(ngModel)]="thePageSize">
+                                    <option [value]="10" [selected]="true" [ngValue]="10">10 địa chỉ / trang</option>
+                                    <option [ngValue]="15">15 địa chỉ / trang</option>
+                                    <option [ngValue]="20">20 địa chỉ / trang</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <div *ngIf="addresses.length == 0" class="d-flex justify-content-center p-2">
+                            <h4 style="color: lightcoral;">Không tìm thấy địa chỉ <i class="fa fa-exclamation"
+                                    aria-hidden="true"></i></h4>
                         </div>
                     </div>
                 </div>
@@ -47,17 +66,7 @@
         </div>
     </div>
 </div>
-<div class="d-flex justify-content-center p-2">
-    <ngb-pagination [collectionSize]="theTotalElements" [(page)]="thePageNumber" [pageSize]="thePageSize" [maxSize]="4"
-        [rotate]="true" [boundaryLinks]="true" (pageChange)="listAllAddress()">
-    </ngb-pagination>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <select class="form-select" style="width: auto" name="pageSize" (change)="listAllAddress()"
-        [(ngModel)]="thePageSize">
-        <option [value]="10" [selected]="true" [ngValue]="10">10 địa chỉ / trang</option>
-        <option [ngValue]="15">15 địa chỉ / trang</option>
-        <option [ngValue]="20">20 địa chỉ / trang</option>
-    </select>
-</div>
+
 
 <ng-template #confirmDelete>
     <div class="modal-body text-center">

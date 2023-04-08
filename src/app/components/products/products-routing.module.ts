@@ -12,6 +12,7 @@ import { ProductDetailComponent } from './physical/product-detail/product-detail
 import { AddProductCategoryComponent } from "./physical/add-product-category/add-product-category.component";
 import { EditProductComponent } from './physical/edit-product/edit-product.component';
 import { CategoryDetailComponent } from './physical/category-detail/category-detail.component';
+import { AdminGuard } from 'src/app/shared/guard/admin-guard.service';
 
 const routes: Routes = [
   {
@@ -35,6 +36,7 @@ const routes: Routes = [
       // },
       {
         path: 'category/:id',
+        canActivate: [AdminGuard],
         component: CategoryDetailComponent,
         data: {
           title: "Danh sách sản phẩm",

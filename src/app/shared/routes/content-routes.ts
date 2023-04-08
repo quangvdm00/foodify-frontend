@@ -6,10 +6,10 @@ export const content: Routes = [
         loadChildren: () => import('../../components/dashboard/dashboard.module').then(m => m.DashboardModule),
     },
     {
-        path: 'addresses',
-        loadChildren: () => import('../../components/addresses/address.module').then(m => m.AddressModule),
+        path: 'utilities',
+        loadChildren: () => import('../../components/utility/utility.module').then(m => m.UtilityModule),
         data: {
-            breadcrumb: "Địa chỉ"
+            breadcrumb: "Tiện ích"
         }
     },
     {

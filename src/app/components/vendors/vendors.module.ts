@@ -9,7 +9,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditVendorComponent } from './edit-vendor/edit-vendor.component';
 import { VendorDetailComponent } from './vendor-detail/vendor-detail.component';
-// import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 @NgModule({
   declarations: [ListVendorsComponent, CreateVendorsComponent, EditVendorComponent, VendorDetailComponent],

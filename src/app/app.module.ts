@@ -47,7 +47,7 @@ import { NgImageSliderModule } from 'ng-image-slider'
         LocalizationModule,
         ProductsModule,
         SalesModule,
-        NgImageSliderModule,
+        // NgImageSliderModule,
         VendorsModule,
         CouponsModule,
         PagesModule,

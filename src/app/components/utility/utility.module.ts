@@ -7,17 +7,19 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ListAddressComponent } from './list-address/list-address.component';
 import { ListSliderComponent } from './list-slider/list-slider.component';
 import { NgImageSliderModule } from 'ng-image-slider';
+import { CarouselModule } from 'ngx-owl-carousel-o';
 
 @NgModule({
     declarations: [ListAddressComponent, ListSliderComponent],
     imports: [
         CommonModule,
         UtilityRoutingModule,
-        NgImageSliderModule,
         NgbModule,
         ReactiveFormsModule,
         SharedModule,
-        FormsModule
+        FormsModule,
+        CarouselModule
+        // NgImageSliderModule,
     ]
 })
 export class UtilityModule { }

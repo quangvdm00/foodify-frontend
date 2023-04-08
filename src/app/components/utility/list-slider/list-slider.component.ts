@@ -4,6 +4,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Observable, finalize } from 'rxjs';
 import { SliderService } from 'src/app/shared/service/slider.service';
 import { Slider } from 'src/app/shared/tables/slider';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 
 @Component({
   selector: 'app-list-slider',
@@ -16,6 +17,26 @@ export class ListSliderComponent implements OnInit {
   sliderChoosenId: number
   sliderAction: string = '';
   uploaded: boolean = false;
+
+  customOptions: OwlOptions = {
+    loop: true,
+    autoplay: true,
+    center: true,
+    dots: false,
+    autoHeight: true,
+    autoWidth: true,
+    responsive: {
+      0: {
+        items: 1,
+      },
+      600: {
+        items: 1,
+      },
+      1000: {
+        items: 1,
+      }
+    }
+  }
 
   downloadURL: Observable<string>
   // sliderObjects: Array<Object> = [];

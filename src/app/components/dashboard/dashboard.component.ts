@@ -55,7 +55,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     totalUser: number = 0;
     day: number = 30;
 
-    public doughnutData = [];
+    public doughnutData: Array<Object> = [];
     public pieData;
 
     constructor(

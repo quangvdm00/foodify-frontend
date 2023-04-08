@@ -1,4 +1,4 @@
-import { Component, TemplateRef } from "@angular/core";
+import { Component, TemplateRef, ViewChild } from "@angular/core";
 import { AngularFireStorage } from "@angular/fire/compat/storage";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
@@ -6,6 +6,7 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { EMPTY, finalize, switchMap } from "rxjs";
 import { Observable } from "rxjs-compat";
 import { Validation } from "src/app/constants/Validation";
+import { AuthService } from "src/app/shared/service/auth.service";
 import { DistrictService } from "src/app/shared/service/district.service";
 import { FirebaseService } from "src/app/shared/service/firebase.service";
 import { ShopService } from "src/app/shared/service/shop.service";
@@ -58,8 +59,15 @@ export class SignupComponent {
   shopImageChoosen: boolean = false;
   isStudent: boolean = true;
 
+  //Modal
+  errorItem = '';
+  layer1: BsModalRef;
+  layer2: BsModalRef;
+  @ViewChild('error_modal') errorModal: TemplateRef<any>;
+
   constructor(
     private formBuilder: FormBuilder,
+    private authService: AuthService,
     private userService: UserService,
     private districtService: DistrictService,
     private storage: AngularFireStorage,
@@ -126,7 +134,7 @@ export class SignupComponent {
   /**
    * create User from Form
    */
-  createUser(template: TemplateRef<any>) {
+  createUser(template: TemplateRef<any>): Promise<void> {
     const newUser = new User();
     const newAddress = new Address();
     const newShop = new Shop();
@@ -138,117 +146,159 @@ export class SignupComponent {
     newUser.identifiedCode = this.userIdentifiedCode.value;
     newUser.defaultAddress = 0;
     newUser.isLocked = false;
-    newUser.roleName = "ROLE_SHOP";
+    newUser.roleName = 'ROLE_SHOP';
 
-    if (this.district === "none" || this.ward === "none") {
-      this.validDistrict = this.district !== "none";
-      this.validWard = this.ward !== "none";
+    if (this.district === 'none' || this.ward === 'none') {
+      this.validDistrict = this.district !== 'none';
+      this.validWard = this.ward !== 'none';
     } else {
       // Tiếp tục với quá trình tạo tài khoản
       this.validDistrict = true;
       this.validWard = true;
     }
 
-    if (this.addUserForm.invalid || this.passwordForm.invalid || this.shopForm.invalid || this.district == "none") {
+
+    if (this.addUserForm.invalid || this.passwordForm.invalid || this.shopForm.invalid || this.district == 'none') {
       this.addUserForm.markAllAsTouched();
       this.passwordForm.markAllAsTouched();
       this.shopForm.markAllAsTouched();
-      return;
+      return Promise.reject();
     }
 
-    newShop.name = this.shopName.value;
+    newShop.name = this.shopName.value
     newShop.description = this.shopDescription.value;
     newShop.isStudent = this.isStudent;
     newShop.isEnabled = true;
-    newShop.lat = "1";
-    newShop.lng = "1";
+    newShop.lat = '1';
+    newShop.lng = '1';
+
 
     newAddress.address = this.userAddress.value;
     newAddress.district = this.district;
     if (this.district != "Huyện Hoàng Sa") newAddress.ward = this.ward;
 
-    if (this.userImageChoosen && this.shopImageChoosen) {
-      this.uploadUserImage(this.userImageFile).then((url) => {
-        newUser.imageUrl = url;
+    this.authService.checkEmailOrPhoneNumberExist(newUser).subscribe((error) => {
+      if (error.title == 'emailExist') {
+        this.errorItem = 'Email';
+        this.layer2 = this.modalService.show(this.errorModal, { class: 'modal-sm' });
+        return Promise.reject();
+      }
+      else if (error.title == 'phoneNumExist') {
+        this.errorItem = 'Số điện thoại';
+        this.layer2 = this.modalService.show(this.errorModal, { class: 'modal-sm' });
+        return Promise.reject();
+      }
+      else {
+        if (this.userImageChoosen && this.shopImageChoosen) {
+          this.uploadUserImage(this.userImageFile).then((url) => {
+            newUser.imageUrl = url
 
-        this.userService
-          .createNewUser(newUser)
-          .pipe(
+            this.authService.SignUpUser(newUser).pipe(
+              switchMap((user) => {
+                this.uploadShopImage(this.shopImageFile).then((url) => {
+                  newShop.userId = user.id
+                  newShop.imageUrl = url;
+                  this.authService.SignUpUserAddress(user.id, newAddress).subscribe({
+                    next: () => {
+                      this.firebaseService.signUp(newUser.email, this.userPassword.value);
+                      this.authService.SignUpShop(newShop).subscribe(() => {
+                        this.layer1 = this.modalService.show(template, { class: 'modal-sm' })
+                      })
+                    }
+                  });
+                })
+                return EMPTY; // Return an empty observable to prevent nested subscriptions
+              })
+            ).subscribe({
+              next: () => { },
+              error: () => {
+                this.errorItem = 'CCCD/CMND';
+                this.layer2 = this.modalService.show(this.errorModal, { class: 'modal-sm' });
+              }
+            })
+          })
+        }
+        else if (this.userImageChoosen && !this.shopImageChoosen) {
+          this.uploadUserImage(this.userImageFile).then((url) => {
+            newUser.imageUrl = url
+
+            this.authService.SignUpUser(newUser).pipe(
+              switchMap((user) => {
+                newShop.userId = user.id
+                newShop.imageUrl = this.defaultShopImg;
+                this.authService.SignUpUserAddress(user.id, newAddress).subscribe({
+                  next: () => {
+                    this.firebaseService.signUp(newUser.email, this.userPassword.value);
+                    this.authService.SignUpShop(newShop).subscribe(() => {
+                      this.layer1 = this.modalService.show(template, { class: 'modal-sm' })
+                    })
+                  }
+                });
+                return EMPTY; // Return an empty observable to prevent nested subscriptions
+              })
+            ).subscribe({
+              next: () => { },
+              error: () => {
+                this.errorItem = 'CCCD/CMND';
+                this.layer2 = this.modalService.show(this.errorModal, { class: 'modal-sm' });
+              }
+            })
+          })
+        }
+        else if (!this.userImageChoosen && this.shopImageChoosen) {
+          newUser.imageUrl = this.defaultUserImg;
+
+          this.authService.SignUpUser(newUser).pipe(
             switchMap((user) => {
               this.uploadShopImage(this.shopImageFile).then((url) => {
-                newShop.userId = user.id;
+                newShop.userId = user.id
                 newShop.imageUrl = url;
-                this.shopService.createShop(newShop).subscribe(() => {
-                  this.firebaseService.signUp(newUser.email, this.userPassword.value);
-                  this.userService.createAddressForUser(user.id, newAddress).subscribe();
-                  this.modalRef = this.modalService.show(template, { class: "modal-sm" });
+                this.authService.SignUpUserAddress(user.id, newAddress).subscribe({
+                  next: () => {
+                    this.firebaseService.signUp(newUser.email, this.userPassword.value);
+                    this.authService.SignUpShop(newShop).subscribe(() => {
+                      this.layer1 = this.modalService.show(template, { class: 'modal-sm' })
+                    })
+                  }
                 });
-              });
+              })
               return EMPTY; // Return an empty observable to prevent nested subscriptions
             })
-          )
-          .subscribe(() => { });
-      });
-    } else if (this.userImageChoosen && !this.shopImageChoosen) {
-      this.uploadUserImage(this.userImageFile).then((url) => {
-        newUser.imageUrl = url;
+          ).subscribe({
+            next: () => { },
+            error: () => {
+              this.errorItem = 'CCCD/CMND';
+              this.layer2 = this.modalService.show(this.errorModal, { class: 'modal-sm' });
+            }
+          })
+        }
+        else {
+          newUser.imageUrl = this.defaultUserImg;
 
-        this.userService
-          .createNewUser(newUser)
-          .pipe(
+          this.authService.SignUpUser(newUser).pipe(
             switchMap((user) => {
-              newShop.userId = user.id;
+              newShop.userId = user.id
               newShop.imageUrl = this.defaultShopImg;
-              this.shopService.createShop(newShop).subscribe(() => {
-                this.firebaseService.signUp(newUser.email, this.userPassword.value);
-                this.userService.createAddressForUser(user.id, newAddress).subscribe();
-                this.modalRef = this.modalService.show(template, { class: "modal-sm" });
+              this.authService.SignUpUserAddress(user.id, newAddress).subscribe({
+                next: () => {
+                  this.firebaseService.signUp(newUser.email, this.userPassword.value);
+                  this.authService.SignUpShop(newShop).subscribe(() => {
+                    this.layer1 = this.modalService.show(template, { class: 'modal-sm' })
+                  })
+                }
               });
               return EMPTY; // Return an empty observable to prevent nested subscriptions
             })
-          )
-          .subscribe(() => { });
-      });
-    } else if (!this.userImageChoosen && this.shopImageChoosen) {
-      newUser.imageUrl = this.defaultUserImg;
-
-      this.userService
-        .createNewUser(newUser)
-        .pipe(
-          switchMap((user) => {
-            this.uploadShopImage(this.shopImageFile).then((url) => {
-              newShop.userId = user.id;
-              newShop.imageUrl = url;
-              this.shopService.createShop(newShop).subscribe(() => {
-                this.firebaseService.signUp(newUser.email, this.userPassword.value);
-                this.userService.createAddressForUser(user.id, newAddress).subscribe();
-                this.modalRef = this.modalService.show(template, { class: "modal-sm" });
-              });
-            });
-            return EMPTY; // Return an empty observable to prevent nested subscriptions
+          ).subscribe({
+            next: () => { },
+            error: () => {
+              this.errorItem = 'CCCD/CMND';
+              this.layer2 = this.modalService.show(this.errorModal, { class: 'modal-sm' });
+            }
           })
-        )
-        .subscribe(() => { });
-    } else {
-      newUser.imageUrl = this.defaultUserImg;
-      console.log("im here")
-
-      this.userService
-        .createNewUser(newUser)
-        .pipe(
-          switchMap((user) => {
-            newShop.userId = user.id;
-            newShop.imageUrl = this.defaultShopImg;
-            this.shopService.createShop(newShop).subscribe(() => {
-              this.firebaseService.signUp(newUser.email, this.userPassword.value);
-              this.userService.createAddressForUser(user.id, newAddress).subscribe();
-              this.modalRef = this.modalService.show(template, { class: "modal-sm" });
-            });
-            return EMPTY; // Return an empty observable to prevent nested subscriptions
-          })
-        )
-        .subscribe(() => { });
-    }
+        }
+      }
+    })
   }
 
   //Districts and Wards
@@ -293,7 +343,7 @@ export class SignupComponent {
         localStorage.setItem("image", this.avatar);
       };
     }
-    this.modalRef.hide();
+    this.layer1.hide();
   }
 
   //Shop Image Selected
@@ -312,7 +362,7 @@ export class SignupComponent {
         localStorage.setItem("image", this.shopBanner);
       };
     }
-    this.modalRef.hide();
+    this.layer1.hide();
   }
 
   uploadUserImage(fileUpload: File): Promise<string> {
@@ -361,15 +411,17 @@ export class SignupComponent {
     });
   }
 
-  modalRef: BsModalRef;
-
   chooseImg(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template, { class: "modal-sm" });
+    this.layer1 = this.modalService.show(template, { class: "modal-sm" });
   }
 
   continue() {
-    this.modalRef.hide();
+    this.layer1.hide();
     this.router.navigate(["/vendors/list"]);
+  }
+
+  closeLayer2() {
+    this.layer2.hide();
   }
 
   goBackToLogin() {

@@ -5,10 +5,11 @@ import { CreateUserComponent } from './create-user/create-user.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { UserDetailComponent } from './user-detail/user-detail.component';
 import { ListAccountComponent } from './list-account/list-account.component';
+import { AdminGuard } from 'src/app/shared/guard/admin-guard.service';
 
 const routes: Routes = [
   {
-    path: '',
+    path: '', canActivate: [AdminGuard],
     children: [
       {
         path: 'list',

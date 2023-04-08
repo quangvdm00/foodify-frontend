@@ -139,14 +139,15 @@
                   <ng-template ngbNavContent>
 
                     <div class="email-img-box d-flex justify-content-center align-items-center">
-                      <img class="email-img" src="../../../../assets/images/dashboard/email.png" >
+                      <img class="email-img" src="../../../../assets/images/dashboard/email.png">
                     </div>
 
                     <div class="tab-pane fade active show" id="account" role="tabpanel" aria-labelledby="account-tab">
                       <form [formGroup]="sendEmailForm" class="form-horizontal auth-form" novalidate="">
                         <div class="form-group d-flex justify-content-center align-items-center ">
                           <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                          <input type="email" class="form-control" placeholder="Vui lòng nhập Email" formControlName="email" />
+                          <input type="email" class="form-control" placeholder="Vui lòng nhập Email"
+                            formControlName="email" />
                         </div>
                         <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="alert alert-danger">
                           <div *ngIf="email?.errors?.['required']">Vui lòng không được bỏ trống email</div>
@@ -171,3 +172,11 @@
     </div>
   </div>
 </div>
+
+<ng-template #sendMailCompleted>
+  <div class="modal-body text-center">
+    <p>Thay đổi mật khẩu thành công</p>
+    <button type="button" class="btn btn-primary" (click)="gmail()">Gmail</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button type="button" class="btn btn-secondary" (click)="closeLayer1()">Đóng</button>
+  </div>
+</ng-template>

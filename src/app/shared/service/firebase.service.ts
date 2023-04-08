@@ -16,7 +16,7 @@ import { Observable } from 'rxjs';
 export class FirebaseService {
     private baseUrl = `${environment.foodOrderingBaseApiUrl}/firebase`
 
-    loggedIn = false;
+    loggedIn: boolean = false;
     token: string;
 
     constructor(
@@ -124,6 +124,14 @@ export class FirebaseService {
             this.loggedIn = JSON.parse(isLog);
             return this.loggedIn;
         }
+    }
+
+    isAdmin() {
+        const role = localStorage.getItem('user-role');
+        if (role == 'ROLE_ADMIN') {
+            return true;
+        }
+        return false;
     }
 
     resetPassword(email: string) {

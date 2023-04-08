@@ -6,6 +6,8 @@ import { LoginComponent } from './components/auth/login/login.component';
 import { SignupComponent } from './components/auth/signup/signup.component';
 import { ForbiddenComponent } from './components/auth/forbidden/forbidden.component';
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
+import { AuthGuard } from './shared/guard/auth-guard.service';
+import { NotLogged } from './shared/guard/not-logged.service';
 
 const routes: Routes = [
   {
@@ -20,18 +22,22 @@ const routes: Routes = [
   },
   {
     path: 'auth/login',
+    canActivate: [NotLogged],
     component: LoginComponent,
   },
   {
     path: 'auth/signup',
+    canActivate: [NotLogged],
     component: SignupComponent
   },
   {
     path: 'auth/forbidden',
+    canActivate: [NotLogged],
     component: ForbiddenComponent
   },
   {
     path: 'auth/reset-password',
+    canActivate: [NotLogged],
     component: ResetPasswordComponent
   }
 ];

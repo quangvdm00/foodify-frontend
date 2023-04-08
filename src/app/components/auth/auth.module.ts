@@ -15,6 +15,13 @@ import { SendEmailComponent } from './send-email/send-email.component';
 
 @NgModule({
   declarations: [LoginComponent, SignupComponent, ForbiddenComponent, ResetPasswordComponent, SendEmailComponent],
-  imports: [CommonModule, AuthRoutingModule, ReactiveFormsModule, CarouselModule, SharedModule, NgbModule, FormsModule],
+  imports: [
+    CommonModule,
+    AuthRoutingModule,
+    ReactiveFormsModule,
+    CarouselModule,
+    SharedModule,
+    NgbModule,
+    FormsModule],
 })
-export class AuthModule {}
+export class AuthModule { }

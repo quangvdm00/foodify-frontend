@@ -28,6 +28,7 @@ import { AngularFireModule } from "@angular/fire/compat";
 import { environment } from "../environments/environment";
 import { FirebaseService } from "./shared/service/firebase.service";
 import { AuthInterceptor } from "./shared/inceptor/auth-interceptor";
+import { NgImageSliderModule } from 'ng-image-slider'
 
 @NgModule({
     declarations: [
@@ -46,6 +47,7 @@ import { AuthInterceptor } from "./shared/inceptor/auth-interceptor";
         LocalizationModule,
         ProductsModule,
         SalesModule,
+        NgImageSliderModule,
         VendorsModule,
         CouponsModule,
         PagesModule,
@@ -57,7 +59,7 @@ import { AuthInterceptor } from "./shared/inceptor/auth-interceptor";
         AngularFireStorageModule,
         AngularFireModule.initializeApp(environment.firebaseConfig, 'cloud'),
         ModalModule.forRoot()
-        
+
     ],
     providers: [
         FirebaseService,

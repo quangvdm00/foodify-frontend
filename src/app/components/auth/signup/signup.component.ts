@@ -1,16 +1,15 @@
-import { Component, OnInit, TemplateRef } from "@angular/core";
+import { Component, TemplateRef } from "@angular/core";
 import { AngularFireStorage } from "@angular/fire/compat/storage";
-import { FormBuilder, FormControl, FormGroup, MinLengthValidator, UntypedFormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { EMPTY, finalize, mergeMap, switchMap, tap } from "rxjs";
+import { EMPTY, finalize, switchMap } from "rxjs";
 import { Observable } from "rxjs-compat";
 import { Validation } from "src/app/constants/Validation";
 import { DistrictService } from "src/app/shared/service/district.service";
 import { FirebaseService } from "src/app/shared/service/firebase.service";
 import { ShopService } from "src/app/shared/service/shop.service";
 import { UserService } from "src/app/shared/service/user.service";
-import { WardService } from "src/app/shared/service/ward.service";
 import { Address } from "src/app/shared/tables/address";
 import { District } from "src/app/shared/tables/district";
 import { Shop } from "src/app/shared/tables/shop";
@@ -232,6 +231,7 @@ export class SignupComponent {
         .subscribe(() => { });
     } else {
       newUser.imageUrl = this.defaultUserImg;
+      console.log("im here")
 
       this.userService
         .createNewUser(newUser)

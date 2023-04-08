@@ -59,11 +59,6 @@ export class NavService {
             active: false
         },
         {
-            title: 'Địa chỉ', icon: 'align-left', type: 'sub', active: false, children: [
-                { path: '/addresses/list-address', title: 'Danh sách', type: 'link' }
-            ]
-        },
-        {
             title: 'Sản phẩm', icon: 'box', type: 'sub', active: false, children: [
                 { path: '/products/product-list', title: 'Danh sách', type: 'link' },
                 // {path: '/products/product-detail', title: 'Product Detail', type: 'link'},
@@ -136,6 +131,12 @@ export class NavService {
                 { path: '/shippers/create', title: 'Tạo shipper', type: 'link' }
             ]
         },
+        {
+            title: 'Tiện ích', icon: 'align-left', type: 'sub', active: false, children: [
+                { path: '/utilities/list-address', title: 'Địa chỉ', type: 'link' },
+                { path: '/utilities/list-slider', title: 'Slider', type: 'link' }
+            ]
+        }
         // {
         //     title: 'Localization', icon: 'chrome', type: 'sub', children: [
         //         {path: '/localization/translations', title: 'Translations', type: 'link'},

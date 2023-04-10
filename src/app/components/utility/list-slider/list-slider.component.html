@@ -18,12 +18,15 @@
                 <ng-container class="card" *ngFor="let slider of sliders">
                     <ng-template class="slide" carouselSlide id="slide.id">
                         <img class="card-body" src="{{slider.imageUrl}}" />
-                        <div class="pull-left">
-                            <button type="submit" class="btn btn-success" (click)="openAddModal()">Thêm</button>
+                        <div class="w-100 d-flex justify-content-center align-items-center">
+                            <div class="mx-3">
+                                <button type="submit" class="btn btn-success" (click)="openAddModal()">Thêm</button>
+                            </div>
+                            <div class="mx-3">
+                                <button type="submit" class="btn btn-primary" (click)="openDeleteModal(slider.id)">Xoá</button>
+                            </div>
                         </div>
-                        <div class="pull-right ">
-                            <button type="submit" class="btn btn-primary" (click)="openDeleteModal(slider.id)">Xoá</button>
-                        </div>
+                        
                     </ng-template>
                 </ng-container>
             </owl-carousel-o>

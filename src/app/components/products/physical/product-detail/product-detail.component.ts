@@ -39,7 +39,7 @@ export class ProductDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private commentService: CommentService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.handleProductDetails()
@@ -56,16 +56,16 @@ export class ProductDetailComponent implements OnInit {
 
   listComments() {
     this.commentService.getProductRating(this.productId, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
-    .subscribe(this.processResult());
+      .subscribe(this.processResult());
   }
 
   processResult() {
     return (data: any) => {
-        this.comments = data.comments;
-        this.thePageNumber = data.page.pageNo + 1;
-        this.thePageSize = data.page.pageSize;
-        this.theTotalElements = data.page.totalElements;
-      };
+      this.comments = data.comments;
+      this.thePageNumber = data.page.pageNo + 1;
+      this.thePageSize = data.page.pageSize;
+      this.theTotalElements = data.page.totalElements;
+    };
   }
 
   //Modal

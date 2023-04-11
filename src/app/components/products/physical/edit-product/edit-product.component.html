@@ -43,9 +43,12 @@
                                                             class="text text-danger">
                                                             Tên sản phẩm không được bỏ trống.
                                                         </div> -->
-                                                        <div *ngIf="productName?.invalid && (productName?.dirty || productName?.touched)" class="alert alert-danger mt-1">
-                                                            <div *ngIf="productName?.errors?.['required']">Tên sản phẩm không được bỏ trống.</div>
-                                                            <div *ngIf="productName?.errors?.['minlength']">Tên sản phẩm phải có ít nhất 2 kí tự.</div>
+                                                        <div *ngIf="productName?.invalid && (productName?.dirty || productName?.touched)"
+                                                            class="alert alert-danger mt-1">
+                                                            <div *ngIf="productName?.errors?.['required']">Tên sản phẩm
+                                                                không được bỏ trống.</div>
+                                                            <div *ngIf="productName?.errors?.['minlength']">Tên sản phẩm
+                                                                phải có ít nhất 2 kí tự.</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -64,9 +67,12 @@
                                                             class="text text-danger">
                                                             Giá sản phẩm không được bỏ trống.
                                                         </div> -->
-                                                        <div *ngIf="productPrice?.invalid && (productPrice?.dirty || productPrice?.touched)" class="alert alert-danger mt-1">
-                                                            <div *ngIf="productPrice?.errors?.['required']">Giá sản phẩm không được bỏ trống.</div>
-                                                            <div *ngIf="productPrice?.errors?.['pattern']">Giá sản phẩm phải là ký tự số.</div>
+                                                        <div *ngIf="productPrice?.invalid && (productPrice?.dirty || productPrice?.touched)"
+                                                            class="alert alert-danger mt-1">
+                                                            <div *ngIf="productPrice?.errors?.['required']">Giá sản phẩm
+                                                                không được bỏ trống.</div>
+                                                            <div *ngIf="productPrice?.errors?.['pattern']">Giá sản phẩm
+                                                                phải là ký tự số.</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -104,9 +110,9 @@
                                                                         Xoá
                                                                     </button>
                                                                 </div>
-                                                                <div
-                                                                    *ngIf="categories.controls[i].get('categoryName').invalid &&
-                                                                    (categories.controls[i].get('categoryName').dirty || categories.controls[i].get('categoryName').touched)" class="alert alert-danger mt-1">
+                                                                <div *ngIf="categories.controls[i].get('categoryName').invalid &&
+                                                                    (categories.controls[i].get('categoryName').dirty || categories.controls[i].get('categoryName').touched)"
+                                                                    class="alert alert-danger mt-1">
                                                                     <div
                                                                         *ngIf="categories.controls[i].get('categoryName')?.errors?.['required']">
                                                                         Không được để trống loại sản phẩm
@@ -157,9 +163,12 @@
                                                     <div class="col-xl-8 col-sm-7">
                                                         <textarea class="form-control" id="validationCustom02"
                                                             type="number" formControlName="descriptions"></textarea>
-                                                        <div *ngIf="descriptions?.invalid && (descriptions?.dirty || descriptions?.touched)" class="alert alert-danger mt-1">
-                                                            <div *ngIf="descriptions?.errors?.['required']">Mô tả sản phẩm không được bỏ trống.</div>
-                                                            <div *ngIf="descriptions?.errors?.['minlength']">Mô tả sản phẩm phải có ít nhất 8 kí tự.</div>
+                                                        <div *ngIf="descriptions?.invalid && (descriptions?.dirty || descriptions?.touched)"
+                                                            class="alert alert-danger mt-1">
+                                                            <div *ngIf="descriptions?.errors?.['required']">Mô tả sản
+                                                                phẩm không được bỏ trống.</div>
+                                                            <div *ngIf="descriptions?.errors?.['minlength']">Mô tả sản
+                                                                phẩm phải có ít nhất 8 kí tự.</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -195,9 +204,12 @@
                                                         <input class="form-control" id="validationCustom02"
                                                             type="number"
                                                             [formControl]="editProductForm.controls['discountPercent']">
-                                                        <div *ngIf="discountPercent?.invalid && (discountPercent?.dirty || discountPercent?.touched)" class="alert alert-danger mt-1">
-                                                            <div *ngIf="discountPercent?.errors?.['required']">Mã giảm giá (%) không được bỏ trống.</div>
-                                                            <div *ngIf="discountPercent?.errors?.['pattern']">Mã giảm giá (%) phải là ký tự số.</div>
+                                                        <div *ngIf="discountPercent?.invalid && (discountPercent?.dirty || discountPercent?.touched)"
+                                                            class="alert alert-danger mt-1">
+                                                            <div *ngIf="discountPercent?.errors?.['required']">Mã giảm
+                                                                giá (%) không được bỏ trống.</div>
+                                                            <div *ngIf="discountPercent?.errors?.['pattern']">Mã giảm
+                                                                giá (%) phải là ký tự số.</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -210,8 +222,10 @@
                                                     <div class="col-xl-8 col-sm-7">
                                                         <input class="form-control" id="validationCustom03"
                                                             [formControl]="editProductForm.controls['shopId']">
-                                                        <div *ngIf="productShopId?.invalid && (productShopId?.dirty || productShopId?.touched)" class="alert alert-danger mt-1">
-                                                            <div *ngIf="productShopId?.errors?.['required']">Id shop không được bỏ trống.</div>
+                                                        <div *ngIf="productShopId?.invalid && (productShopId?.dirty || productShopId?.touched)"
+                                                            class="alert alert-danger mt-1">
+                                                            <div *ngIf="productShopId?.errors?.['required']">Id shop
+                                                                không được bỏ trống.</div>
                                                         </div>
                                                     </div>
                                                 </div>

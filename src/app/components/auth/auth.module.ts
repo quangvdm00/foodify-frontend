@@ -12,9 +12,11 @@ import { ForbiddenComponent } from "./forbidden/forbidden.component";
 import { SignupComponent } from "./signup/signup.component";
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { SendEmailComponent } from './send-email/send-email.component';
+import { EmailVerifiedComponent } from './email-verified/email-verified.component';
+import { EmailNotVerifiedComponent } from './email-not-verified/email-not-verified.component';
 
 @NgModule({
-  declarations: [LoginComponent, SignupComponent, ForbiddenComponent, ResetPasswordComponent, SendEmailComponent],
+  declarations: [LoginComponent, SignupComponent, ForbiddenComponent, ResetPasswordComponent, SendEmailComponent, EmailVerifiedComponent, EmailNotVerifiedComponent],
   imports: [
     CommonModule,
     AuthRoutingModule,

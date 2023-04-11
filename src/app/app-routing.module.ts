@@ -8,6 +8,8 @@ import { ForbiddenComponent } from './components/auth/forbidden/forbidden.compon
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
 import { AuthGuard } from './shared/guard/auth-guard.service';
 import { NotLogged } from './shared/guard/not-logged.service';
+import { EmailVerifiedComponent } from './components/auth/email-verified/email-verified.component';
+import { EmailNotVerifiedComponent } from './components/auth/email-not-verified/email-not-verified.component';
 
 const routes: Routes = [
   {
@@ -39,6 +41,16 @@ const routes: Routes = [
     path: 'auth/reset-password',
     canActivate: [NotLogged],
     component: ResetPasswordComponent
+  },
+  {
+    path: 'auth/email-verified',
+    canActivate: [NotLogged],
+    component: EmailVerifiedComponent
+  },
+  {
+    path: 'auth/email-not-verified',
+    canActivate: [NotLogged],
+    component: EmailNotVerifiedComponent
   }
 ];
 

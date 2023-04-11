@@ -15,6 +15,7 @@ export class ResetPasswordComponent {
   public active = 1;
 
   // Password
+  action: string = '';
   oobCode: string = '';
   showPassword = false;
 
@@ -55,6 +56,12 @@ export class ResetPasswordComponent {
   ngOnInit() {
     //Get Token from link
     this.oobCode = this.activatedRoute.snapshot.queryParamMap.get('oobCode');
+    this.action = this.activatedRoute.snapshot.queryParamMap.get('mode');
+
+    if (this.action == 'verifyEmail') {
+      this.firebaseService.confirmVerifyEmail(this.oobCode)
+      this.router.navigate(['/auth/email-verified'])
+    }
 
     if (this.oobCode) {
       this.resetPasswordForm = this.formBuilder.group({

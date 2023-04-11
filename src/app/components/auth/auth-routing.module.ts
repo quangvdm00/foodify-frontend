@@ -5,6 +5,7 @@ import { ForbiddenComponent } from "./forbidden/forbidden.component";
 import { SignupComponent } from "./signup/signup.component";
 import { ResetPasswordComponent } from "./reset-password/reset-password.component";
 import { SendEmailComponent } from "./send-email/send-email.component";
+import { EmailVerifiedComponent } from "./email-verified/email-verified.component";
 
 const routes: Routes = [
   {
@@ -27,10 +28,18 @@ const routes: Routes = [
     path: "reset-password",
     component: ResetPasswordComponent,
   },
+  {
+    path: "email-verified",
+    component: EmailVerifiedComponent,
+  },
+  {
+    path: "email-not-verified",
+    component: EmailVerifiedComponent,
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AuthRoutingModule {}
+export class AuthRoutingModule { }

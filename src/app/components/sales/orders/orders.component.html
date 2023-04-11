@@ -12,17 +12,17 @@
               <input type="text" [(ngModel)]="searchName" (change)="searchOrder()" class="filter-ngx form-control"
                 placeholder="Tìm kiếm ..." autocomplete="off" />
             </div>
-            <table class="table table-striped">
+            <table class="table table-striped" *ngIf="orders.length > 0">
               <thead>
                 <tr>
-                  <th scope="col">Mã đơn hàng</th>
-                  <th scope="col">Thời gian đặt hàng</th>
-                  <th scope="col">Tên khách hàng</th>
-                  <th scope="col">Tên shipper</th>
+                  <th scope="col">Mã vận đơn</th>
+                  <th scope="col">Thời gian</th>
+                  <th scope="col">Khách hàng</th>
+                  <th scope="col">Shipper</th>
                   <th scope="col">Địa chỉ</th>
-                  <th scope="col">Phương thức thanh toán</th>
-                  <th scope="col">Trạng thái đơn hàng</th>
-                  <th scope="col">Số tiền cần thanh toán</th>
+                  <th scope="col">Phương thức</th>
+                  <th scope="col">Trạng thái</th>
+                  <th scope="col">Số tiền</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
@@ -32,7 +32,10 @@
                   <td>{{ order.orderTime }}</td>
                   <td>{{ order.user.fullName }}</td>
                   <td *ngIf="order?.shipper?.user?.fullName != null">{{ order?.shipper?.user?.fullName }}</td>
-                  <td *ngIf="order?.shipper?.user?.fullName == null">Đang chờ...</td>
+                  <td *ngIf="order?.shipper?.user?.fullName == null"><i style="color: lightseagreen;"
+                      class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                    <span class="sr-only">Loading...</span>
+                  </td>
                   <td>{{ order.address }}</td>
                   <td>
                     <span [ngClass]="{
@@ -96,7 +99,14 @@
                 </tr>
               </tbody>
             </table>
-            <div class="d-flex justify-content-center p-2">
+            <div class="d-flex justify-content-center p-2" *ngIf="orders.length > 0">
+              <!-- <select [(ngModel)]="sortBy" class="form-select" style="width: auto" name="pageSize"
+                (change)="ngOnInit()">
+                <option [value]="'orderTime'" [selected]="true" [ngValue]="'orderTime'">Thời gian</option>
+                <option [ngValue]="20">20 đơn hàng / trang</option>
+                <option [ngValue]="30">30 đơn hàng / trang</option>
+              </select> -->
+
               <ngb-pagination [collectionSize]="theTotalElements" [(page)]="thePageNumber" [pageSize]="thePageSize"
                 [rotate]="true" [maxSize]="5" [boundaryLinks]="true" (pageChange)="listOrder()">
               </ngb-pagination>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -107,6 +117,11 @@
                 <option [ngValue]="20">20 đơn hàng / trang</option>
                 <option [ngValue]="30">30 đơn hàng / trang</option>
               </select>
+            </div>
+
+            <div class="d-flex justify-content-center p-2" *ngIf="orders.length == 0">
+              <h4 style="color: lightcoral">Không có đơn hàng nào <i class="fa fa-exclamation" aria-hidden="true"></i>
+              </h4>
             </div>
           </div>
         </div>

@@ -21,6 +21,8 @@ import { Ward } from 'src/app/shared/tables/ward';
   styleUrls: ['./edit-vendor.component.scss']
 })
 export class EditVendorComponent implements OnInit {
+  roleName = localStorage.getItem('user-role');
+
   //ids
   userId: number;
   shopId: number;
@@ -84,6 +86,7 @@ export class EditVendorComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.roleName)
     const shopId = +this.route.snapshot.paramMap.get('id')!;
     this.getAllDistrict().then(() => {
       this.shopService.getShopById(shopId).subscribe((data => this.fillFormToUpdate(data)))

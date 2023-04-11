@@ -75,6 +75,13 @@
                         </tbody>
                     </table>
 
+                    <div class="d-flex justify-content-center p-2" *ngIf="comments.length > 0">
+                        <ngb-pagination [collectionSize]="theTotalElements" [(page)]="thePageNumber" [maxSize]="5"
+                            [pageSize]="thePageSize" [rotate]="true" [boundaryLinks]="true"
+                            (pageChange)="listComments()">
+                        </ngb-pagination>
+                    </div>
+
                     <div class="m-t-15">
                         <button class="btn btn-primary m-r-10" type="button"
                             [routerLink]="['/products', 'edit-product', product?.id]">Chỉnh sửa</button>

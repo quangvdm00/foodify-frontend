@@ -90,7 +90,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                             i++;
                         }
                     });
-                    this.totalAverageRating = this.totalAverageRating / i;
+                    if (i != 0) {
+                        this.totalAverageRating = this.totalAverageRating / i;
+                    }
                 })
 
                 this.productService.getProductsByShopIdAndSort(this.shopId, 0, 5, 'sold', 'desc').subscribe((data) => {

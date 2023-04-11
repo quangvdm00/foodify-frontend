@@ -109,17 +109,19 @@
                         <li *ngIf="!isShop"><a [routerLink]="['/users', 'detail', loggedId]">
                                 <app-feather-icons [icon]="'user'"></app-feather-icons>Trang cá nhân
                             </a></li>
-                        <li><a href="javascript:void(0)">
+                        <!-- <li><a href="javascript:void(0)">
                                 <app-feather-icons [icon]="'mail'"></app-feather-icons>Inbox
-                            </a></li>
+                            </a>
+                        </li>
                         <li><a href="javascript:void(0)">
                                 <app-feather-icons [icon]="'lock'"></app-feather-icons>Lock Screen
-                            </a></li>
+                            </a>
+                        </li>
                         <li>
                             <a href="javascript:void(0)">
                                 <app-feather-icons [icon]="'settings'"></app-feather-icons>Settings
                             </a>
-                        </li>
+                        </li> -->
                         <li>
                             <a (click)="logOut()">
                                 <app-feather-icons [icon]="'log-out'"></app-feather-icons>Đăng xuất

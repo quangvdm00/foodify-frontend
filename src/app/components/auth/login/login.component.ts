@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { FirebaseService } from "../../../shared/service/firebase.service";
 import { Router } from '@angular/router';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
     selector: 'app-login',
@@ -17,8 +18,13 @@ export class LoginComponent implements OnInit {
     // Password
     showPassword = false;
 
+    //Modal
+    @ViewChild('error_modal') errorModal: TemplateRef<any>
+    layer1: BsModalRef;
+
     constructor(private formBuilder: UntypedFormBuilder,
         private firebaseAuthService: FirebaseService,
+        private modalService: BsModalService,
         private router: Router) {
         this.createLoginForm();
         this.createRegisterForm();
@@ -71,7 +77,18 @@ export class LoginComponent implements OnInit {
     }
 
     onSignIn() {
-        this.firebaseAuthService.signIn(this.getSignInEmail, this.getSignInPassword)
+        this.firebaseAuthService.signIn(this.getSignInEmail, this.getSignInPassword).then((result) => {
+            if (result) {
+
+            }
+            else {
+                this.layer1 = this.modalService.show(this.errorModal, { class: "modal-sm" });
+            }
+        });
+    }
+
+    closeLayer1() {
+        this.layer1.hide();
     }
 
     get getSignUpEmail() {

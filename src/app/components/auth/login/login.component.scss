@@ -7,6 +7,13 @@
     background-size: cover;
     z-index: -99;
 
+
+    @media (max-width:768px)  { 
+      .disable-pink {
+        display: none;
+      }
+     }
+
     .login-img-box {
       width: 100%;
       padding-bottom: 20px;
@@ -29,3 +36,4 @@
         }
       }
 }
+

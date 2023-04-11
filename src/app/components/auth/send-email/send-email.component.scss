@@ -7,6 +7,12 @@
   background-size: cover;
   z-index: -99;
 
+  @media (max-width:768px)  { 
+    .disable-pink {
+      display: none;
+    }
+   }
+
   .email-img-box {
 
     .email-img {

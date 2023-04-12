@@ -44,4 +44,23 @@
   }
 }
 
+@media (max-width:768px)  { 
+  .backgound-food {
+    background-image: none;
+
+    .responsive-box {
+      width: 86%;
+      padding: 16px 20px 40px;
+
+      .forbidden-img {
+        max-width: 248px;
+      }
+
+      .forbidden-text {
+        text-align: center;
+      }
+    }
+  }  
+}
+
 

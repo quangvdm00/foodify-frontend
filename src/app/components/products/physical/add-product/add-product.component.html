@@ -219,17 +219,19 @@
                                         </button> -->
                                         <ng-template #add_product>
                                             <div class="modal-body text-center">
-                                                <p>Bạn chắc chắc muốn thêm sản phẩm này chứ ?</p>
-                                                <button type="button" class="btn btn-default"
-                                                    (click)="confirm(complete)">Có
-                                                </button>
-                                                <button type="button" class="btn btn-primary" (click)="decline()">Không
-                                                </button>
+                                                <h5 class="text-dark font-weight-bold mb-4">Bạn chắc chắc muốn thêm sản phẩm này chứ ?</h5>
+                                                <div class="modal-btn-option">
+                                                    <button type="button" class="btn btn-default width-btn"
+                                                        (click)="confirm(complete)">Có
+                                                    </button>
+                                                    <button type="button" class="btn btn-primary width-btn" (click)="decline()">Không
+                                                    </button>
+                                                </div>
                                             </div>
                                         </ng-template>
                                         <ng-template #complete>
                                             <div class="modal-body text-center">
-                                                <p>Thêm sản phẩm thành công</p>
+                                                <h5 class="text-dark font-weight-bold mb-4">Thêm sản phẩm thành công</h5>
                                                 <button type="button" class="btn btn-primary" (click)="completed()">Tiếp
                                                     tục
                                                 </button>

@@ -183,7 +183,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div *ngIf="user?.addresses.length > 0" class="table-responsive">
+                                <div *ngIf="user?.addresses.length == 0" class="table-responsive">
                                     <div class="d-flex justify-content-center p-2">
                                         <h4 style="color: lightcoral;">Không tìm thấy địa chỉ nào <i
                                                 class="fa fa-exclamation" aria-hidden="true"></i></h4>
@@ -289,7 +289,8 @@
                     </ul>
                     <div [ngbNavOutlet]="nav" class="mt-2"></div>
                     <div class="pull-right">
-                        <button type="submit" class="btn btn-primary" [routerLink]="['/users','edit', user?.id]">Chỉnh
+                        <button type="submit" class="btn btn-primary" [routerLink]="['/users','edit', user?.id]"
+                            style="font-family: Metrophobic;">Chỉnh
                             sửa
                             thông tin</button>
                     </div>

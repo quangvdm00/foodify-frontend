@@ -1,12 +1,7 @@
 <div class="d-flex justify-content-start align-items-center px-4 py-2">
   <div class="btn-popup pull-left m-0">
-    <input
-      [(ngModel)]="searchName"
-      class="form-control search-input"
-      type="text"
-      placeholder="Tìm kiếm"
-      (change)="searchProduct()"
-    />
+    <input [(ngModel)]="searchName" class="form-control search-input" type="text" placeholder="Tìm kiếm"
+      (change)="searchProduct()" />
   </div>
 </div>
 
@@ -17,8 +12,10 @@
         <div class="card card-position">
           <div *ngIf="product.discountPercent > 0" class="discount-product">
             <div class="discount-box">
-              <img src="../../../../../assets/images/dashboard/Sale.png" *ngIf="product.discountPercent > 0" class="discount-cover">
-              <div [ngClass]="{'discount-text': true, 'discount-text-desc': product.discountPercent < 10}" class="discount-text mb-0">{{ product.discountPercent }}%</div>
+              <img src="../../../../../assets/images/dashboard/Sale-01.png" *ngIf="product.discountPercent > 0"
+                class="discount-cover">
+              <div [ngClass]="{'discount-text': true, 'discount-text-desc': product.discountPercent < 10}"
+                class="discount-text mb-0">{{ product.discountPercent }}%</div>
             </div>
           </div>
           <div class="card-body product-box">
@@ -28,11 +25,11 @@
                 <!-- <span class="lable3" *ngIf="product.discountPercent > 0">{{ product.discountPercent }}%</span> -->
                 <span class="lable4" *ngIf="!product.isEnabled">Không mở bán</span>
               </div>
-              
+
               <div class="front">
                 <a href="javascript:void(0)">
-                  <img [src]="[product.images[0].imageUrl]" class="img-fluid blur-up lazyload bg-img border border-secondary rounded" alt=""
-                /></a>
+                  <img [src]="[product.images[0].imageUrl]"
+                    class="img-fluid blur-up lazyload bg-img border border-secondary rounded" alt="" /></a>
                 <div class="product-hover">
                   <ul>
                     <li>
@@ -46,15 +43,9 @@
                       </button>
                     </li>
                     <li>
-                      <button
-                        class="btn"
-                        type="button"
-                        data-toggle="modal"
-                        (click)="openModal(confirm_Delete, product.id)"
-                        data-target="#exampleModalCenter"
-                        data-original-title=""
-                        title=""
-                      >
+                      <button class="btn" type="button" data-toggle="modal"
+                        (click)="openModal(confirm_Delete, product.id)" data-target="#exampleModalCenter"
+                        data-original-title="" title="">
                         <i class="icon-trash"></i>
                       </button>
                     </li>
@@ -63,19 +54,20 @@
               </div>
             </div>
             <div class="product-detail mt-3">
-              <a [routerLink]="['/products', 'product-detail', product.id]" >
+              <a [routerLink]="['/products', 'product-detail', product.id]">
                 <h4 class="mb-2">{{ product.name }}</h4>
               </a>
               <h5 class="font-weight-bold" style="color: lightcoral">
                 <del *ngIf="product.discountPercent > 0">{{ product.cost | currency : "VND" }}</del>
                 {{ product.cost - (product.cost * product.discountPercent) / 100 | currency : "VND"}}
               </h5>
-              <div *ngIf="product.averageRating > 0" class="rating font-weight-bold">Đánh giá: <span class="font-weight-bold" style="color: lightcoral">{{ product.averageRating }}</span></div>
+              <div *ngIf="product.averageRating > 0" class="rating font-weight-bold">Đánh giá: <span
+                  class="font-weight-bold" style="color: lightcoral">{{ product.averageRating }}</span></div>
               <div *ngIf="product.averageRating == 0" class="rating font-weight-bold">
                 Chưa có đánh giá
               </div>
-              
-              
+
+
             </div>
           </div>
         </div>
@@ -83,24 +75,11 @@
     </div>
 
     <div class="d-flex justify-content-center p-2">
-      <ngb-pagination
-        [collectionSize]="theTotalElements"
-        [(page)]="thePageNumber"
-        [maxSize]="5"
-        [pageSize]="thePageSize"
-        [rotate]="true"
-        [boundaryLinks]="true"
-        (pageChange)="listProduct()"
-      >
-      </ngb-pagination
-      >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <select
-        class="form-select"
-        style="width: auto"
-        name="pageSize"
-        (change)="listProduct()"
-        [(ngModel)]="thePageSize"
-      >
+      <ngb-pagination [collectionSize]="theTotalElements" [(page)]="thePageNumber" [maxSize]="5"
+        [pageSize]="thePageSize" [rotate]="true" [boundaryLinks]="true" (pageChange)="listProduct()">
+      </ngb-pagination>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <select class="form-select" style="width: auto" name="pageSize" (change)="listProduct()"
+        [(ngModel)]="thePageSize">
         <option [value]="12" [selected]="true" [ngValue]="12">12 sản phẩm / trang</option>
         <option [ngValue]="20">20 sản phẩm / trang</option>
         <option [ngValue]="28">28 sản phẩm / trang</option>

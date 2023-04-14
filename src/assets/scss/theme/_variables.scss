@@ -5,22 +5,22 @@ $font_1: sans-serif;
 $font-themify: themify;
 $font-awesome: FontAwesome;
 $font-ICO: IcoFont;
-$font-work-sans: work-Sans;
+$font-work-sans: Metrophobic;
 $font-nunito: Nunito;
 $font-serif: sans-serif;
 
 //colors
-$dark-border-color:#374558;
+$dark-border-color: #374558;
 $white: #ffffff;
 $white-dark: #eeeeee;
 $black: #000000;
-$grey01:#111111;
+$grey01: #111111;
 $dark-font: #222222;
 $grey-dark: #2d2a25;
-$font-color:#333333;
+$font-color: #333333;
 $grey: #777777;
 $grey-light: #a1a1a1;
-$border:#dddada;
+$border: #dddada;
 $round-border: #dddddd;
 $grey-lighter: #f9f9f9;
 $theme-deafult: #ff8084;
@@ -35,21 +35,21 @@ $border-color: #38352f;
 $border-grey: #f1f5f4;
 $font-grey: #aaaaaa;
 $star-yellow: #ffa200;
-$border-bottom-g:#525252;
+$border-bottom-g: #525252;
 $top-header: #f8f8f8;
 $header-font: #999999;
 $shadow: #ededed;
 $box-border: #ecececa8;
 $grey-about: #f7f7f7;
-$grey2:#555555;
+$grey2: #555555;
 $grey3: #efefef;
 $grey4: #444444;
 $grey5: #888888;
-$grey6:#6f6f6f;
-$grey7:#40494f;
-$grey8:#c0c0c0;
+$grey6: #6f6f6f;
+$grey7: #40494f;
+$grey8: #c0c0c0;
 $sidebar-border: #f5f2f2;
-$sidebar-color:#938d8c;
+$sidebar-color: #938d8c;
 $modal: #ffba00;
 $bg-color: #d0edff;
 $bg-color1: #f1e7e6;
@@ -58,68 +58,68 @@ $light-grey: #d0edff;
 $pink: #f1e7e6;
 $blue: #bfbfbf;
 $icon: #6f6f6f;
-$color-red:#ff4c3b;
+$color-red: #ff4c3b;
 $gradient1: #01effc;
 $gradient2: #485ff2;
 $left-sidebar: #2b2b2b;
 
 // dark layput variable //
-$dark-body:#2b2b2b;
-$dark-top:#232323;
-$dark-border:#404040;
-$dark-link:#cbcbcb;
-$dark-span:#929292;
-$dark-footer-bg:#383838;
+$dark-body: #2b2b2b;
+$dark-top: #232323;
+$dark-border: #404040;
+$dark-link: #cbcbcb;
+$dark-span: #929292;
+$dark-footer-bg: #383838;
 
 
-$white-1:#f1f3f5;
-$white-2:#eaedef;
-$white-3:#e7eaec;
-$white-4:#dee2e6;
-$white-5:#cfd4da;
+$white-1: #f1f3f5;
+$white-2: #eaedef;
+$white-3: #e7eaec;
+$white-4: #dee2e6;
+$white-5: #cfd4da;
 
 
 // Theme colors variables
 $primary-color: #ff8084;
 //$primary-color: #544efa ;
-$secondary-color: #13c9ca ;
-$success-color: #81ba00  ;
-$info-color   : #00a8ff  ;
+$secondary-color: #13c9ca;
+$success-color: #81ba00;
+$info-color : #00a8ff;
 $warning-color: #ffbc58;
-$danger-color: #a5a5a5 ;
-$light-color   : #f8f8f9 ;
-$semi-dark  :#aaaaaa;
-$light-semi-gray   :#adadad;
-$light-gray   :#e8ebf2;
-$dark-gray 	:#898989;
-$dark-color   : #2a3142;
-$gray-60   :#999999 ;
+$danger-color: #a5a5a5;
+$light-color : #f8f8f9;
+$semi-dark :#aaaaaa;
+$light-semi-gray :#adadad;
+$light-gray :#e8ebf2;
+$dark-gray :#898989;
+$dark-color : #2a3142;
+$gray-60 :#999999;
 $transparent-color: transparent;
-$auth-bg-color:#fafafa;
+$auth-bg-color: #fafafa;
 $light : #f6f6f6;
 $light-text: #999;
 
 
 // Tables settings
-$horizontal-border-color:    #dee2e6;
-$table-b-margin:             0px;
-$table-footer-font-weight:   bold;
-$table-inverse-color:        $white;
-$table-hover-color:          $light;
-$table-padding:              0.75rem;
-$table-xl-padding:           1.25rem 2rem;
-$table-xl-font:              120%;
-$table-lg-padding:           .9rem 2rem;
-$table-lg-font:              110%;
-$table-de-padding:           .75rem 2rem;
-$table-de-font:              100%;
-$table-sm-padding:           .5rem 2rem;
-$table-sm-font:              90%;
-$table-xs-padding:           0.2rem 2rem;
-$table-xs-font:              80%;
-$horizontal-border-color:    #dee2e6;
-$horizontal-padding:         .75rem 2rem;
-$table-inverse-bg-color:     #292b2c;
+$horizontal-border-color: #dee2e6;
+$table-b-margin: 0px;
+$table-footer-font-weight: bold;
+$table-inverse-color: $white;
+$table-hover-color: $light;
+$table-padding: 0.75rem;
+$table-xl-padding: 1.25rem 2rem;
+$table-xl-font: 120%;
+$table-lg-padding: .9rem 2rem;
+$table-lg-font: 110%;
+$table-de-padding: .75rem 2rem;
+$table-de-font: 100%;
+$table-sm-padding: .5rem 2rem;
+$table-sm-font: 90%;
+$table-xs-padding: 0.2rem 2rem;
+$table-xs-font: 80%;
+$horizontal-border-color: #dee2e6;
+$horizontal-padding: .75rem 2rem;
+$table-inverse-bg-color: #292b2c;
 
 
 // General variables
@@ -142,10 +142,10 @@ $main-header-padding : 12px;
 $main-header-z-index : 9;
 $main-header-right-padding: 0 40px;
 $main-header-right-toggle-color : $primary-color;
-$main-header-right-nav-right :  0px;
-$main-header-right-nav-icon-size :  18px;
-$main-header-right-nav-icon-color :  $primary-color;
-$main-header-right-nav-icon-margin-top :  10px;
+$main-header-right-nav-right : 0px;
+$main-header-right-nav-icon-size : 18px;
+$main-header-right-nav-icon-color : $primary-color;
+$main-header-right-nav-icon-margin-top : 10px;
 
 //page settings
 $page-body-padding : 0 15px;
@@ -211,12 +211,12 @@ $footer_dark__txt_color : $white;
 
 
 //Card settings
-$card-padding        :30px;
-$card-margin-bottom  :30px;
-$card-border-width   :0px;
-$card-border-color   :$light-color;
+$card-padding :30px;
+$card-margin-bottom :30px;
+$card-border-width :0px;
+$card-border-color :$light-color;
 $card-border-radious :8px;
-$card-box-shadow     :1px 5px 24px 0 rgba(68, 102, 242, 0.05);
+$card-box-shadow :1px 5px 24px 0 rgba(68, 102, 242, 0.05);
 $card-header-font-weight : 600;
 $card-header-bg-color : $white;
 $card-header-font-size : 18px;
@@ -228,8 +228,8 @@ $card-body-bg-color : $transparent-color;
 $card-footer-bg-color : $white;
 
 //breadcrumb setting
-$breadcrumb-ancher-color    : $white;
-$breadcrumb-ancher-dark-color    : $black;
+$breadcrumb-ancher-color : $white;
+$breadcrumb-ancher-dark-color : $black;
 
 //buttons setting
 $btn-font-size : 14px;
@@ -237,10 +237,10 @@ $btn-padding : 0.6rem 1.75rem;
 $btn-lg-font-size: 18px;
 $btn-sm-font-size: 12px;
 $btn-xs-font-size: 11px;
-$btn-xs-padding:  0.05rem 0.4rem;
+$btn-xs-padding: 0.05rem 0.4rem;
 
 //error input color start
-$light-body-bg-color:#f1f4fb;
+$light-body-bg-color: #f1f4fb;
 
 
 //sidebar profile settings
@@ -281,5 +281,5 @@ $sidebar-arrow-size: 15px;
 $sidebar-arrow-color: $theme-body-font-color;
 
 $sidebar-open-icon: "\f107";
-$sidebar-close-icon:"\f105";
+$sidebar-close-icon: "\f105";
 $sidebar-icon-font-family: $font-awesome;

@@ -45,9 +45,12 @@
                                                 class="text text-danger">
                                                 Tên sản phẩm không được bỏ trống.
                                             </div> -->
-                                            <div *ngIf="productName?.invalid && (productName?.dirty || productName?.touched)" class="alert alert-danger mt-1">
-                                                <div *ngIf="productName?.errors?.['required']">Tên sản phẩm không được bỏ trống.</div>
-                                                <div *ngIf="productName?.errors?.['minlength']">Tên sản phẩm phải có ít nhất 2 kí tự.</div>
+                                            <div *ngIf="productName?.invalid && (productName?.dirty || productName?.touched)"
+                                                class="alert alert-danger mt-1">
+                                                <div *ngIf="productName?.errors?.['required']">Tên sản phẩm không được
+                                                    bỏ trống.</div>
+                                                <div *ngIf="productName?.errors?.['minlength']">Tên sản phẩm phải có ít
+                                                    nhất 2 kí tự.</div>
                                             </div>
                                         </div>
                                     </div>
@@ -64,9 +67,12 @@
                                                 class="text text-danger">
                                                 Giá sản phẩm không được bỏ trống.
                                             </div> -->
-                                            <div *ngIf="productPrice?.invalid && (productPrice?.dirty || productPrice?.touched)" class="alert alert-danger mt-1">
-                                                <div *ngIf="productPrice?.errors?.['required']">Giá sản phẩm không được bỏ trống.</div>
-                                                <div *ngIf="productPrice?.errors?.['pattern']">Giá sản phẩm phải là ký tự số.</div>
+                                            <div *ngIf="productPrice?.invalid && (productPrice?.dirty || productPrice?.touched)"
+                                                class="alert alert-danger mt-1">
+                                                <div *ngIf="productPrice?.errors?.['required']">Giá sản phẩm không được
+                                                    bỏ trống.</div>
+                                                <div *ngIf="productPrice?.errors?.['pattern']">Giá sản phẩm phải là ký
+                                                    tự số.</div>
                                             </div>
                                         </div>
                                     </div>
@@ -88,16 +94,16 @@
                                                             Xoá
                                                         </button>
                                                     </div>
-                                                    <div
-                                                        *ngIf="categories.controls[i].get('categoryName').invalid &&
-                                                        (categories.controls[i].get('categoryName').dirty || categories.controls[i].get('categoryName').touched)" class="alert alert-danger mt-1">
+                                                    <div *ngIf="categories.controls[i].get('categoryName').invalid &&
+                                                        (categories.controls[i].get('categoryName').dirty || categories.controls[i].get('categoryName').touched)"
+                                                        class="alert alert-danger mt-1">
                                                         <div
                                                             *ngIf="categories.controls[i].get('categoryName')?.errors?.['required']">
                                                             Không được để trống loại sản phẩm
                                                         </div>
                                                     </div>
 
-                                                    
+
                                                 </div>
                                             </div>
 
@@ -127,8 +133,8 @@
                                             <div *ngFor="let item of images.controls; let i = index">
                                                 <div formGroupName="{{i}}">
                                                     <div class="d-flex mb-2 mt-2">
-                                                        <input class="form-control" id="image" formControlName="image_File"
-                                                            type="file" autocomplete="off"
+                                                        <input class="form-control" id="image"
+                                                            formControlName="image_File" type="file" autocomplete="off"
                                                             (change)="onFileSelected($event, i)" />
                                                         <button type="button" class="btn btn-light ml-2"
                                                             (click)="deleteImage(i)">
@@ -143,7 +149,7 @@
                                                         </div>
                                                     </div> -->
 
-                                                    
+
                                                 </div>
                                             </div>
 
@@ -181,9 +187,12 @@
                                                 class="text text-danger">
                                                 Mô tả không được bỏ trống.
                                             </div> -->
-                                            <div *ngIf="descriptions?.invalid && (descriptions?.dirty || descriptions?.touched)" class="alert alert-danger mt-1">
-                                                <div *ngIf="descriptions?.errors?.['required']">Mô tả sản phẩm không được bỏ trống.</div>
-                                                <div *ngIf="descriptions?.errors?.['minlength']">Mô tả sản phẩm phải có ít nhất 8 kí tự.</div>
+                                            <div *ngIf="descriptions?.invalid && (descriptions?.dirty || descriptions?.touched)"
+                                                class="alert alert-danger mt-1">
+                                                <div *ngIf="descriptions?.errors?.['required']">Mô tả sản phẩm không
+                                                    được bỏ trống.</div>
+                                                <div *ngIf="descriptions?.errors?.['minlength']">Mô tả sản phẩm phải có
+                                                    ít nhất 8 kí tự.</div>
                                             </div>
                                         </div>
                                     </div>
@@ -200,8 +209,10 @@
                                                 class="text text-danger">
                                                 Id shop không được bỏ trống.
                                             </div> -->
-                                            <div *ngIf="productShopId?.invalid && (productShopId?.dirty || productShopId?.touched)" class="alert alert-danger mt-1">
-                                                <div *ngIf="productShopId?.errors?.['required']">Id shop không được bỏ trống.</div>
+                                            <div *ngIf="productShopId?.invalid && (productShopId?.dirty || productShopId?.touched)"
+                                                class="alert alert-danger mt-1">
+                                                <div *ngIf="productShopId?.errors?.['required']">Id shop không được bỏ
+                                                    trống.</div>
                                             </div>
                                         </div>
                                     </div>
@@ -217,26 +228,6 @@
                                         <!-- <button type="button" class="btn btn-light" (click)="openModal(add_product)">
                                             Discard
                                         </button> -->
-                                        <ng-template #add_product>
-                                            <div class="modal-body text-center">
-                                                <h5 class="text-dark font-weight-bold mb-4">Bạn chắc chắc muốn thêm sản phẩm này chứ ?</h5>
-                                                <div class="modal-btn-option">
-                                                    <button type="button" class="btn btn-default width-btn"
-                                                        (click)="confirm(complete)">Có
-                                                    </button>
-                                                    <button type="button" class="btn btn-primary width-btn" (click)="decline()">Không
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </ng-template>
-                                        <ng-template #complete>
-                                            <div class="modal-body text-center">
-                                                <h5 class="text-dark font-weight-bold mb-4">Thêm sản phẩm thành công</h5>
-                                                <button type="button" class="btn btn-primary" (click)="completed()">Tiếp
-                                                    tục
-                                                </button>
-                                            </div>
-                                        </ng-template>
                                     </div>
                                 </div>
                             </div>
@@ -248,3 +239,41 @@
     </div>
 </div>
 <!-- Container-fluid Ends-->
+<ng-template #add_product>
+    <div class="modal-body text-center">
+        <h5 class="text-dark font-weight-bold mb-4">Bạn chắc chắc muốn thêm sản phẩm này chứ ?</h5>
+        <div class="modal-btn-option">
+            <button type="button" class="btn btn-default width-btn" (click)="confirm()">Có
+            </button>
+            <button type="button" class="btn btn-primary width-btn" (click)="decline()">Không
+            </button>
+        </div>
+    </div>
+</ng-template>
+<ng-template #completedModal>
+    <div class="modal-body text-center">
+        <h5 class="text-dark font-weight-bold mb-4">Thêm sản phẩm thành công</h5>
+        <button type="button" class="btn btn-primary" (click)="completed()">Tiếp
+            tục
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #errorModal>
+    <div class="modal-body text-center">
+        <h5 class="text-dark font-weight-bold mb-4">Vui lòng thêm ít nhất một {{ item }} vào trong sản phẩm của bạn.
+        </h5>
+        <button type="button" class="btn btn-primary" (click)="closeModal()">Tiếp
+            tục
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #errorShopModal>
+    <div class="modal-body text-center">
+        <h5 class="text-dark font-weight-bold mb-4">Shop bạn thêm vào không tồn tại. Vui lòng chọn một shop khác.</h5>
+        <button type="button" class="btn btn-primary" (click)="closeModal()">Tiếp
+            tục
+        </button>
+    </div>
+</ng-template>

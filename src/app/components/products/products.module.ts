@@ -32,6 +32,7 @@ import { CategoryDetailComponent } from './physical/category-detail/category-det
 import { CarouselModule } from 'ngx-owl-carousel-o';
 // import { NgbdSortableHeader } from "src/app/shared/directives/NgbdSortableHeader";
 // import {  } from '../../directives/shorting.directive/';
+import { ToastrModule } from 'ngx-toastr'
 
 
 @NgModule({
@@ -60,7 +61,8 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
         CKEditorModule,
         NgxDropzoneModule,
         SharedModule,
-        CarouselModule
+        CarouselModule,
+        ToastrModule.forRoot()
     ],
     exports: [SubCategoryComponent],
     bootstrap: [SubCategoryComponent],

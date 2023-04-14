@@ -25,7 +25,6 @@ export class ProductService {
     }
 
     getProductsPaginationAndSort(thePage: number, thePageSize: number, sortBy: string, sortDir: string): Observable<GetResponseProducts> {
-        console.log(this.baseUrl + `?pageNo=${thePage}&pageSize=${thePageSize}&sortBy=${sortBy}&sortDir=${sortDir}`)
         return this.httpClient.get<GetResponseProducts>(this.baseUrl + `?pageNo=${thePage}&pageSize=${thePageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
     }
 
@@ -54,8 +53,6 @@ export class ProductService {
         categories.forEach(category => {
             this.idString = this.idString + `id=${category}&`
         });
-
-        console.log(this.baseUrl + this.idString + `pageNo=${thePage}&pageSize=${thePageSize}`);
         return this.httpClient.get<GetResponseProducts>(this.baseUrl + this.idString + `pageNo=${thePage}&pageSize=${thePageSize}`)
     }
 

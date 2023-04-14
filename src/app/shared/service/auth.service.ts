@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { SignUpUser } from '../tables/sign-up-user';
 import { User } from '../tables/user';
 import { StringBoolObject } from '../tables/string-bool-object';
 import { Address } from '../tables/address';

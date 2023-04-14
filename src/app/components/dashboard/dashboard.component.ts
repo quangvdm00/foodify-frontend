@@ -9,6 +9,7 @@ import { OrderService } from 'src/app/shared/service/order.service';
 import { resolve } from 'path';
 import { forkJoin } from 'rxjs';
 import { UserService } from 'src/app/shared/service/user.service';
+import { FirebaseService } from 'src/app/shared/service/firebase.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -63,6 +64,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         private shopService: ShopService,
         private productService: ProductService,
         private orderService: OrderService,
+        private firebaseService: FirebaseService
     ) {
     }
 

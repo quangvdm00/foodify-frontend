@@ -13,6 +13,8 @@ import { resolve } from 'path';
 import { rejects } from 'assert';
 import { ProductImageService } from 'src/app/shared/service/product-image.service';
 import { ProductImage } from 'src/app/shared/tables/product-image';
+import { ToastrService } from 'ngx-toastr';
+import { error } from 'console';
 
 
 @Component({
@@ -34,6 +36,7 @@ export class AddProductComponent implements OnInit {
 
     adminImg = environment.adminImg;
 
+    item: string = '';
     description: string = '';
     message: string;
     cats!: FormArray;
@@ -41,12 +44,17 @@ export class AddProductComponent implements OnInit {
     createdId: number;
     imageUrls: string[] = [];
 
+    @ViewChild('errorModal') errorModal: TemplateRef<any>
+    @ViewChild('errorShopModal') errorShopModal: TemplateRef<any>
+    @ViewChild('completedModal') completedModal: TemplateRef<any>
+
     constructor(
         private fb: UntypedFormBuilder,
         private productService: ProductService,
         private productImageService: ProductImageService,
         private modalService: BsModalService,
-        private storage: AngularFireStorage) {
+        private storage: AngularFireStorage,
+        private toastService: ToastrService) {
         this.productForm = this.fb.group({
             name: new FormControl("", [Validators.required, Validators.minLength(2)]),
             price: new FormControl("", [Validators.required, Validators.pattern("^[0-9]*$")]),
@@ -68,10 +76,42 @@ export class AddProductComponent implements OnInit {
     }
 
     onAddNewProduct(): Promise<void> {
-        return new Promise((resolve, rejects) => {
-            const categoryNames: string[] = this.cats.controls.map(control => control.get('categoryName').value);
+        return new Promise((resolve) => {
+            const catArray = this.productForm.get('categories') as FormArray
+            if (catArray.length == 0) {
+                this.item = 'thể loại'
+                this.modalRef.hide();
+                this.modalRef = this.modalService.show(this.errorModal, { class: 'modal-sm' });
+                return Promise.reject();
+            }
 
+            const imgArray = this.productForm.get('images') as FormArray
+            if (imgArray.length == 0) {
+                this.item = 'ảnh'
+                this.modalRef.hide();
+                this.modalRef = this.modalService.show(this.errorModal, { class: 'modal-sm' });
+                return Promise.reject();
+            }
+
+            const categoryNames: string[] = this.cats.controls.map(control => control.get('categoryName').value);
             const uploadFiles: File[] = this.imgs.controls.map(control => control.get('image_File').value);
+
+            const product = new Product();
+            product.name = this.productName.value;
+            product.description = this.descriptions.value;
+            product.isEnabled = true;
+            product.discountPercent = 0;
+            product.cost = this.productPrice.value;
+            product.averageRating = 0;
+            product.reviewCount = 0;
+            product.categoryNames = categoryNames;
+
+            if (this.isShop) {
+                product.shopId = this.shopId;
+            }
+            else {
+                product.shopId = this.productShopId.value;
+            }
 
             const uploadPromises = uploadFiles.map((file) => {
                 return this.uploadImage(file).then((imageUrl: string) => {
@@ -79,40 +119,45 @@ export class AddProductComponent implements OnInit {
                 })
             })
 
-            Promise.all(uploadPromises).then(() => {
-                const product = new Product();
-
-                product.name = this.productName.value;
-                product.description = this.descriptions.value;
-                product.isEnabled = true;
-                product.discountPercent = 0;
-                product.cost = this.productPrice.value;
-                product.averageRating = 0;
-                product.reviewCount = 0;
-                if (this.isShop) {
-                    product.shopId = this.shopId;
-                }
-                else {
-                    product.shopId = this.productShopId.value;
-                }
-                product.categoryNames = categoryNames;
-
-                this.productService.addProduct(product).pipe(
-                    switchMap((product) => {
-                        this.createdId = product.id;
-                        return this.imageUrls;
-                    }),
-                    concatMap((url) => {
-                        const img = new ProductImage();
-                        img.id = 0;
-                        img.imageUrl = url;
-                        img.productId = this.createdId;
-                        return this.productImageService.addProductImage(img, img.productId);
+            this.productService.addProduct(product).subscribe({
+                next: (product) => {
+                    this.createdId = product.id;
+                    Promise.all(uploadPromises).then(() => {
+                        this.imageUrls.forEach(url => {
+                            const img = new ProductImage();
+                            console.log("LINK: " + url)
+                            img.id = 0;
+                            img.imageUrl = url;
+                            img.productId = product.id;
+                            this.productImageService.addProductImage(img, img.productId).subscribe();
+                        });
+                        this.modalRef = this.modalService.show(this.completedModal, { class: 'modal-sm' });
+                        resolve();
                     })
-                ).subscribe();
-
-                resolve();
+                },
+                error: () => {
+                    this.modalRef = this.modalService.show(this.errorShopModal, { class: 'modal-sm' });
+                }
             })
+
+            // Promise.all(uploadPromises).then(() => {             
+
+            //     this.productService.addProduct(product).pipe(
+            //         switchMap((product) => {
+            //             this.createdId = product.id;
+            //             return this.imageUrls;
+            //         }),
+            //         concatMap((url) => {
+            //             const img = new ProductImage();
+            //             img.id = 0;
+            //             img.imageUrl = url;
+            //             img.productId = this.createdId;
+            //             return this.productImageService.addProductImage(img, img.productId);
+            //         })
+
+
+            //     resolve();
+            // })
         })
     }
 
@@ -152,7 +197,7 @@ export class AddProductComponent implements OnInit {
     }
 
     //Getter
-    get productName() { return this.productForm.get('name')}
+    get productName() { return this.productForm.get('name') }
 
     get productCategory() {
         const numberStr: string = this.productForm.get('category').value;
@@ -180,17 +225,17 @@ export class AddProductComponent implements OnInit {
 
     openModal(template: TemplateRef<any>) {
         if (this.productForm.invalid) {
-          this.productForm.markAllAsTouched()
-          console.log(this.productForm);
-          return;
+            this.productForm.markAllAsTouched()
+            console.log(this.productForm);
+            return;
         }
         this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
     }
 
-    confirm(template: TemplateRef<any>): void {
+    confirm(): void {
         this.modalRef.hide();
         this.onAddNewProduct().then(() => {
-            this.modalRef = this.modalService.show(template, { class: 'modal-sm' })
+
         })
     }
 
@@ -201,6 +246,10 @@ export class AddProductComponent implements OnInit {
     completed(): void {
         this.modalRef.hide();
         this.productForm.reset();
+    }
+
+    closeModal() {
+        this.modalRef.hide();
     }
 
     //Image Upload

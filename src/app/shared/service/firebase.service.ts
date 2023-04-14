@@ -26,7 +26,6 @@ export class FirebaseService {
 
     constructor(
         public firebaseAuth: AngularFireAuth,
-        private modalService: BsModalService,
         private userService: UserService,
         private shopService: ShopService,
         private httpClient: HttpClient,
@@ -42,78 +41,6 @@ export class FirebaseService {
                 error => console.log(error)
             );
     }
-
-    // signIn(email: string, password: string) {
-    //     this.firebaseAuth.signInWithEmailAndPassword(email, password)
-    //         .then(
-    //             response => {
-    //                 if (!response.user.emailVerified) {
-    //                     response.user.sendEmailVerification();
-    //                     this.router.navigate(['/auth/email-not-verified']);
-    //                 }
-    //                 else {
-    //                     response.user.getIdToken()
-    //                         .then(
-    //                             (token: string) => {
-    //                                 this.token = token;
-    //                                 console.log(token);
-    //                                 localStorage.setItem('jwt-token', token);
-
-    //                                 this.userService.getUserByEmailOrPhoneNumber(email).subscribe((user) => {
-    //                                     if (user.role.roleName == 'ROLE_ADMIN') {
-    //                                         this.loggedIn = true;
-    //                                         localStorage.setItem('user-role', user.role.roleName);
-    //                                         localStorage.setItem('email', user.email);
-    //                                         localStorage.setItem('user-id', user.id.toString());
-    //                                         localStorage.setItem('is-logged', JSON.stringify(this.loggedIn));
-    //                                         this.router.navigate(['/dashboard/default']);
-
-    //                                     }
-    //                                     else if (user.role.roleName == 'ROLE_SHOP') {
-    //                                         localStorage.setItem('user-role', user.role.roleName);
-    //                                         localStorage.setItem('user-email', user.email);
-    //                                         localStorage.setItem('user-id', user.id.toString());
-    //                                         this.shopService.getShopByUserId(user.id).subscribe((shop) => {
-    //                                             if (shop.isEnabled) {
-    //                                                 this.loggedIn = true;
-    //                                                 localStorage.setItem('is-logged', JSON.stringify(this.loggedIn))
-    //                                                 localStorage.setItem('shop-id', shop.id.toString());
-    //                                                 this.router.navigate(['/dashboard/default']);
-    //                                             }
-    //                                             else {
-    //                                                 this.firebaseAuth.signOut().then(
-    //                                                     res => {
-    //                                                         this.loggedIn = false;
-    //                                                         this.token = null;
-    //                                                         localStorage.clear();
-    //                                                         this.router.navigate(['/auth', 'forbidden']);
-    //                                                     }
-    //                                                 );
-    //                                             }
-    //                                         })
-    //                                     }
-    //                                     else {
-    //                                         this.firebaseAuth.signOut().then(
-    //                                             res => {
-    //                                                 this.loggedIn = false;
-    //                                                 this.token = null;
-    //                                                 localStorage.clear();
-    //                                                 this.router.navigate(['/auth', 'forbidden']);
-
-    //                                             }
-    //                                         );
-    //                                     }
-    //                                 })
-    //                             }
-    //                         );
-    //                 }
-    //             }
-    //         ).catch(
-    //             error => {
-    //                 this.layer1 = this.modalService.show(this.errorModal);
-    //             }
-    //         );
-    // }
 
     signIn(email: string, password: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
@@ -196,6 +123,12 @@ export class FirebaseService {
 
     isAuthenticated() {
         return this.token != null;
+    }
+
+    isTokenExpired(): boolean {
+        const now = new Date().getTime() / 1000;
+        const payload = JSON.parse(atob(localStorage.getItem('jwt-token').split('.')[1]));
+        return payload.exp < now
     }
 
     isLoggedIn(): boolean {

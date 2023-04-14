@@ -38,7 +38,7 @@
                   </td>
                   <td>{{ order.address }}</td>
                   <td>
-                    <span [ngClass]="{
+                    <span class="fs-status" [ngClass]="{
                         badge: true,
                         'badge-info': order.paymentMethod === 'ZALO PAY',
                         'badge-success': order.paymentMethod === 'CASH'
@@ -52,7 +52,7 @@
                     </span>
                   </td>
                   <td>
-                    <span [ngClass]="{
+                    <span class="fs-status" [ngClass]="{
                         badge: true,
                         'badge-dark': order.status === 'AWAITING',
                         'badge-warning': order.status === 'CONFIRMED',

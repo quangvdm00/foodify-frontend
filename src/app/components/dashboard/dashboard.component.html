@@ -121,7 +121,7 @@
                                 <tr *ngFor="let order of orders; let i = index">
                                     <td>{{ order?.orderTrackingNumber }}</td>
                                     <td>{{ order?.total | currency : "VND" }}</td>
-                                    <td><span [ngClass]="{
+                                    <td><span class="fs-status" [ngClass]="{
                                           badge: true,
                                           'badge-info': order.paymentMethod === 'ZALO PAY',
                                           'badge-success': order.paymentMethod === 'CASH'
@@ -133,7 +133,7 @@
                                             : ""
                                             }}
                                         </span></td>
-                                    <td><span [ngClass]="{
+                                    <td><span class="fs-status" [ngClass]="{
                                           badge: true,
                                           'badge-dark': order.status === 'AWAITING',
                                           'badge-warning': order.status === 'CONFIRMED',

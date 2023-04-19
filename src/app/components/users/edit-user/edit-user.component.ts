@@ -133,7 +133,6 @@ export class EditUserComponent implements OnInit {
 
     if (this.editUserForm.invalid) {
       this.editUserForm.markAllAsTouched();
-      console.log(this.editUserForm);
       return;
     }
 

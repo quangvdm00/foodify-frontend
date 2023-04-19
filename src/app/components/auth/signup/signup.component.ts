@@ -310,7 +310,6 @@ export class SignupComponent {
 
   onDistrictSelected() {
     this.isHaveDistrict = false;
-    console.log("Choose:  " + this.district);
     this.districts.forEach((element: District) => {
       if (this.district == element.name && this.district != "Huyện Hoàng Sa") {
         this.isHaveDistrict = true;
@@ -324,7 +323,6 @@ export class SignupComponent {
       this.isStudent = false;
     } else {
       this.isStudent = true;
-      console.log(this.isStudent);
     }
   }
 
@@ -351,7 +349,6 @@ export class SignupComponent {
     this.shopImageChoosen = true;
     this.shopImageFile = event.target.files[0];
 
-    console.log(this.shopImageFile);
     const reader = new FileReader();
     if (event.target.files && event.target.files.length) {
       const [file] = event.target.files;

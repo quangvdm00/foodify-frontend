@@ -82,7 +82,6 @@ export class ListUserComponent implements OnInit {
 
   openModal(user: User, template: TemplateRef<any>) {
     this.userDel = user;
-    console.log(this.userDel.email)
     this.layer1 = this.modalService.show(template, { class: 'modal-sm' });
   }
 

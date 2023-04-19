@@ -18,7 +18,6 @@ export class CategoryService {
   }
 
   editCategoryById(categoryId: number, category: Category): Observable<Category> {
-    console.log("edit service called")
     return this.httpClient.put<Category>(this.baseUrl + `/${categoryId}`, category)
   }
 

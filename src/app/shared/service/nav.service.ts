@@ -88,7 +88,7 @@ export class NavService {
         {
             title: 'Đơn hàng', icon: 'dollar-sign', type: 'sub', active: false, children: [
                 { path: '/sales/orders', title: 'Danh sách', type: 'link' },
-                { path: '/sales/transactions', title: 'Giao dịch', type: 'link' },
+                // { path: '/sales/transactions', title: 'Giao dịch', type: 'link' },
             ]
         },
         // {

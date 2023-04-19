@@ -204,7 +204,6 @@ export class CreateShipperComponent implements OnInit {
   onFileSelected(event) {
     this.edited = true;
     this.imageFile = event.target.files[0];
-    console.log(this.imageFile.name)
   }
 
   onFileChange(event) {
@@ -244,7 +243,6 @@ export class CreateShipperComponent implements OnInit {
         )
         .subscribe(url => {
           // if (url) {
-          //     // console.log(url);
           // }
         }
         );

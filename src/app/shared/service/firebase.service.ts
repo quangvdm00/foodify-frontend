@@ -38,7 +38,7 @@ export class FirebaseService {
                 userCredential.user.sendEmailVerification();
             })
             .catch(
-                error => console.log(error)
+                error => { console.log(error) }
             );
     }
 
@@ -94,7 +94,7 @@ export class FirebaseService {
                                             this.token = null;
                                             localStorage.clear();
                                             this.router.navigate(['/auth', 'forbidden']);
-                                            resolve(true); // trả về false nếu tài khoản không có quyền truy cập
+                                            resolve(true);
                                         }
                                     );
                                 }
@@ -106,20 +106,6 @@ export class FirebaseService {
                 });
         });
     }
-
-
-
-    // getToken() {
-    //     this.firebaseAuth.currentUser.then(
-    //         res => res.getIdToken().then(
-    //             (token: string) => {
-    //                 this.token = token;
-    //                 console.log(token);
-    //             }
-    //         )
-    //     );
-    //     console.log('Token: ', this.token);
-    // }
 
     isAuthenticated() {
         return this.token != null;

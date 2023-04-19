@@ -86,11 +86,10 @@ export class EditVendorComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.roleName)
     const shopId = +this.route.snapshot.paramMap.get('id')!;
     this.getAllDistrict().then(() => {
       this.shopService.getShopById(shopId).subscribe((data => this.fillFormToUpdate(data)))
-    }).catch(error => console.log(error));
+    }).catch(error => { });
   }
 
   createUserForm() {
@@ -218,7 +217,6 @@ export class EditVendorComponent implements OnInit {
                 this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
                   () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
                   (error) => {
-                    console.log("Address existed ! No problem");
                     this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
                   });
               })
@@ -237,7 +235,6 @@ export class EditVendorComponent implements OnInit {
           this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
             () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
             (error) => {
-              console.log("Address existed ! No problem");
               this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
             }
           )
@@ -251,7 +248,6 @@ export class EditVendorComponent implements OnInit {
           this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
             () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
             (error) => {
-              console.log("Address existed ! No problem");
               this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
             }
           )
@@ -264,7 +260,6 @@ export class EditVendorComponent implements OnInit {
         this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
           () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
           (error) => {
-            console.log("Address existed ! No problem");
             this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
           }
         )
@@ -287,7 +282,6 @@ export class EditVendorComponent implements OnInit {
                   this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
                     () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
                     (error) => {
-                      console.log("Address existed ! No problem");
                       this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
                     });
                 })
@@ -306,7 +300,6 @@ export class EditVendorComponent implements OnInit {
             this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
               () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
               (error) => {
-                console.log("Address existed ! No problem");
                 this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
               }
             )
@@ -320,7 +313,6 @@ export class EditVendorComponent implements OnInit {
             this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
               () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
               (error) => {
-                console.log("Address existed ! No problem");
                 this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
               }
             )
@@ -333,7 +325,6 @@ export class EditVendorComponent implements OnInit {
           this.userService.updateUserAddress(this.userId, this.addressId, editAddress).subscribe(
             () => { this.modalRef = this.modalService.show(template, { class: 'modal-sm' }); },
             (error) => {
-              console.log("Address existed ! No problem");
               this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
             }
           )

@@ -125,7 +125,6 @@ export class AddProductComponent implements OnInit {
                     Promise.all(uploadPromises).then(() => {
                         this.imageUrls.forEach(url => {
                             const img = new ProductImage();
-                            console.log("LINK: " + url)
                             img.id = 0;
                             img.imageUrl = url;
                             img.productId = product.id;
@@ -226,7 +225,6 @@ export class AddProductComponent implements OnInit {
     openModal(template: TemplateRef<any>) {
         if (this.productForm.invalid) {
             this.productForm.markAllAsTouched()
-            console.log(this.productForm);
             return;
         }
         this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
@@ -261,7 +259,6 @@ export class AddProductComponent implements OnInit {
 
     onFileSelected(event, index: number) {
         this.imageFile = event.target.files[0]
-        console.log(this.imageFile.name, index)
 
         this.imgs = this.productForm.get('images') as FormArray;
         this.imgs.at(index).patchValue({ image_File: this.imageFile });
@@ -288,9 +285,6 @@ export class AddProductComponent implements OnInit {
                     })
                 )
                 .subscribe(url => {
-                    // if (url) {
-                    //     // console.log(url);
-                    // }
                 }
                 );
         })

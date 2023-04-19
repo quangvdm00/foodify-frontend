@@ -62,7 +62,6 @@ export class CategoryComponent implements OnInit {
     }
 
     confirm(categoryId: number, template: TemplateRef<any>): void {
-        console.log("Delete category with id :" + categoryId);
         this.categoryService.deleteCategoryById(categoryId).subscribe();
         this.modalRef.hide();
         this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
@@ -75,7 +74,6 @@ export class CategoryComponent implements OnInit {
     editCategory(template: TemplateRef<any>, category: Category) {
         this.categoryId = category.id
 
-        console.log(category.name)
         this.categoryForm.patchValue({
             categoryName: category.name,
             categoryImage: category.imageUrl
@@ -129,7 +127,6 @@ export class CategoryComponent implements OnInit {
                 )
                 .subscribe(url => {
                     // if (url) {
-                    //     // console.log(url);
                     // }
                 }
                 );

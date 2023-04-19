@@ -33,7 +33,6 @@ export class ListAddressComponent {
   }
 
   searchAddress() {
-    console.log(this.searchName);
     if (this.searchName.trim() !== '') {
       this.addressService.findAddressesByName(this.searchName, this.thePageNumber - 1, this.thePageSize)
         .subscribe(this.processResult())

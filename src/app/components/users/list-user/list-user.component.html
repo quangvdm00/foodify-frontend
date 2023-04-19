@@ -10,7 +10,7 @@
                     (change)="searchUser()" />
             </form>
             <div id="batchDelete" class="category-table custom-datatable transcation-datatable user-image">
-                <div class="table-responsive">
+                <div class="table-responsive" *ngIf="users.length">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -70,6 +70,15 @@
                             <option [ngValue]="20">20 người dùng / trang</option>
                             <option [ngValue]="30">30 người dùng / trang</option>
                         </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive" *ngIf="!users.length">
+                    <div class="d-flex justify-content-center p-2">
+                        <img src="../../../../assets/images/error/no-user.png" alt="">
+                    </div>
+                    <div class="d-flex justify-content-center p-2">
+                        <h4 style="color: #FF8084;">Không tìm thấy người dùng</h4>
                     </div>
                 </div>
             </div>

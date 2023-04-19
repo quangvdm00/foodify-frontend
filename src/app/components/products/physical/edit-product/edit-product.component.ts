@@ -71,7 +71,6 @@ export class EditProductComponent {
   fillFormToUpdate(product: Product) {
     this.product = product;
     product.categories.forEach((category: Category) => {
-      console.log(category.name);
       this.items = this.editProductForm.get('categories') as FormArray;
       this.items.push(new FormGroup({
         categoryName: new FormControl(category.name, Validators.required)
@@ -94,7 +93,6 @@ export class EditProductComponent {
 
   onUpdateProduct() {
     const categoryNames: string[] = this.items.controls.map(control => control.get('categoryName').value);
-    console.log(categoryNames);
     const product = new Product();
     product.id = 1;
     product.name = this.productName.value;
@@ -106,7 +104,6 @@ export class EditProductComponent {
     product.reviewCount = 0;
     product.shopId = this.productShopId.value;
     product.categoryNames = categoryNames;
-    console.log(product);
     this.productService.updateProductById(this.editProductId, product).subscribe();
   }
 
@@ -133,7 +130,6 @@ export class EditProductComponent {
     }
     else {
       this.isEnabled = true;
-      console.log(this.isEnabled);
     }
   }
 
@@ -199,11 +195,9 @@ export class EditProductComponent {
   openImgModal(id: number, imageTemplate: TemplateRef<any>) {
     if (this.editProductForm.invalid) {
       this.editProductForm.markAllAsTouched()
-      console.log(this.editProductForm);
       return;
     }
     this.editOrDeleteId = id;
-    console.log(this.editOrDeleteId);
     this.layer1 = this.modalService.show(imageTemplate, { class: 'modal-sm' });
   }
 

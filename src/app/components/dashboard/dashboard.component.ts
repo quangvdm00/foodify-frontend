@@ -51,6 +51,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     //Products
     products: Product[] = [];
+    isData: boolean = false;
 
     //Admin
     totalUser: number = 0;
@@ -99,6 +100,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
                 this.productService.getProductsByShopIdAndSort(this.shopId, 0, 5, 'sold', 'desc').subscribe((data) => {
                     this.products = data.products;
+                    if (this.products.length > 4) {
+                        this.isData = true;
+                    }
                     this.doughtnutData(data.products);
                 })
 
@@ -107,11 +111,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 this.shopService.getShopRevenue(this.shopId, 30).subscribe((res) => {
                     this.totalRevenue = res;
                 });
-
                 this.valueOfShopDistrict();
-
-
-
             })
         }
         else {
@@ -358,28 +358,26 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
         this.doughnutData = [
             {
-                value: products[0].sold,
-                name: products[0].name
+                value: products[0]?.sold,
+                name: products[0]?.name
 
             },
             {
-                value: products[1].sold,
-                name: products[1].name
+                value: products[1]?.sold,
+                name: products[1]?.name
             },
             {
-                value: products[2].sold,
-                name: products[2].name
+                value: products[2]?.sold,
+                name: products[2]?.name
             },
             {
-                value: products[3].sold,
-                name: products[3].name
+                value: products[3]?.sold,
+                name: products[3]?.name
             },
             {
-                value: products[4].sold,
-                name: products[4].name
+                value: products[4]?.sold,
+                name: products[4]?.name
             }
         ];
-
-        // console.log(this.doughnutData)
     }
 }

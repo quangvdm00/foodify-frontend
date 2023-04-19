@@ -312,7 +312,6 @@ export class CreateVendorsComponent {
 
     onDistrictSelected() {
         this.isHaveDistrict = false;
-        console.log("Choose:  " + this.district);
         this.districts.forEach((element: District) => {
             if (this.district == element.name && this.district != 'Huyện Hoàng Sa') {
                 this.isHaveDistrict = true;
@@ -327,7 +326,6 @@ export class CreateVendorsComponent {
         }
         else {
             this.isStudent = true;
-            console.log(this.isStudent);
         }
     }
 

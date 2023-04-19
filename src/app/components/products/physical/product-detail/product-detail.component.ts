@@ -77,9 +77,8 @@ export class ProductDetailComponent implements OnInit {
   }
 
   confirm(deleteProductId: number, template: TemplateRef<any>): void {
-    console.log("Delete product with id :" + deleteProductId);
     this.productService.deleteProduct(deleteProductId).subscribe((data) => {
-      console.log("Deleted successfully");
+
     });
     this.modalRef.hide();
     this.modalRef = this.modalService.show(template, { class: "modal-sm" });

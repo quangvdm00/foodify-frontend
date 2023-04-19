@@ -83,7 +83,6 @@ export class ResetPasswordComponent {
       this.resetPasswordForm.markAllAsTouched();
       return;
     }
-    console.log(this.oobCode + " " + this.password.value)
 
     this.firebaseService.confirmPasswordReset(this.oobCode, this.password.value);
     this.layer1 = this.modalService.show(success, { class: 'modal-sm' })

@@ -25,7 +25,6 @@ export class DigitalListComponent implements OnInit {
   @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
 
   onSort({ column, direction }: SortEvent) {
-    console.log("ddsds");
 
     // resetting other headers
     this.headers.forEach((header) => {

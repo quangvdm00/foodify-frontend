@@ -30,15 +30,13 @@ export class DetailOrderComponent {
 
   ngOnInit() {
     this.handleOrderEdit();
-    this.listOrderDetails()    
+    this.listOrderDetails()
   }
 
   handleOrderEdit() {
     let orderId = +this.route.snapshot.paramMap.get("id")!;
     let userId = +this.route.snapshot.paramMap.get("userId")!;
     this.orderId = orderId;
-    console.log("order id:" + orderId);
-    console.log("user id:" + userId);
 
     this.orderService.getOrderById(userId, orderId).subscribe((order) => {
       this.order = order;
@@ -47,7 +45,7 @@ export class DetailOrderComponent {
 
   listOrderDetails() {
     this.orderDetailService.getOrderDetail(this.orderId, this.thePageNumber - 1, this.thePageSize, this.sortBy, this.sortDir)
-    .subscribe(this.processResult())
+      .subscribe(this.processResult())
   }
 
   processResult() {

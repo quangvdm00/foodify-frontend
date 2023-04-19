@@ -23,6 +23,7 @@ export class FooterComponent implements OnInit {
 
   //Order
   refreshInterval = 5000;
+  refreshTimeout;
 
   //Modal
   mainLayer: BsModalRef;
@@ -46,7 +47,7 @@ export class FooterComponent implements OnInit {
       .subscribe((data) => {
         this.theTotalElements = data.page.totalElements;
 
-        setTimeout(() => {
+        this.refreshTimeout = setTimeout(() => {
           this.refreshShopOrder();
         }, this.refreshInterval);
       })
@@ -66,7 +67,7 @@ export class FooterComponent implements OnInit {
         }
       })
 
-    setTimeout(() => {
+    this.refreshTimeout = setTimeout(() => {
       this.refreshShopOrder();
     }, this.refreshInterval);
   }
@@ -78,6 +79,6 @@ export class FooterComponent implements OnInit {
 
   ngOnDestroy() {
     // Xóa timeout khi component bị destroy
-    clearTimeout(this.refreshInterval);
+    clearTimeout(this.refreshTimeout);
   }
 }

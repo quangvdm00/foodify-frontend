@@ -29,7 +29,7 @@ export class OrdersComponent implements OnInit {
   userId: number;
   orderId: number;
 
-  orders = [];
+  orders: Order[] = [];
 
   //Pagination Properties
   thePageNumber = 1;
@@ -49,7 +49,8 @@ export class OrdersComponent implements OnInit {
   searchName: string = '';
 
   //Event
-  refreshInterval = 10000;
+  refreshInterval = 5000;
+  refreshTimeout;
   totalOrders = 0;
 
   orderStatuses = ["Chờ xác nhận", "Đã xác nhận", "Đang giao hàng", "Giao thành công", "Đã huỷ đơn", "Không nhận hàng"];
@@ -81,7 +82,7 @@ export class OrdersComponent implements OnInit {
         .subscribe(this.processResult());
     }
 
-    setTimeout(() => {
+    this.refreshTimeout = setTimeout(() => {
       this.refreshOrder();
     }, this.refreshInterval);
   }
@@ -101,7 +102,7 @@ export class OrdersComponent implements OnInit {
         .subscribe(this.refreshResult());
     }
 
-    setTimeout(() => {
+    this.refreshTimeout = setTimeout(() => {
       this.refreshOrder();
     }, this.refreshInterval);
   }
@@ -141,7 +142,7 @@ export class OrdersComponent implements OnInit {
   // Change status order modal
   openStatusModal(confirmBoxChangeStatus: TemplateRef<any>, userId: number, orderId: number, shipper: Shipper) {
     this.isHaveShipper = false;
-    if (shipper != null) {
+    if (shipper != undefined) {
       this.isHaveShipper = true
     }
 
@@ -150,7 +151,6 @@ export class OrdersComponent implements OnInit {
         this.userId = userId;
         this.orderId = orderId;
         this.selectedStatus = order.status;
-        console.log(this.selectedStatus);
         this.layer1 = this.modalService.show(confirmBoxChangeStatus, { class: "modal-sm" });
       },
       (error) => {
@@ -165,14 +165,18 @@ export class OrdersComponent implements OnInit {
 
       }
       else {
-        console.log(this.shipper.id)
-        this.orderService.updateOrderShipper(this.userId, this.orderId, this.shipper.id).subscribe();
+        this.orderService.updateOrderShipper(this.userId, this.orderId, this.shipper.id).subscribe(() => {
+          this.orderService.updateOrderStatus(this.userId, this.orderId, this.selectedStatus).subscribe((res) => { });
+          this.layer1.hide();
+          this.layer1 = this.modalService.show(successChangeStatus, { class: "modal-sm" });
+        });
       }
     }
-
-    this.orderService.updateOrderStatus(this.userId, this.orderId, this.selectedStatus).subscribe((res) => { });
-    this.layer1.hide();
-    this.layer1 = this.modalService.show(successChangeStatus, { class: "modal-sm" });
+    else {
+      this.orderService.updateOrderStatus(this.userId, this.orderId, this.selectedStatus).subscribe((res) => { });
+      this.layer1.hide();
+      this.layer1 = this.modalService.show(successChangeStatus, { class: "modal-sm" });
+    }
   }
 
   decline() {
@@ -190,8 +194,6 @@ export class OrdersComponent implements OnInit {
   openDeleteModal(confirmBoxDelete: TemplateRef<any>, userId: number, orderId: number) {
     this.userId = userId
     this.orderId = orderId
-    console.log('userId: ' + this.userId);
-    console.log('orderId: ' + this.orderId);
 
     this.layer1 = this.modalService.show(confirmBoxDelete, { class: "modal-sm" });
   }
@@ -211,6 +213,6 @@ export class OrdersComponent implements OnInit {
 
   ngOnDestroy() {
     // Xóa timeout khi component bị destroy
-    clearTimeout(this.refreshInterval);
+    clearTimeout(this.refreshTimeout);
   }
 }

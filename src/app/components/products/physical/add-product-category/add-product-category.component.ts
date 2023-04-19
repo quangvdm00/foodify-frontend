@@ -57,7 +57,6 @@ export class AddProductCategoryComponent {
         //     this.productName, this.description, true, 20,
         //     this.productPrice,
         //     [this.productCategory], [''], 30);
-        // console.log(product);
         this.productForm.reset();
     }
 

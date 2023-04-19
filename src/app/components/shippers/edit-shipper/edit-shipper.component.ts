@@ -57,7 +57,7 @@ export class EditShipperComponent {
     private shipperService: ShipperService,
     private storage: AngularFireStorage,
     private modalService: BsModalService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.editShipperForm = this.formBuilder.group(
@@ -86,7 +86,6 @@ export class EditShipperComponent {
     this.route.params.subscribe((val) => {
       this.shipperIdToUpdate = val["id"];
       this.shipperService.getShipperById(this.shipperIdToUpdate).subscribe((res) => {
-        console.log(res);
         this.fillFormToUpdate(res);
       });
     });
@@ -115,8 +114,7 @@ export class EditShipperComponent {
     this.edited = true;
     this.fileShipperName = event.target.files[0].name;
     this.shipperImageFile = (event.target as HTMLInputElement).files[0];
-    console.log(this.shipperImageFile);
-    
+
     const reader = new FileReader();
     if (event.target.files && event.target.files.length) {
       const [file] = event.target.files;
@@ -128,7 +126,6 @@ export class EditShipperComponent {
       };
     }
     this.modalRef.hide();
-    console.log("New image: " + this.edited);
   }
 
   // Modal Image
@@ -156,7 +153,7 @@ export class EditShipperComponent {
             });
           })
         )
-        .subscribe((url) => {});
+        .subscribe((url) => { });
     });
   }
 
@@ -180,47 +177,29 @@ export class EditShipperComponent {
   swapActive() {
     // if (this.isActive) {
     //   this.isActive = false;
-    //   console.log("Swap Active case 01: " + this.isActive);
+
     //   if (this.isShipping) {
     //     this.isShipping = false;
-    //     console.log("SwapShipping case 02 in active: " + this.isShipping);
+
     //   }
     // } else {
     //   this.isActive = true;
-    //   console.log("Swap Active case 02: " + this.isActive);
+
     // }
-    console.log("Active state before: " + this.isActive);
+
     if (this.isActive) {
       this.isShipping = false;
     }
     this.isActive = !this.isActive;
-    console.log("Active state after: " + this.isActive);
-    console.log("Shipping state from swapActive: " + this.isShipping);
-    
   }
 
   // Check isShipping
   swapShipping() {
-    // console.log("active log 1: " + this.isActive);
-    // console.log("shipping log 1: " + this.isShipping);
-    
-    // if (this.isActive && !this.isShipping) {
-    //   this.isShipping = true;
-    //   console.log("SwapShipping case 01: " + this.isShipping);
-    // } else if (this.isActive && this.isShipping) {
-    //   this.isShipping = false;
-    //   console.log("SwapShipping case 02 in shipping: " + this.isShipping);
-    // } 
-    // console.log("active log 2: " + this.isActive);
-    // console.log("shipping log 2: " + this.isShipping);
-    console.log("Shipping state before: " + this.isShipping);
     if (this.isActive) {
       this.isShipping = !this.isShipping;
     }
-    console.log("Shipping state after: " + this.isShipping);
-    
   }
-  
+
   // Update shipper information
   updateShipper() {
     let editShipper = new Shipper();
@@ -241,7 +220,7 @@ export class EditShipperComponent {
     const updateUser$ = this.userService.updateUser(this.userIdToUpdate, editUser);
     const updateShipperActive$ = this.shipperService.updateShiperActive(this.shipperIdToUpdate, editShipper, this.isActive);
     const updateShipperShipping$ = this.shipperService.updateShiperShipping(this.shipperIdToUpdate, editShipper, this.isShipping);
-    
+
     if (editUser && editShipper) {
       if (this.shipperImageFile) {
         this.uploadShipperImage(this.shipperImageFile).then((url) => {
@@ -276,7 +255,7 @@ export class EditShipperComponent {
           }
         })
       }
-    } 
+    }
 
     // Check all validations addUserForm
     if (this.editShipperForm.invalid) {

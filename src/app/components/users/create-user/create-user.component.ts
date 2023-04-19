@@ -103,7 +103,6 @@ export class CreateUserComponent implements OnInit {
 
         if (this.addUserForm.invalid) {
             this.addUserForm.markAllAsTouched();
-            console.log(this.addUserForm);
             return;
         }
 
@@ -118,7 +117,7 @@ export class CreateUserComponent implements OnInit {
                         this.userService.createAddressForUser(user.id, newAddress).subscribe(
                             () => { },
                             (error) => {
-                                console.log("Address existed! No problem!")
+
                             }
                         )
                         this.firebaseService.signUp(newUser.email, this.userPassword.value);

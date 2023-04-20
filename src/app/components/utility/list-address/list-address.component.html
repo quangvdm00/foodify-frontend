@@ -27,14 +27,16 @@
                                 <tbody>
                                     <tr *ngFor="let addr of addresses; let i = index">
                                         <th scope="row">{{ i + 1 }}</th>
-                                        <td>{{ addr.address }}</td>
-                                        <td>{{ addr.district }}</td>
-                                        <td>{{ addr.ward}}</td>
-                                        <td>{{ addr.users.length}}</td>
+                                        <td>{{ addr?.address }}</td>
+                                        <td>{{ addr?.district }}</td>
+                                        <td>{{ addr?.ward}}</td>
+                                        <td>{{ addr?.users.length}}</td>
                                         <td>
-                                            <!-- <a href="javascript:void(0)"><i class='fa fa-edit f-12'></i></a>&nbsp; -->
-                                            <a style="cursor: pointer;"
-                                                (click)="confirmDeleted(confirmDelete, addr.id)"><i
+                                            <a *ngIf="addr?.users.length" style="cursor: not-allowed;"><i
+                                                    title="Không thể xoá địa chỉ đang sử dụng" style="color: gray;"
+                                                    class="fa fa-trash-o"></i></a>
+                                            <a *ngIf="!addr?.users.length" style="cursor: pointer;" title="Xoá địa chỉ"
+                                                (click)="confirmDeleted(confirmDelete, addr?.id)"><i
                                                     class="fa fa-trash-o"></i></a>
                                         </td>
                                     </tr>

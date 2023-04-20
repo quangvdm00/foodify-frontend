@@ -10,10 +10,6 @@ export class AuthInterceptor implements HttpInterceptor {
     constructor(private firebaseService: FirebaseService) { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        // if (req.headers.get("skip")) {
-        //     return next.handle(req);
-        // }
-
         const token = localStorage.getItem('jwt-token');
         if (token != null && this.firebaseService.isTokenExpired()) {
             this.firebaseService.logout();
@@ -23,10 +19,6 @@ export class AuthInterceptor implements HttpInterceptor {
             const authReq = req.clone({
                 setHeaders: {
                     Authorization: `Bearer ${token}`
-                    // 'Access-Control-Allow-Origin': 'http://localhost:4200',
-                    // 'Access-Control-Allow-Credentials': 'true',
-                    // 'Access-Control-Allow-Headers': 'X-Requested-With,content-type',
-                    // 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, PATCH, DELETE'
                 }
             });
             return next.handle(authReq);
